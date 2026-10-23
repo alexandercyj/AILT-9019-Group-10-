@@ -1,46 +1,52 @@
-# Label Desk — UI Integration Notes
+# Architecture notes
 
-## What is included
+The previous version of this file described a planned split across four local ports
+(`server.py` 8000, `label_renderer.py` 8001, `grounding_check.py` 8002, `llm_adapter.py`
+8003). None of those services exist. The core path is one Python package called in-process,
+and the browser view is a thin client over it. This file now records what is actually
+there.
 
-- `index.html`: single-page browser view for the proposal prototype.
-- `styles.css`: responsive CSS layout and visual system.
-- `app.js`: local interaction logic for drafting labels and exercising the refusal path.
-- All visible guidance, inline suggestions, and backend integration notes are written in English.
-
-## Current local preview
-
-The UI is being served locally for preview at:
+## One implementation, two entry points
 
 ```text
-http://127.0.0.1:4173/
+                      labeldesk/                     (standard library only)
+  CLI  ──────────────►  corpus → validate → factsheet → render → grounding
+  server.py /api/draft ┘                                        │
+                                                                ▼
+                                                     drafted | refused
 ```
 
-This is a static prototype server. It is for local preview only.
+- `python3 -m labeldesk <catalogue number>` prints the result for a human.
+- `server.py` serves `index.html` and exposes `POST /api/draft`, which calls the same
+  `labeldesk.draft()` function and returns the same JSON.
 
-## Suggested backend file connections
+`app.js` contains no renderer, no grounding rule and no refusal rule. If the browser view
+and the CLI ever disagreed, that would be a bug in one call, not a divergence between two
+implementations.
 
-| File | Suggested local service | Why it belongs there |
+## HTTP surface
+
+| Method | Path | Purpose |
 | --- | --- | --- |
-| `server.py` | `http://127.0.0.1:8000` | Main API and static entry point for the browser view. |
-| `label_renderer.py` | `http://127.0.0.1:8001` | Offline deterministic label rendering endpoint. |
-| `grounding_check.py` | `http://127.0.0.1:8002` | Fact containment and citation resolution checks. |
-| `llm_adapter.py` | `http://127.0.0.1:8003` | Optional model pass behind the same guardrails. |
-| `frozen_corpus.json` | no port | Local read-only data file used by the backend services. |
+| GET | `/` | The single-page browser view. |
+| GET | `/api/records` | Corpus metadata and all 20 records, each with a `missing` field list. |
+| GET | `/api/record/<catalogue number>` | One record, or 404 `out_of_corpus`. |
+| POST | `/api/draft` | `{"catalogue_number": "...", "question": "..."}` → the full result object. |
 
-## Inline recommendation
+No CORS headers: the page and the API are the same origin. The server binds to
+`127.0.0.1` by default and has no write endpoints.
 
-Keep the browser UI on port `8000` and proxy backend requests through `server.py` only. The frontend should not connect directly to the checker or model adapter services. This makes refusal handling, grounding checks, and fallbacks easier to enforce in one place.
+## Why there is no model service yet
 
-## UI behavior implemented
+The proposal keeps the LLM pass optional and behind the same guardrails. When it is built,
+it belongs *behind* `grounding.py`: a rewrite is accepted only if it passes the same four
+checks and returns the same claim-to-field structure, with the offline draft as the
+fallback. That is why there is no `llm_adapter` port to wire up now — adding one before the
+check is enforced would put unverified prose in the label.
 
-- Fill or edit the record fields.
-- Generate a grounded draft.
-- Trigger a safe refusal when a required field is missing.
-- Show claim tags, citation tags, and grounding status.
+## Result object
 
-## Accessibility and review notes
-
-- Semantic sections and headings are used.
-- Form controls have labels.
-- The page is keyboard-friendly and remains readable at narrow widths.
-- The output keeps the proposal’s review wording: draft for curator review, not an official record.
+Every drafted result carries `label`, `claims` (`text`, `source_field`, `value_span`),
+`citations`, `padding`, `word_count` and `checks`. Every refusal carries `status`,
+`reason`, `reason_text` and `missing_fields`, with `label: null`. `--json` and
+`POST /api/draft` return the identical object.

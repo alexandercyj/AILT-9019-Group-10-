@@ -1,125 +1,153 @@
 <!doctype html>
-<html lang="en" data-page-node-id="LwDWMju4r0YQxqHiSBsxOd">
-<head data-page-node-id="C3JaBALiCbG7r4nUSy39aY">
-  <meta charset="UTF-8" data-page-node-id="eNQChPUhP0MvjiCgluQi68" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="Wvrw2nhQ7W1ZeptMZkWeSw" />
-  <meta name="description" content="Label Desk: grounded exhibition label drafting aid" data-page-node-id="eGzVG0TiWoLZVusyMglJib" />
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Label Desk: grounded exhibition label drafting aid" />
   <title>Label Desk | Grounded exhibition labels</title>
-  <link rel="stylesheet" href="styles.css" data-page-node-id="vEl2iEWoAC55bgSEYfax8e" />
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<body data-page-node-id="af657xUIJdexAwVz6b3Z8m">
-  <header class="topbar" data-page-node-id="Q22dRG3K149nFySsyd2SAt">
-    <div class="brand-wrap" data-page-node-id="LafpqrIJArGVGFek1A74HV">
-      <div class="brand-mark" data-page-node-id="4AUqMBobl46mjMLaK7ZQ0j">LD</div>
-      <div data-page-node-id="ZYlV0ETuAvkuybjYFfG7xH">
-        <p class="eyebrow" data-page-node-id="ifUm99j13WogLkNkgRWWSZ">AILT9019 · AI Literacy II</p>
-        <h1 data-page-node-id="xzVyM85h33uyWv64TA9BlW">Label Desk</h1>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-mark">LD</div>
+      <div>
+        <p class="eyebrow">AILT9019 · AI Literacy II</p>
+        <h1>Label Desk</h1>
       </div>
     </div>
-    <div class="top-actions" data-page-node-id="lwVo0h6Ycq4WGByDptw6J0">
-      <span class="status-pill" data-page-node-id="puDOXak5FPIjBTXrXb1wKz"><span class="status-dot" data-page-node-id="eFnH6ZnEVilBiDkreK0mkn"></span>Local workspace</span>
-      <button class="ghost-button" id="resetButton" data-page-node-id="k9khgkE1EwOpOKbiBjsWDq">Reset demo</button>
+    <div class="top-actions">
+      <span class="status-pill" id="serverStatus"><span class="status-dot"></span>Connecting</span>
+      <button class="ghost-button" id="resetButton" type="button">Reset</button>
     </div>
   </header>
 
-  <main class="app-shell" data-page-node-id="VQKpO73M6phnNaEFWTNhFY">
-    <section class="hero panel" data-page-node-id="0n1dLkeI2J2gi8XiwF9aC3">
-      <div data-page-node-id="3OaZOjCn0P6jduUK5eOJ0b">
-        <p class="eyebrow accent" data-page-node-id="bvpA73G2nDQ4Gx6iaqLgkF">GROUNDED LABEL DRAFTING AID</p>
-        <h2 data-page-node-id="LF6260qFcibrsOyH2jdBa3">Turn a catalogue record into a reviewable label.</h2>
-        <p class="hero-copy" data-page-node-id="nmdDXVxHnCi6onSRS0zjZa">Every claim stays linked to a source field. Missing evidence produces a refusal instead of an invented fact.</p>
+  <main class="app-shell">
+    <section class="hero panel">
+      <div>
+        <p class="eyebrow accent">GROUNDED LABEL DRAFTING AID</p>
+        <h2>Turn a catalogue record into a reviewable label.</h2>
+        <p class="hero-copy">
+          Every sentence is a claim tied to one field of the frozen record. The check below reads the
+          claims, not the prose. A record that cannot supply a required field is refused, never filled in.
+        </p>
       </div>
-      <div class="hero-metrics" data-page-node-id="4GG52B9CHpNaAFuUcbMDA0">
-        <div data-page-node-id="XMKsVEciFc0teQ11FqwVBN"><strong data-page-node-id="lzsD76BYbfLzupplgI6iG0">100%</strong><span data-page-node-id="G9Q8RQqJ9vCrQ2XojmpPjY">claim grounding target</span></div>
-        <div data-page-node-id="cLsMofo2b1dlbChtdGG5La"><strong data-page-node-id="9YKRyHec1jm77R3n2M5zGl">60–80</strong><span data-page-node-id="30tKhrlMB1z0CgavXGaKgx">label word range</span></div>
-        <div data-page-node-id="YY9WQvEizFE6kZFQr9tetv"><strong data-page-node-id="2tlVbH2nQJ21Ikn2C4Hxpa">0</strong><span data-page-node-id="tjvPvokF67VJXG7oyP6vB3">network calls required</span></div>
+      <div class="hero-metrics">
+        <div><strong>100%</strong><span>claim precision gate</span></div>
+        <div><strong>60–80</strong><span>label word band</span></div>
+        <div><strong>0</strong><span>network calls at run time</span></div>
       </div>
     </section>
 
-    <section class="workspace-grid" data-page-node-id="uF8me1XRjKtZsfCprqxxNV">
-      <div class="main-column" data-page-node-id="GYE72ZRRL3AGKFhvE5RQyP">
-        <section class="panel record-panel" data-page-node-id="PDdCU0XE7Oi6xdte7CMHMl">
-          <div class="section-heading" data-page-node-id="FtGKaYZPTyKDcxpIFZJw9l">
-            <div data-page-node-id="UXJMgyXqPgybh6KM5KZdtV">
-              <p class="eyebrow" data-page-node-id="cXECq2GzbnBKap8MGF8DfF">01 · INPUT RECORD</p>
-              <h3 data-page-node-id="o2jX1oDFqAs2RRTGo5DnaX">Catalogue record</h3>
+    <div class="banner" id="banner" hidden>
+      <b>Pipeline not reachable.</b>
+      <span>Start the local server with <code>python3 server.py</code>, then reload this page. The view calls the same Python pipeline as the command line.</span>
+    </div>
+
+    <section class="workspace-grid">
+      <div class="main-column">
+        <section class="panel record-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">01 · INPUT RECORD</p>
+              <h3>Catalogue record</h3>
             </div>
-            <span class="source-badge" data-page-node-id="Ax2QF9Lfj3Pjd3Cb4vRxVI">Frozen corpus · demo</span>
+            <span class="source-badge">Frozen corpus · CC0</span>
           </div>
-          <div class="record-layout" data-page-node-id="PPybEhMIHKCYECkreTk2fV">
-            <div class="object-preview" data-page-node-id="nAGDHznjFFBlIrxalWRe2v">
-              <div class="object-orbit" data-page-node-id="zCOByNv29K4aKgJ7UF7eKO"><div class="object-vase" data-page-node-id="edPXjnI0YS1GYYZzLdJQzC"></div></div>
-              <span class="object-caption" data-page-node-id="IQkuYABtksNqxHLEl84HSf">Object preview<br  data-page-node-id="Od8Sv8n8Xm2VZPo0WO5jtF"/><b data-page-node-id="aHPGAH7QJ09uxXvkoaNudz">CC0 source image placeholder</b></span>
+          <div class="record-layout">
+            <div class="object-preview">
+              <div class="object-orbit"><div class="object-vase"></div></div>
+              <span class="object-caption">
+                Object preview<br />
+                <b id="previewNumber">—</b><br />
+                <a id="sourceLink" href="#" target="_blank" rel="noopener">Met object record</a>
+              </span>
             </div>
-            <form id="recordForm" class="record-form" data-page-node-id="yNYEDtxUoGdh0qR8BgV2G6">
-              <label data-page-node-id="wJOMpmz2izsma15UigQoec">Catalogue number<input name="catalogueNumber" value="17.190.581" data-page-node-id="irXSzoWG9LXOvbcx5YGWwQ" /></label>
-              <label data-page-node-id="SiX4AS9lokyI7DsOx5hRsH">Title<input name="title" value="Vase with floral decoration" data-page-node-id="HyueJCpP7K9Cv8lIY6fFGY" /></label>
-              <label data-page-node-id="B5qenGz0HqeMxEcY1YX6Fv">Object date<input name="objectDate" value="18th century" data-page-node-id="6XUgka4dWhMfiwPCFsS43E" /></label>
-              <label data-page-node-id="AxDp3mouwO1ttUddQ4K6SL">Medium<input name="medium" value="Fritware, underglaze painted" data-page-node-id="9vNlqNqHlpHkat3o1GxzVX" /></label>
-              <label data-page-node-id="7NkxrnpW6cB5KQwAnk1LYy">Place or culture<input name="culture" value="probably Iran" data-page-node-id="sNNDOdKCCDWT64mEErMx3y" /></label>
-              <label data-page-node-id="XU1NS8ABZjQ7UaKgiWgs6v">Credit line<input name="creditLine" value="Gift of the Friends of Islamic Art" data-page-node-id="KcluExusQb5BvyjCQq1d9p" /></label>
-              <div class="form-actions" data-page-node-id="q1nLg4dbc5KUl1BXSwKCfg">
-                <button class="primary-button" type="submit" data-action="draft" data-page-node-id="3LY1psunsEvC3RiS13XXlR">Draft grounded label <span data-page-node-id="ofD1xe3wFsvLvC2aNTdAFu">→</span></button>
-                <button class="secondary-button" type="button" id="refusalButton" data-page-node-id="7gXBAvCKBoAuEP4qa52mXI">Test refusal path</button>
-                <button class="ghost-button" type="button" id="forceDraftButton" data-page-node-id="bnTFjvH7qYQR2jAcK0zHnh">Regenerate</button>
+            <form id="recordForm" class="record-form">
+              <label class="wide">Catalogue number<select id="catalogueSelect"></select></label>
+              <label>Title<input id="fieldTitle" readonly /></label>
+              <label>Object date<input id="fieldDate" readonly /></label>
+              <label class="wide">Medium<input id="fieldMedium" readonly /></label>
+              <label class="wide">Place or culture<input id="fieldCulture" readonly /></label>
+              <label class="wide">Credit line<input id="fieldCredit" readonly /></label>
+              <div class="form-actions">
+                <button class="primary-button" type="submit" id="draftButton">Draft grounded label <span>→</span></button>
+                <button class="secondary-button" type="button" id="refusalButton">Test refusal path</button>
               </div>
             </form>
           </div>
         </section>
 
-        <section class="panel output-panel" aria-live="polite" data-page-node-id="vb2hKUOcaFqJvomkQptYJ2">
-          <div class="section-heading" data-page-node-id="oNdowEN4w0A9p0b412S9wV">
-            <div data-page-node-id="qM9U8VsgJnJ0IiI4ZWsdLf">
-              <p class="eyebrow" data-page-node-id="E275rqODEOYdHn1i8zAQOy">02 · RESULT</p>
-              <h3 id="resultTitle" data-page-node-id="m0eprF6JftlbP46B0Bjujo">Grounded draft</h3>
+        <section class="panel output-panel" aria-live="polite">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">02 · RESULT</p>
+              <h3 id="resultTitle">Grounded draft</h3>
             </div>
-            <span class="result-status drafted" id="resultStatus" data-page-node-id="1FYIzXgDggrCrumEn7BFIY">DRAFTED</span>
+            <span class="result-status drafted" id="resultStatus">—</span>
           </div>
-          <div class="result-card" id="resultCard" data-page-node-id="a5Srn6yBUv5tGZs7EdV8Gt">
-            <p class="label-text" id="labelText" data-page-node-id="ZYPMfmVdosw406uXDxTaE9">This vase was made in the 18th century in probably Iran. It is made of fritware and is decorated with underglaze painting. The object is titled “Vase with floral decoration”. It is credited as a gift of the Friends of Islamic Art. Draft for curator review, not an official record.</p>
-            <div class="claim-list" id="claimList" data-page-node-id="d1udclnZPQz9h89p67NuqD"></div>
+          <div class="result-card" id="resultCard">
+            <p class="label-text" id="labelText">Choose a record and draft a label.</p>
+            <div class="claim-list" id="claimList"></div>
           </div>
-          <div class="citation-strip" id="citationStrip" data-page-node-id="l6dCaXi7BXAVMW6MhPDhHJ"></div>
+          <div class="citation-strip" id="citationStrip"></div>
         </section>
       </div>
 
-      <aside class="side-column" data-page-node-id="8fawX0iwXTL5WuWKPWzFmY">
-        <section class="panel check-panel" data-page-node-id="HemGDrN0Q3BSntUd4zqu0W">
-          <div class="section-heading compact" data-page-node-id="vrvZSrqXRpy8CXmqRd3ZGd"><div data-page-node-id="GyePFBHqNnkPzOLn6slkZY"><p class="eyebrow" data-page-node-id="dgQXsbVyZCdK3xf9eYD70Q">03 · SAFETY CHECK</p><h3 data-page-node-id="bGXB5xWazSb4rW7ZysnWWb">Grounding status</h3></div><span class="shield" data-page-node-id="QTVMg0Gtxc7Ryv5d3BjM1x">✓</span></div>
-          <div class="check-score" data-page-node-id="RmMOvLXPbNoTKtThdvtF8D"><strong id="scoreValue" data-page-node-id="qMJ3DtA4BqN66ZxGlYB46F">100%</strong><span data-page-node-id="6gHc1Y1LVlyo5pNz0l6IHg">checks passed</span></div>
-          <div class="check-list" id="checkList" data-page-node-id="h0BUsvxgAKwGuGm7dY6hOt">
-            <div class="check-row" data-page-node-id="PexRZKclj5zwTzDBANkYnb"><span class="check-icon" data-page-node-id="lv2oe7ESxFJ1TYTDwcIwi1">✓</span><div data-page-node-id="TFkYEbIBnkDQvGxLDTbOi6"><b data-page-node-id="w4xcB4dygn4LBCAogd3HCW">Field existence</b><small data-page-node-id="6iL2sLm1LMeg5nSukTTBaG">Every claim cites a supplied field.</small></div></div>
-            <div class="check-row" data-page-node-id="mvR3fbJIelZvlABJ63TmKG"><span class="check-icon" data-page-node-id="Tvtungfzij7lzLlWGy3VcR">✓</span><div data-page-node-id="js49EfIzoVdQn9S5xvtQx1"><b data-page-node-id="CztL46XE7DJLPnLQM4lsWG">Value containment</b><small data-page-node-id="J9jWwVndsoIgonzpeVY2hz">Named values stay inside their source.</small></div></div>
-            <div class="check-row" data-page-node-id="1tahTBqGEkyU8z8KBEGKK1"><span class="check-icon" data-page-node-id="EuqjHCkHYD8fmYxUHltj34">✓</span><div data-page-node-id="T4HbTjFEZPc94tHItxBLhc"><b data-page-node-id="MU1Ms82L2cAIU2oJWzktPD">Citation resolution</b><small data-page-node-id="KhK2IXb6QqRXqFQu0iEEZw">Printed citations resolve to the record.</small></div></div>
-            <div class="check-row" data-page-node-id="vG7MAeBs7zNW79vYGSfpIl"><span class="check-icon" data-page-node-id="Mk33pWiUK3ygHiHWE8idsC">✓</span><div data-page-node-id="v7Op6FHCUn5Jm3siIaCRH2"><b data-page-node-id="jG6fL10LBGBc1W8GaOuXRO">Readability band</b><small data-page-node-id="lqZfD5mm2qfSFoBzkEEXB6">Short sentences, 60–80 words.</small></div></div>
+      <aside class="side-column">
+        <section class="panel check-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">03 · SAFETY CHECK</p>
+              <h3>Grounding status</h3>
+            </div>
+            <span class="shield" id="shield">·</span>
+          </div>
+          <div class="check-score">
+            <strong id="scoreValue">—</strong>
+            <span id="scoreLabel">waiting for a draft</span>
+          </div>
+          <div class="check-list" id="checkList"></div>
+        </section>
+
+        <section class="panel ports-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">04 · REPRODUCE</p>
+              <h3>Same result from the CLI</h3>
+            </div>
+            <span class="link-icon">↗</span>
+          </div>
+          <p class="panel-note">This page calls the pipeline; it does not reimplement it.</p>
+          <div class="code-block" id="commandBlock">python3 -m labeldesk 14.40.377</div>
+          <div class="port-list">
+            <div class="port-row"><span class="file-chip">corpus</span><span class="port-line"></span><span class="port-value" id="corpusVersion">—</span></div>
+            <div class="port-row"><span class="file-chip">records</span><span class="port-line"></span><span class="port-value" id="corpusCount">—</span></div>
+            <div class="port-row"><span class="file-chip">sha256</span><span class="port-line"></span><span class="port-value" id="corpusChecksum">—</span></div>
           </div>
         </section>
 
-        <section class="panel ports-panel" data-page-node-id="7zitUSpnDBp29cuCAWhAQ4">
-          <div class="section-heading compact" data-page-node-id="mMElOnHFElxoucuKm3iNYU"><div data-page-node-id="GvBvXbdsI87RcrMaTLf4kU"><p class="eyebrow" data-page-node-id="7ehEw63JcCTBTZqC9RfJoe">04 · INTEGRATION</p><h3 data-page-node-id="rQfnUlcSEsb47HxYyjzjP6">Backend port map</h3></div><span class="link-icon" data-page-node-id="SoKCjkm5Cp8Z1gNZ5K9oxV">↗</span></div>
-          <p class="panel-note" data-page-node-id="ZRPalANHIOwzkiDTx4ZE6A">Suggested local connections for the planned files.</p>
-          <div class="port-list" data-page-node-id="qevmQqBddnRS8X61sayYcv">
-            <div class="port-row" data-page-node-id="fso7DPbVCtv7QG60cIGrjQ"><span class="file-chip" data-page-node-id="nakHojmESd7zY65Ftgu2Jm">server.py</span><span class="port-line" data-page-node-id="BShDD1hLdALHoKSUPPkp51"></span><span class="port-value" data-page-node-id="7UBz3ULHepgHBE3fDCmfp8">:8000</span></div>
-            <div class="port-row" data-page-node-id="V1ja2fNIipw20I2Edj1bPr"><span class="file-chip" data-page-node-id="GLeDBIDGZTcpeag3LM4mcQ">label_renderer.py</span><span class="port-line" data-page-node-id="hTC7qFFcr4PCGr1TqAkaaV"></span><span class="port-value" data-page-node-id="dxCkNnAcF7CKo9EIQogRpf">:8001</span></div>
-            <div class="port-row" data-page-node-id="bCsN2D8CYtMEdGPVcCnool"><span class="file-chip" data-page-node-id="apKmnFwICMDBe1HUWhlbp1">grounding_check.py</span><span class="port-line" data-page-node-id="YSUbRbtBPEMXCzLChA8Wej"></span><span class="port-value" data-page-node-id="E71gjVbKv0PIBER8DYvLBI">:8002</span></div>
-            <div class="port-row" data-page-node-id="dGcY5RFdS2RA9tmYA1lQBn"><span class="file-chip" data-page-node-id="TdEy4RLTk52dGm80pvotQ1">llm_adapter.py</span><span class="port-line" data-page-node-id="uChpWzO31242qyJto3Wxoc"></span><span class="port-value" data-page-node-id="N2He0GefHDaG9VVEHWaTKY">:8003</span></div>
-            <div class="port-row" data-page-node-id="vtzGEYVh39k58A0FHPcbzT"><span class="file-chip" data-page-node-id="CDK5YtmviK6nU03KleOwiD">frozen_corpus.json</span><span class="port-line" data-page-node-id="tcBxVGbfpAaa7F1JKvCZbH"></span><span class="port-value" data-page-node-id="LCAgY2kQbUYugHLRavGNd2">read-only</span></div>
+        <section class="panel notes-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">05 · WHAT IT REFUSES</p>
+              <h3>Designed refusals</h3>
+            </div>
           </div>
-          <div class="inline-suggestion" data-page-node-id="1xKP58bO0MGsMoAUNYhPNo"><span data-page-node-id="SZ8cfYGbvWCqIlbJ5RlpRi">Suggestion</span><p data-page-node-id="YI16tm97P4p0otSOEB8uCk">Keep the browser view on <b data-page-node-id="sTSX7IJvPEv444uac2v343">:8000</b>; proxy internal services through one API so the UI never needs direct access to the checker or LLM adapter.</p></div>
-        </section>
-
-        <section class="panel notes-panel" data-page-node-id="lbSpeDeOEKCQK3H5kGfvwn">
-          <div class="section-heading compact" data-page-node-id="sQXlbUnFMVn8lv4UVn35VC"><div data-page-node-id="yLXY7vcA1nu5bu90kGNweg"><p class="eyebrow" data-page-node-id="IurDwAfnBmx4Ldl2jzBuSX">05 · INLINE NOTES</p><h3 data-page-node-id="HgGEQTxL6vTqoB8VbGk76V">Implementation guidance</h3></div></div>
-          <ul class="notes-list" data-page-node-id="MaXn3msi7cvQIISQe4AbWP">
-            <li data-page-node-id="MUblmGJco8yEJ3g7OpiVzL"><b data-page-node-id="d4QkhalcdrC48EHATP7AAf">Refuse safely:</b> stop when a required field is missing or the request is out of scope.</li>
-            <li data-page-node-id="2o9zbFc9puf5neHfmQ5fNb"><b data-page-node-id="I3WKdmyJ1rxrIvhymWE9PZ">Preserve hedges:</b> keep words such as “probably”, “attributed to”, and “ca.”.</li>
-            <li data-page-node-id="dn62uo5vyhpPyVtH3KXlu7"><b data-page-node-id="1kIJRVDDDQTpvQu9Quo8Ch">Fallback first:</b> reject an unsafe model rewrite and keep the offline draft.</li>
+          <ul class="notes-list">
+            <li><b>Missing field:</b> a blank title, date, medium, place or credit line stops the draft.</li>
+            <li><b>Unknown number:</b> a catalogue number outside the corpus is refused, not approximated.</li>
+            <li><b>Out of scope:</b> value, authenticity, insurance and rights questions are declined.</li>
           </ul>
         </section>
       </aside>
     </section>
   </main>
-  <footer class="footer" data-page-node-id="rDklRHTeBh5z0ZAUDbiPbM"><span data-page-node-id="Hilot9Fuq4TFABBoixUyIV">Label Desk prototype</span><span data-page-node-id="ibM6HDzwHEKKMLA9hxnq4K">Offline-first · curator review required</span></footer>
+
+  <footer class="footer">
+    <span>Label Desk prototype · AILT9019 Group 10</span>
+    <span>Offline-first · curator review required</span>
+  </footer>
   <script src="app.js"></script>
 </body>
 </html>

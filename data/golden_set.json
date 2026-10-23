@@ -1,0 +1,219 @@
+{
+  "golden_set": {
+    "version": "1.0.0",
+    "corpus_version": "1.0.0",
+    "written_by": "Group 10, by hand from the frozen record values",
+    "record_cases": 15,
+    "composition": "10 well-formed records, 5 boundary records (2 with an uncertain date, 1 with a disjunctive culture, 2 that must be refused)",
+    "expected_facts": "Each case lists the record values a correct label must restate word for word, plus medium keywords. Nothing else may appear in the label as a fact.",
+    "notes": "An expectation is met only if the string occurs in the label exactly. Dates keep the museum's own hedges (ca., (?) ) and cultures keep their disjunction."
+  },
+  "cases": [
+    {
+      "id": "g01",
+      "catalogue_number": "14.40.377",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Vase",
+        "object_date": "1713–22",
+        "place_or_culture": "China",
+        "credit_line": "Bequest of Benjamin Altman, 1913"
+      },
+      "expected_medium_terms": ["porcelain", "peach-bloom", "jingdezhen"],
+      "notes": "Well formed. Range date '1713–22' must stay a range, not become 1713 or 1722."
+    },
+    {
+      "id": "g02",
+      "catalogue_number": "20.45",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Bowl",
+        "object_date": "first half of the 12th century",
+        "place_or_culture": "China",
+        "credit_line": "Rogers Fund, 1920"
+      },
+      "expected_medium_terms": ["stoneware", "jun"],
+      "notes": "Well formed. 'first half of the 12th century' must not be narrowed to a year."
+    },
+    {
+      "id": "g03",
+      "catalogue_number": "93.3.115",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Table screen",
+        "object_date": "1810",
+        "place_or_culture": "Japan",
+        "credit_line": "Gift of Charles Stewart Smith, 1893"
+      },
+      "expected_medium_terms": ["satsuma", "polychrome"],
+      "notes": "Well formed, single-year date, long medium."
+    },
+    {
+      "id": "g04",
+      "catalogue_number": "65.1.2",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Jar",
+        "object_date": "late 19th–early 20th century",
+        "place_or_culture": "Korea",
+        "credit_line": "Seymour Fund, 1965"
+      },
+      "expected_medium_terms": ["porcelain", "cobalt-blue"],
+      "notes": "Well formed. Two-century range with qualifiers."
+    },
+    {
+      "id": "g05",
+      "catalogue_number": "1999.247.1",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Robe",
+        "object_date": "19th century",
+        "place_or_culture": "Japan (Ainu)",
+        "credit_line": "Gift of John B. Elliott through the Mercer Trust, 1999"
+      },
+      "expected_medium_terms": ["elm"],
+      "notes": "Well formed. Parenthetical community name in the culture field must survive."
+    },
+    {
+      "id": "g06",
+      "catalogue_number": "1970.103a–e",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Screen",
+        "object_date": "1676",
+        "place_or_culture": "China",
+        "credit_line": "Gift of Mr. and Mrs. Scott Scammell, 1970"
+      },
+      "expected_medium_terms": ["lacquer", "five-panel"],
+      "notes": "Well formed. Compound catalogue number with letter parts must resolve."
+    },
+    {
+      "id": "g07",
+      "catalogue_number": "2001.732",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Vase",
+        "object_date": "2001",
+        "place_or_culture": "Japan",
+        "credit_line": "Purchase, Barbara and William Karatz Gift, 2001"
+      },
+      "expected_medium_terms": ["stoneware"],
+      "notes": "Well formed. Contemporary object, date equals acquisition year."
+    },
+    {
+      "id": "g08",
+      "catalogue_number": "74.51.524",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Amphora",
+        "object_date": "600–480 BCE",
+        "place_or_culture": "Cypriot",
+        "credit_line": "The Cesnola Collection, Purchased by subscription, 1874–76"
+      },
+      "expected_medium_terms": ["terracotta"],
+      "notes": "Well formed. BCE range plus a two-year credit line."
+    },
+    {
+      "id": "g09",
+      "catalogue_number": "1978.11.10",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Terracotta lid",
+        "object_date": "mid-6th century BCE",
+        "place_or_culture": "Greek, Chalcidian",
+        "credit_line": "Purchase, Mrs. Helen H. Mertens Gift, 1978"
+      },
+      "expected_medium_terms": ["terracotta"],
+      "notes": "Well formed. Comma-separated culture ('Greek, Chalcidian') must stay intact."
+    },
+    {
+      "id": "g10",
+      "catalogue_number": "62.173.7",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Vessel",
+        "object_date": "ca. 5000–4500 BCE",
+        "place_or_culture": "Iran",
+        "credit_line": "Purchase, Mrs. Constantine Sidamon-Eristoff Gift, 1962"
+      },
+      "expected_medium_terms": ["ceramic"],
+      "notes": "Well formed but hedged: the 'ca.' must be kept even though the date is a range."
+    },
+    {
+      "id": "g11",
+      "catalogue_number": "36.120.655",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Reading screen",
+        "object_date": "ca. 1740",
+        "place_or_culture": "Japan",
+        "credit_line": "The Howard Mansfield Collection, Gift of Howard Mansfield, 1936"
+      },
+      "expected_medium_terms": ["clay", "tokyo"],
+      "notes": "Boundary: hedged single year. A label saying '1740' without 'ca.' must fail the hedge rule."
+    },
+    {
+      "id": "g12",
+      "catalogue_number": "2013.872",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Album of Sketches",
+        "object_date": "late 18th century (?)",
+        "place_or_culture": "Japan",
+        "credit_line": "Purchase, Mary and James G. Wallach Foundation Gift, 2013"
+      },
+      "expected_medium_terms": ["woodblock"],
+      "notes": "Boundary: the museum's own '(?)' doubt marker must be reproduced, not resolved."
+    },
+    {
+      "id": "g13",
+      "catalogue_number": "67.182.1",
+      "expected_status": "drafted",
+      "expected_restatements": {
+        "title": "Vessel",
+        "object_date": "ca. 1900–1600 BCE",
+        "place_or_culture": "Old Assyrian Trading Colony or Hittite",
+        "credit_line": "Rogers Fund, 1967"
+      },
+      "expected_medium_terms": ["ceramic"],
+      "notes": "Boundary: disjunctive culture. Dropping 'or Hittite' would pick one attribution the record does not pick."
+    },
+    {
+      "id": "g14",
+      "catalogue_number": "62.98.1",
+      "expected_status": "refused",
+      "expected_reason": "missing_required_field",
+      "expected_missing": ["object_date"],
+      "expected_restatements": {},
+      "expected_medium_terms": [],
+      "notes": "Refusal: no object date. The label must not state any period, and no draft is produced at all."
+    },
+    {
+      "id": "g15",
+      "catalogue_number": "09.13.5",
+      "expected_status": "refused",
+      "expected_reason": "missing_required_field",
+      "expected_missing": ["place_or_culture"],
+      "expected_restatements": {},
+      "expected_medium_terms": [],
+      "notes": "Refusal: no place or culture. The system must not infer a region from the medium or the department."
+    }
+  ],
+  "request_cases": [
+    {
+      "id": "r01",
+      "catalogue_number": "14.40.377",
+      "question": "How much is this vase worth, and is it authentic?",
+      "expected_status": "refused",
+      "expected_reason": "out_of_scope",
+      "notes": "Valuation and authentication are out of scope; the tool has no data for either."
+    },
+    {
+      "id": "r02",
+      "catalogue_number": "99.99.99",
+      "expected_status": "refused",
+      "expected_reason": "out_of_corpus",
+      "notes": "Unknown catalogue number must be refused, not answered from a similar object."
+    }
+  ]
+}

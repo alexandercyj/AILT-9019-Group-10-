@@ -1,0 +1,104 @@
+{
+  "probes": {
+    "version": "1.0.0",
+    "purpose": "Hand-labelled single sentences that test the grounding rule itself, not the templates. 'fail' probes are sentences the checker must reject; 'pass' probes are sentences a curator would accept. A rejected 'pass' probe is a spurious rejection: it is reported as a diagnostic, because the check is deliberately conservative. An accepted 'fail' probe is unsound and fails the run.",
+    "probes": [
+      {
+        "id": "p01",
+        "field": "object_date",
+        "span": "ca. 1750",
+        "claim": "made around 1750",
+        "expect": "pass",
+        "why": "'around' is the same hedge family as 'ca.'"
+      },
+      {
+        "id": "p02",
+        "field": "object_date",
+        "span": "ca. 1750",
+        "claim": "made in the mid-18th century",
+        "expect": "fail",
+        "why": "a period the record never states; 'mid-18th century' is not in the value"
+      },
+      {
+        "id": "p03",
+        "field": "object_date",
+        "span": "18th century",
+        "claim": "made in the 18th century",
+        "expect": "pass",
+        "why": "plain restatement"
+      },
+      {
+        "id": "p04",
+        "field": "object_date",
+        "span": "18th century",
+        "claim": "made in 1750",
+        "expect": "fail",
+        "why": "narrows a century to a year the record never gives"
+      },
+      {
+        "id": "p05",
+        "field": "place_or_culture",
+        "span": "probably Iran",
+        "claim": "probably made in Iran",
+        "expect": "pass",
+        "why": "hedge kept, place restated"
+      },
+      {
+        "id": "p06",
+        "field": "place_or_culture",
+        "span": "probably Iran",
+        "claim": "made in Iran",
+        "expect": "fail",
+        "why": "drops the stated uncertainty"
+      },
+      {
+        "id": "p07",
+        "field": "place_or_culture",
+        "span": "Iran",
+        "claim": "made in Egypt",
+        "expect": "fail",
+        "why": "names a place the cited field does not contain"
+      },
+      {
+        "id": "p08",
+        "field": "credit_line",
+        "span": "Rogers Fund, 1920",
+        "claim": "The credit line reads: Rogers Fund, 1920.",
+        "expect": "pass",
+        "why": "credit line reproduced verbatim"
+      },
+      {
+        "id": "p09",
+        "field": "place_or_culture",
+        "span": "Old Assyrian Trading Colony or Hittite",
+        "claim": "made in Hittite",
+        "expect": "fail",
+        "why": "resolves a disjunction the record leaves open"
+      },
+      {
+        "id": "p10",
+        "field": "object_date",
+        "span": "late 18th century (?)",
+        "claim": "The catalogue dates it to late 18th century.",
+        "expect": "fail",
+        "why": "silently removes the museum's own doubt marker"
+      },
+      {
+        "id": "p11",
+        "field": "medium",
+        "span": "Porcelain with peach-bloom glaze (Jingdezhen ware)",
+        "claim": "The medium is recorded as \"Porcelain with peach-bloom glaze (Jingdezhen ware)\".",
+        "expect": "pass",
+        "why": "medium reproduced verbatim"
+      },
+      {
+        "id": "p12",
+        "field": "title",
+        "span": "Vase",
+        "claim": "The object is titled \"Vase\".",
+        "expect": "pass",
+        "why": "title reproduced verbatim"
+      }
+    ]
+  }
+}
