@@ -5,3 +5,7 @@ __pycache__/
 .DS_Store
 data/.rebuilt.json
 .workbuddy-ai/
+
+# local editor noise
+.Rhistory
+.DS_Store
