@@ -4,42 +4,95 @@ A cited, plain-language exhibition label drafted from one frozen museum record �
 machine check that every sentence in the label comes from a field of that record, and a
 refusal path for records that cannot supply one.
 
-AILT9019 Group 10. Midterm check, October 2026.
+AILT9019 Group 10. Midterm check, October 2026 · post-midterm work, November 2026.
 
 ---
 
 ## What works today
 
-One command takes a catalogue number from a frozen 20-record corpus of Met Open Access
-(CC0) objects and prints one of two things:
+One command takes a catalogue number from a frozen corpus of Met Open Access (CC0)
+objects and prints one of two things:
 
-- **drafted** — a 60–80 word label, five claims, five citations, and four automatic checks
-  that all pass;
+- **drafted** — a 60–80 word label, five claims, five citations, and four automatic
+  checks that all pass;
 - **refused** — a stated reason and no label text, for a record with a missing required
   field, a catalogue number outside the corpus, or an out-of-scope request.
 
-There is no model in the core path and no network call at run time. The same record always
-produces the same label.
+The core path has no model in it and makes no network call at run time. The same record
+always produces the same label.
+
+Three corpora ship, from two museums, and nothing in the package knows which is which:
+the field map and the licence live in the corpus file and in `data/sources.json`. Adding
+a museum is a data change, not a code change.
+
+An **optional model layer** sits behind the same check: `--llm` asks a model to reword
+the five sentences, and the rewrite is printed only if it passes the identical four
+checks and keeps at least as much of each field as the offline draft did. Otherwise the
+offline draft is printed and the rejection reason is recorded. Turning the model on can
+cost prose quality; it cannot cost a fact or a citation.
+
+| | |
+| --- | --- |
+| Corpora | 20 records (Met, 4 departments) · 10 (Met, Egyptian Art) · 10 (Cleveland Museum of Art) |
+| Sources checked | 7, of which 2 admitted, 2 refused, 1 deferred, 1 reference-only, 1 not frozen |
+| Tests | 191 |
+| Golden set | 17/17 cases, both model-off and model-on |
+| Cross-corpus run | 40 records, 0 check failures, 35/37 rewrites accepted |
+| Claim precision · citation resolution | 100% · 100%, every run |
+| Network at run time | none, unless `--llm` is passed |
+
+---
+
+## Open it without installing anything
+
+`labeldesk.html` is the whole thing in one file. Double-click it, or drag it into a
+browser. No Python, no server, no network, no key.
+
+It contains all 40 records from all three corpora, and for each one both the offline
+draft and the recorded model rewrite, computed by the real pipeline at build time. The
+page looks results up; it does not recompute them. So a label on that page is a label
+`python3 -m labeldesk` prints, byte for byte — and `tests/test_standalone.py` fails if
+that ever stops being true.
+
+What you can do in it: switch corpus, pick a record, toggle the model rewrite, type any
+catalogue number (it gets the real refusal), and ask a question (out-of-scope questions
+are declined with the CLI's own wording). It also prints the source register, so the
+two refusals are visible rather than described.
+
+```bash
+python3 tools/build_standalone.py          # rebuild labeldesk.html
+python3 tools/build_standalone.py --check  # is the shipped file stale?
+```
+
+The build is byte-reproducible: no timestamp goes into the file, only the corpus
+checksums and the prompt hash.
 
 ---
 
 ## Setup
 
-Requires Python 3.10 or newer. No third-party package is needed for the core path.
+Requires Python 3.10 or newer. The core path needs no third-party package.
 
 ```bash
 git clone https://github.com/alexandercyj/AILT-9019-Group-10-.git
 cd AILT-9019-Group-10-
 python3 --version          # 3.10 or newer
+python3 -m pip install -r requirements.txt   # pytest, and the optional model SDK
 ```
 
-`pytest` is the only dependency, and only for the test suite:
+Nothing to configure for the core path: no environment variables, no API key.
+
+**Only** if you want live model rewrites, put a key in `.env` (copied from
+`.env.example`, and git-ignored):
 
 ```bash
-python3 -m pip install -r requirements.txt
+cp .env.example .env
+# then edit .env and set LABELDESK_API_KEY
+python3 -m labeldesk --status      # shows the endpoint, the model, and whether a key is set
 ```
 
-Nothing to configure, no environment variables, no API key.
+Without a key, `--llm` replays the recorded responses in `data/llm_transcripts.json`.
+The model path is therefore demonstrable offline, which is the pre-agreed fallback.
 
 ---
 
@@ -54,19 +107,20 @@ python3 -m labeldesk 14.40.377
 Expected output (this is the whole result, not an extract):
 
 ```text
-Label Desk 1.0.0 · offline draft
+Label Desk 1.1.0 · offline draft
 Corpus  labeldesk-frozen-corpus v1.0.0 · 20 records · sha256 962e03aba0b6
-Record  14.40.377 · Vase · Met object 42229 · Asian Art
+Source  met · CC0-1.0 · robots no_restriction_published · ai_input yes
+Record  14.40.377 · Vase · object 42229 · Asian Art
 
 STATUS  DRAFTED
 Label   65 words (band 60–80)
 
-  The object is titled "Vase". The catalogue dates it to 1713–22. The medium is
-  recorded as "Porcelain with peach-bloom glaze (Jingdezhen ware)". Its place or
-  culture is given as China. The credit line reads: Bequest of Benjamin Altman,
-  1913. Every sentence above restates one field of the catalogue record. No fact
-  outside that record has been added. Draft for curator review, not an official
-  record.
+  The object is titled "Vase". The catalogue dates it to 1713–22. The
+  medium is recorded as "Porcelain with peach-bloom glaze (Jingdezhen
+  ware)". Its place or culture is given as China. The credit line reads:
+  Bequest of Benjamin Altman, 1913. Every sentence above restates one
+  field of the catalogue record. No fact outside that record has been
+  added. Draft for curator review, not an official record.
 
 Claims
   c1  title             -> "Vase"
@@ -81,12 +135,11 @@ Checks
   PASS  Citation resolution   5/5 citations pass
   PASS  Readability           1/1 label pass
   claim precision 100% · citation resolution 100% · average sentence 8.12 words
-
-  Draft for curator review, not an official record.
 ```
 
 Exit codes: `0` drafted and every check passed, `1` drafted but a check failed,
-`3` refused. Refusal is a designed outcome, so it gets its own code rather than an error.
+`3` refused, `4` the model layer was asked for and could not run. Refusal is a
+designed outcome, so it gets its own code rather than an error.
 
 ### Three sample catalogue numbers
 
@@ -99,11 +152,48 @@ Exit codes: `0` drafted and every check passed, `1` drafted but a check failed,
 Other entry points:
 
 ```bash
-python3 -m labeldesk --list                          # the 20 catalogue numbers
-python3 -m labeldesk --info                          # corpus metadata and checksum
+python3 -m labeldesk --list                          # the catalogue numbers in the corpus
+python3 -m labeldesk --info                          # corpus metadata, checksum, source policy
+python3 -m labeldesk --sources                       # the source register, and the corpus aliases
 python3 -m labeldesk 14.40.377 --json                # full machine-readable result
 python3 -m labeldesk 14.40.377 --ask "what is it worth?"   # out-of-scope refusal
+python3 -m labeldesk 29.3.1 --corpus egyptian        # second department (Met, Egyptian Art)
+python3 -m labeldesk 1970.36 --corpus cleveland      # second museum (Cleveland Museum of Art)
 ```
+
+`--corpus` takes a registered alias or a path. An alias that is not in
+`data/sources.json` is an error rather than a silent fallback to the default
+corpus, because reading the wrong records is worse than stopping.
+
+### Model layer (optional)
+
+```bash
+python3 -m labeldesk 14.40.377 --llm            # live call if a key is set, else replay
+python3 -m labeldesk 14.40.377 --llm --replay   # recorded response, no network, no key
+python3 -m labeldesk 1970.36 --corpus cleveland --llm --replay   # the model path on a third museum
+python3 -m labeldesk --status                   # endpoint, model, prompt hash, transcript count
+```
+
+The tail of a model-on run says what happened to the rewrite:
+
+```text
+  Model   deepseek-v4.1-flash · live · rewrite accepted (1 call)
+```
+
+or, when the guardrail fired:
+
+```text
+  Model   deepseek-v4.1-flash · replay · rewrite discarded: drops_field_content
+          {"reason": "drops_field_content", "field": "medium", "missing": ["both", "decorated", "faces", "glaz
+          offline draft printed instead (no-regression rule)
+```
+
+That example is real. The record's medium is a four-part description
+(`Clay; moulded frame and shaped supports glazed black; both faces of screen with ivory
+glaze, decorated with landscapes in black (Tokyo ware)`); the rewrite kept the first two
+parts, stopped at a semicolon, and cited what it kept. Every word it printed was true, the
+citation resolved, and the label had lost the ware. The `drops_field_content` rule is what
+catches that.
 
 ### Browser view (optional)
 
@@ -114,7 +204,8 @@ python3 server.py            # http://127.0.0.1:8000
 The page posts the selected catalogue number to the same Python pipeline and draws the
 result. It contains no second implementation of the renderer or the check, so the two
 paths cannot disagree. Add `#refuse` to the URL (`http://127.0.0.1:8000/#refuse`) to open
-on the refusal path.
+on the refusal path. A "Model rewrite" checkbox posts `{"llm": "auto"}`; unchecked, the
+page never asks for a model call.
 
 ---
 
@@ -133,8 +224,8 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `51 passed`. The suite is not a smoke test — it breaks the output on purpose and
-requires the check to catch it:
+Expected: `191 passed`. The suite is not a smoke test — it breaks the output on purpose
+and requires the check to catch it:
 
 | Test file | What it proves |
 | --- | --- |
@@ -144,14 +235,23 @@ requires the check to catch it:
 | `tests/test_grounding.py` | Invented place, narrowed date, dropped hedge and dropped `or` are rejected. |
 | `tests/test_render.py` | Long values are shortened to a prefix that still resolves. |
 | `tests/test_golden.py` | The evaluation below passes, and the CLI exit codes are right. |
+| `tests/test_llm.py` | 43 tests: every way a rewrite is discarded, transcript replay and scoping, stale prompt, no key, and that a refusal never reaches the model. |
+| `tests/test_second_corpus.py` | The second department drafts and refuses with no new code. |
+| `tests/test_third_corpus.py` | The second museum does too, on dates the team did not phrase. |
+| `tests/test_sources.py` | Every shipped corpus is registered, and the pipeline refuses the model for one that is not. |
+| `tests/test_import.py` | A CSV with an unquoted comma is refused rather than silently misaligned. |
+| `tests/test_standalone.py` | Every label in `labeldesk.html` equals a fresh pipeline run, and the file has no external reference. |
+| `tests/test_skill.py` | The skill file describes the program that actually runs. |
 
-### 3. The golden set
+### 3. The golden set, run twice
 
 ```bash
-python3 eval/evaluate.py
+python3 eval/evaluate.py                 # model off
+python3 eval/evaluate.py --llm --replay  # model on
+python3 eval/evaluate.py --compare       # the two side by side
 ```
 
-Expected:
+Expected, both runs:
 
 ```text
 Golden set · 17/17 cases passed
@@ -159,23 +259,62 @@ Golden set · 17/17 cases passed
   restatements           72/72  probe agreement 100%  (false accepts 0, spurious rejections 0)
 ```
 
+The model-on run adds one line:
+
+```text
+  rewrites               11/13 accepted  (85%), 2 discarded -> offline draft
+        - drops_field_content x 2
+```
+
 `data/golden_set.json` holds 15 record cases (10 well formed, 5 boundary) and 2 request
 cases, each with the record values a correct label must restate and the outcome it must
 produce. `eval/probes.json` holds 12 single sentences labelled pass or fail, which test the
-grounding rule rather than the templates. The script writes
-`eval/reports/golden_report.md` and `.json`; it exits `1` if any gate is missed.
+grounding rule rather than the templates.
 
-To reproduce the corpus byte for byte:
+Reports land in `eval/reports/`:
+
+| File | What it is |
+| --- | --- |
+| `golden_report.md` / `.json` | model off |
+| `golden_report_llm.md` / `.json` | model on, recorded — reproducible by anyone, no key |
+| `golden_report_llm_live.md` / `.json` | model on, live call on 1 Nov 2026, kept as evidence |
+| `model_comparison.md` | the two runs side by side, gate by gate |
+
+The committed model-on report is the recorded run, not the live one, because a live call
+is not reproducible. Both pass the same gates; the live run accepted one rewrite more.
+
+To reproduce any corpus byte for byte:
 
 ```bash
 python3 tools/fetch_corpus.py --check
+python3 tools/fetch_corpus.py --preset egyptian --check
+python3 tools/fetch_corpus.py --preset cleveland --check
 ```
+
+### 4. Every record in every corpus
+
+```bash
+python3 eval/cross_corpus.py
+```
+
+The golden set is 17 hand-picked cases with expectations the team wrote while looking at
+the same records. This is the other test: all 40 records across all three corpora, no
+per-record expectations, reporting only what the pipeline says about itself.
+
+```text
+cleveland  10 records · 10 drafted · 0 refused · 10/10 checks pass · rewrite 10 accepted, 0 discarded
+egyptian   10 records · 10 drafted · 0 refused · 10/10 checks pass · rewrite 10 accepted, 0 discarded
+primary    20 records · 17 drafted · 3 refused · 17/17 checks pass · rewrite 15 accepted, 2 discarded
+```
+
+Report: `eval/reports/cross_corpus.md`. Exit `1` if any drafted label fails a check in either
+mode, which makes it usable as a regression gate rather than only as a table.
 
 ---
 
 ## The core path, in five steps
 
-1. **Look up** the catalogue number in `data/frozen_corpus.json`. Not found → refused as
+1. **Look up** the catalogue number in the frozen corpus. Not found → refused as
    `out_of_corpus`; the system never describes a similar object instead.
 2. **Validate** the record against the five required fields: title, object date, medium,
    place or culture, credit line. Any blank → refused as `missing_required_field`, naming
@@ -202,6 +341,70 @@ it. Concretely, for the record value `probably Iran`:
 
 `eval/probes.json` holds these and nine more.
 
+The comparison is token-level, which is stricter than "no new facts" and has two
+consequences worth knowing. A word may be added only if it is on a short, documented
+**free-word list**: function words, field names, the verbs of the templates, and a
+reporting vocabulary (`keeps`, `states`, `gives`, `lists`) that describes the record
+rather than the object. And an apostrophe leaves a stray `s` token, so "the record's
+wording" is rejected where "the wording of the record" passes.
+
+---
+
+## The model layer
+
+```text
+record ──► source register: may these records be sent to a model at all?
+                    │
+        no ─────────┴─────────► policy_block, exit 4, nothing sent
+                    │ yes
+fact sheet + offline draft ──► model (temperature 0, prompt in prompts/rewrite.txt)
+                                        │
+                                        ▼
+                         claims + one source field each
+                                        │
+              ┌─────────────────────────┴──────────────────────────┐
+              ▼                                                    ▼
+     structure: 5 claims, one per field,       coverage: keeps at least as much
+     span occurs verbatim in the value         of each field as the offline draft
+              └─────────────────────────┬──────────────────────────┘
+                                        ▼
+                   the same four checks the offline draft faces
+                                        │
+                            accepted ───┴─── discarded → offline draft, reason logged
+```
+
+Why the layer is built this way:
+
+- **The licence is read before the call, not after it.** `sources.py` answers whether this
+  corpus's source permits `ai_input`. A corpus that is unregistered, or whose source says
+  no, never reaches the network — `attempts: 0`, reason `source_policy`, exit `4`. See
+  "Where the data comes from" above.
+- **The model returns structure, not prose.** It must answer with one claim per field and
+  the exact slice of that field each sentence restates. Prose alone is not accepted, so
+  there is nothing to re-check by hand.
+- **A fifth rule exists only for the model.** `drops_field_content` catches the one failure
+  the four checks cannot see: a rewrite that cites a *narrower* slice than the draft did.
+  Nothing false was added and the citation resolved — and the label quietly lost half of a
+  four-part medium description. Factual grounding cannot detect a subtraction; coverage can.
+- **The prompt is a file, and it is hashed.** `prompts/rewrite.txt` is the system message.
+  Each transcript entry stores the sha256 of the prompt that produced it, so editing the
+  prompt marks the transcript stale instead of silently replaying an answer to a question
+  that is no longer being asked.
+- **Record values are data, never instructions.** The fact sheet is sent as JSON in the
+  user message, and the prompt says so too. A field reading "ignore the rules" arrives
+  inside a string.
+- **The model reasons by default; it is switched off.** `deepseek-v4.1-flash` spends
+  tokens on a hidden reasoning trace before answering, and with a 900-token budget it
+  spent all of them there and returned an empty string. `enable_thinking: false` makes the
+  same request cost six completion tokens and makes temperature 0 mean something.
+
+What it actually buys, measured rather than claimed: 11 of 13 golden cases accepted on
+replay, 12 of 13 live, and 35 of 37 across all three corpora. The prose is a little more
+fluent ("The title given for the object is Vase" against the template's
+`The object is titled "Vase"`), and the structural constraint leaves little room for more.
+The full argument for keeping the layer, with the numbers and the conditions, is in
+`docs/MODEL_LAYER_DECISION.md`.
+
 ---
 
 ## Refusals
@@ -213,64 +416,229 @@ it. Concretely, for the record value `probably Iran`:
 | `99.99.99` | `out_of_corpus` | "… is not in the frozen corpus … the system does not describe a similar object from memory." |
 | `--ask "what is it worth?"` | `out_of_scope` | Valuation, authentication, insurance and rights are declined. |
 
+A refusal never reaches the model: the look-up and validation steps run first, so there is
+nothing for a model to be asked about.
+
+---
+
+## A second department, and a second museum
+
+`data/frozen_corpus_egyptian.json` holds 10 Egyptian Art records. The point is not the
+records but the field map: that department leaves `culture` blank and records place in
+`country`, so its corpus declares `"place_or_culture": ["country", "culture"]`. Nothing in
+`labeldesk/` knows this — the mapping lives in the corpus file, which is what makes the
+pipeline data-agnostic rather than Met-Asian-Art-shaped.
+
+```bash
+python3 -m labeldesk 29.3.1 --corpus egyptian
+python3 -m labeldesk 26.7.1460 --corpus egyptian --llm --replay
+```
+
+One record carries a `(?)` doubt marker and a disjunctive title ("Part (?) of a bracelet or
+armlet with uraei"), so the hedge rule is exercised on this data too.
+
+`data/frozen_corpus_cleveland.json` is the harder test: a different museum, a different
+API, and dates phrased by someone else. The team did not write `c. 1050`, `1100s` or
+`1800s, before 1896`; Cleveland did. A hedge rule that only works on phrasings we chose is
+not a rule, so this corpus is the check on it.
+
+```bash
+python3 -m labeldesk 1970.36 --corpus cleveland            # c. 1050 survives
+python3 -m labeldesk 1926.428 --corpus cleveland --llm     # c. 1160–1170 survives a rewrite
+python3 -m labeldesk --corpus cleveland --list
+```
+
+All 10 records draft with the four checks passing, and all 10 rewrites are accepted on
+replay. `eval/cross_corpus.py` runs every record in every corpus and writes
+`eval/reports/cross_corpus.md`:
+
+| corpus | records | drafted | refused | checks pass | rewrite accepted |
+| --- | --- | --- | --- | --- | --- |
+| cleveland | 10 | 10 | 0 | 10/10 | 10 |
+| egyptian | 10 | 10 | 0 | 10/10 | 10 |
+| primary | 20 | 17 | 3 | 17/17 | 15 (2 discarded) |
+
+---
+
+## Where the data comes from, and what the sources allow
+
+`data/sources.json` is a register of every source that was examined, not only the ones
+that were used. Each entry records what the host publishes about automated access (the
+file, its HTTP status, a sha256 prefix, and the verdict drawn from it), the terms for the
+records as distinct from the terms for the website, and whether a record may be used as
+label input at all.
+
+```bash
+python3 -m labeldesk --sources          # the register as a table, plus the corpus aliases
+python3 tools/check_sources.py          # re-fetch every robots.txt and report drift
+```
+
+```text
+SOURCE          ROBOTS                    LICENCE                    AI   DECISION
+met             no_restriction_published  CC0-1.0                    yes  admitted
+cleveland       allowed                   CC0-1.0                    yes  admitted
+british-museum  restricted                no-open-licence-published  no   refused
+palace-museum   not_published             no-open-licence-published  no   refused
+artic           unreachable               CC0-1.0                    no   deferred
+wikidata        allowed                   CC0-1.0                    yes  reference_only
+nga             not_applicable            CC0-1.0                    yes  admitted_not_frozen
+```
+
+Two of these are refusals, and they are refusals of the brief: the post-midterm note asked
+for the Palace Museum and the British Museum specifically. Both were checked, both were
+rejected, and neither was worked around.
+
+- **The British Museum** serves `Content-Signal: search=yes, ai-train=no, use=reference`
+  and disallows the major training crawlers, publishes no open licence for collection
+  records, and answers non-browser clients with a Cloudflare challenge. Getting past that
+  challenge would be evasion, not permission.
+- **The Palace Museum** returns a 70-byte meta refresh where `robots.txt` should be, has no
+  open data licence, no API, and no reachable collection endpoint. A missing `robots.txt`
+  is not a grant.
+
+The register is not decoration. `pipeline.draft()` asks `sources.ai_input_allowed()`
+*before* the model step, so a corpus whose source forbids `ai_input` — or which is not
+registered at all — cannot reach the network through `--llm`, whichever entry point is
+used. The offline draft is unaffected; the request loses its rewrite and exits `4`.
+
+```bash
+python3 -m labeldesk 1970.36 --corpus cleveland --llm --replay
+#   Model   deepseek-v4.1-flash · replay · rewrite accepted (1 call)
+
+python3 -m labeldesk 1970.36 --corpus /tmp/unregistered.json --llm --replay
+#   Model   … · refused before sending: source_policy
+#           source unregistered · licence not on file · ai_input not granted
+#           offline draft printed instead; no record left this machine
+```
+
+Records from a refused source can still be used by someone entitled to hold them, through
+`tools/import_records.py`: a CSV of the five fields plus the licence the importer asserts
+and the basis on which they hold it. `--ai-input` is off by default there too — asserting a
+licence to read records is not asserting a licence to send them to a model.
+
+`docs/DATA_SOURCES.md` records the full reasoning, source by source.
+
+---
+
+## Calling it from another agent environment
+
+`skills/labeldesk/SKILL.md` is a single-file contract for another agent: the invocation,
+the result shape, the three refusal reasons, and six guardrails the caller must keep (never
+turn a refusal into prose, never fill a blank field, check `checks.passed` before quoting,
+always print the notice). The document is tested against the program, so it cannot drift
+into describing a tool that does not exist.
+
+---
+
+## Curator review
+
+`docs/REVIEW_CHECKLIST.md` is the human half of the system: six groups of yes/no questions
+covering traceability, hedges, wording, readability, framing and sign-off. The tool can
+prove a label is grounded; it cannot prove it is good, and the checklist is where that
+judgement is recorded.
+
 ---
 
 ## Repository map
 
 ```text
+labeldesk.html        the whole thing in one file: open it, no install, no server
+standalone/
+  template.html       the page shell, with three inline markers
+  standalone.css      the styles the standalone page adds to styles.css
+  standalone.js       presentation only: it looks results up, it does not compute them
 labeldesk/            core pipeline, standard library only
   corpus.py           loading, checksum, required-field list
   validate.py         missing-field detection
   factsheet.py        fact sheet with a pointer per value
   render.py           deterministic renderer and claim emission
   grounding.py        the four checks
-  pipeline.py         draft / refuse orchestration
+  llm.py              optional model layer, behind the same checks
+  sources.py          the source register: what may be done with a corpus
+  pipeline.py         draft / refuse orchestration, including the licence gate
   cli.py              command-line entry point
+prompts/rewrite.txt   the guardrail prompt, hashed into every transcript
 server.py             local server for the browser view
 index.html            browser view (one page)
 app.js                browser view logic: calls /api/draft, no logic of its own
 styles.css            styling
+skills/labeldesk/     single-file skill contract for other agent environments
 data/
-  frozen_corpus.json  20 Met Open Access records, values copied verbatim
+  frozen_corpus.json            20 Met Open Access records, values copied verbatim
   frozen_corpus.sha256
-  golden_set.json     15 record cases + 2 request cases, hand-written expectations
+  frozen_corpus_egyptian.json   10 Egyptian Art records, second department
+  frozen_corpus_egyptian.sha256
+  frozen_corpus_cleveland.json  10 Cleveland Museum of Art records, second museum
+  frozen_corpus_cleveland.sha256
+  sources.json                  every source examined: robots, licence, policy, decision
+  golden_set.json               15 record cases + 2 request cases, hand-written expectations
+  llm_transcripts.json          37 recorded model responses, keyed by corpus
 eval/
-  evaluate.py         golden-set scorer, writes eval/reports/
+  evaluate.py         golden-set scorer, --llm and --compare, writes eval/reports/
+  cross_corpus.py     every record in every corpus, both modes, no per-record expectations
   probes.json         12 hand-labelled sentences for the grounding rule
-tests/                pytest suite (51 tests)
-tools/fetch_corpus.py rebuild the corpus from the Met API (not needed to run)
-docs/DEMO_SCRIPT.md   shot list for the 60-second recording
+tests/                pytest suite (191 tests)
+tools/
+  fetch_corpus.py     rebuild any corpus from its museum API (--preset, --check)
+  check_sources.py    re-fetch every robots.txt and report drift against the register
+  import_records.py   bring in records by hand and register the licence asserted
+  build_standalone.py build labeldesk.html from a fresh run of the pipeline
+  record_transcripts.py  record or verify the model transcripts
+docs/
+  DATA_SOURCES.md     why each source was admitted, refused or deferred
+  DEMO_SCRIPT.md      shot list for the 60-second recording
+  REVIEW_CHECKLIST.md the curator's half of the system
+  MODEL_LAYER_DECISION.md  the Week 10 keep-or-cut decision, with evidence
 ```
 
 ## Data
 
-- Source: The Metropolitan Museum of Art Open Access, CC0 1.0. Field values in
-  `data/frozen_corpus.json` are copied verbatim from the object records; blanks are the
-  museum's own blanks, not missing data introduced by the team.
-- Corpus checksum: `962e03aba0b6ff94b53a7822f0c59f2e1c2b6157a58586664df4dfa3a1e97158`
-- Frozen on 2026-10-23. Six of the 20 records are boundary cases, kept on purpose so the
-  refusal path can be demonstrated without inventing a broken record.
+- Sources: The Metropolitan Museum of Art Open Access and The Cleveland Museum of Art Open
+  Access, both CC0 1.0. Field values in the corpus files are copied verbatim from the object
+  records; blanks are the museum's own blanks, not missing data introduced by the team.
+- Primary corpus checksum: `962e03aba0b6ff94b53a7822f0c59f2e1c2b6157a58586664df4dfa3a1e97158`
+- Egyptian corpus checksum: `f070a5bc801c1bdc922d7820e6b6de3c1c3374d51ee4783a6d404a69af5d94e8`
+- Cleveland corpus checksum: `bad1b2fe313b884babe013b9b439390456f33b5d314d9b55b431316dfebb34e5`
+- Frozen 2026-10-23 (primary) and 2026-11-01 (Egyptian, Cleveland). Six of the primary
+  records are boundary cases, kept on purpose so the refusal path can be demonstrated
+  without inventing a broken record.
+- `fetched_at` is pinned per preset, not read from the clock, so `--check` is a real test
+  rather than a same-day coincidence. All three corpora rebuild byte-identically.
+- The Cleveland corpus is filtered to `share_license_status == "CC0"` at fetch time, so
+  nothing outside the open-access set can reach the file.
 
 ## What this does not do
 
 It does not authenticate, appraise, price, insure or clear rights for any object. It does
 not replace the curator's judgement or the museum's record. It does not process personal
-data — the corpus contains none. Every label ends with the same notice: *draft for curator
-review, not an official record*.
+data — the corpora contain none. It does not crawl a museum that has not granted access:
+two were asked and refused, and the refusal is recorded rather than routed around. Every
+label ends with the same notice: *draft for curator review, not an official record*.
 
 ## Known limitations
 
 - **The word band is met partly with framing sentences.** A record with short field values
   would render under 60 words, so the renderer appends one or two carrier-only sentences
   ("No fact outside that record has been added."). They add no facts and are listed in the
-  output as `padding`, but they are not exhibition prose.
-- **The check is conservative.** It can reject a sentence a curator would accept, for
-  example a paraphrase that reorders a value. Rejections are returned with a reason and
-  counted in the evaluation rather than tuned away.
-- **Five fields, one template set.** The renderer has no grammar of its own; a record whose
-  medium is a long list is quoted, not summarised.
-- **No model layer yet.** The optional LLM pass in the proposal is not built. The offline
-  draft is the whole system, which is the pre-agreed fallback.
+  output as `padding`, but they are not exhibition prose. Egyptian records, whose medium is
+  one word ("Granite"), lean on this most.
+- **The check is conservative.** It can reject a sentence a curator would accept — a
+  paraphrase that reorders a value, or a possessive. Rejections are returned with a reason
+  and counted in the evaluation rather than tuned away.
+- **Five fields, one claim each.** The renderer has no grammar of its own, and the model may
+  not merge two fields into one sentence, so the prose ceiling is low by construction. That
+  constraint is what makes the check exact.
+- **The model is accepted on most records, not all.** 11 of 13 on the recorded golden run,
+  35 of 37 across all three corpora. A discarded rewrite costs nothing but fluency; the
+  label that prints is the offline draft.
+- **`--llm` is not the default and should not be.** A reader who never passes it never
+  touches the network, and the offline path is the one the evaluation treats as canonical.
+- **Three corpora is not a survey.** They were chosen because their sources permit the use,
+  which is a selection effect: a museum that refuses automated access also tends not to
+  publish the kind of record this tool needs. The pipeline is museum-agnostic; the evidence
+  is two museums wide.
+- **The corpus is 30 records, not a collection.** It is frozen so a run needs no network and
+  so a reader can tell exactly which records an output came from.
 
 ## Troubleshooting
 
@@ -280,3 +648,7 @@ review, not an official record*.
 | `pytest: command not found` | `python3 -m pytest -q` after `python3 -m pip install -r requirements.txt`. |
 | Browser view says "Pipeline not reachable" | `python3 server.py` in another terminal, then reload. |
 | Port 8000 already in use | `python3 server.py --port 8080`. |
+| `--llm` says `rewrite discarded: no_key` | No key in `.env` and no live call attempted. Drop `--llm`, or add a key, or use `--llm --replay`. |
+| `--llm` says `transcript_stale` | `prompts/rewrite.txt` changed after the transcript was recorded. Re-record with `python3 tools/record_transcripts.py --force`. |
+| `--llm` says `not_json` | The model answered in prose. It is a rejection by design, not a crash; the offline draft prints. |
+| `--llm` is slow the first time | A live call with a cold prompt cache. `--llm --replay` is instant. |

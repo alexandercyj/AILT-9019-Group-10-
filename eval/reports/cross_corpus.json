@@ -1,0 +1,121 @@
+{
+  "generated": "2026-11-01T12:41:43.555456+00:00",
+  "runs": [
+    {
+      "alias": "cleveland",
+      "offline": {
+        "records": 10,
+        "counts": {
+          "drafted": 10,
+          "drafted_checks_passed": 10
+        },
+        "reasons": {},
+        "mean_words": 64.7,
+        "mean_sentence": 7.37,
+        "failures": []
+      },
+      "llm": {
+        "records": 10,
+        "counts": {
+          "drafted": 10,
+          "drafted_checks_passed": 10,
+          "rewrite_accepted": 10
+        },
+        "reasons": {},
+        "mean_words": 65.1,
+        "mean_sentence": 7.7,
+        "failures": []
+      },
+      "provenance": {
+        "id": "cleveland",
+        "name": "The Cleveland Museum of Art Open Access",
+        "license": "CC0-1.0",
+        "homepage": "https://www.clevelandart.org/",
+        "registered": true,
+        "ai_input": true,
+        "robots_verdict": "allowed",
+        "decision": "admitted"
+      }
+    },
+    {
+      "alias": "egyptian",
+      "offline": {
+        "records": 10,
+        "counts": {
+          "drafted": 10,
+          "drafted_checks_passed": 10
+        },
+        "reasons": {},
+        "mean_words": 62.6,
+        "mean_sentence": 6.86,
+        "failures": []
+      },
+      "llm": {
+        "records": 10,
+        "counts": {
+          "drafted": 10,
+          "drafted_checks_passed": 10,
+          "rewrite_accepted": 10
+        },
+        "reasons": {},
+        "mean_words": 63.7,
+        "mean_sentence": 7.32,
+        "failures": []
+      },
+      "provenance": {
+        "id": "met",
+        "name": "The Metropolitan Museum of Art Open Access",
+        "license": "CC0-1.0",
+        "homepage": "https://www.metmuseum.org/",
+        "registered": true,
+        "ai_input": true,
+        "robots_verdict": "no_restriction_published",
+        "decision": "admitted"
+      }
+    },
+    {
+      "alias": "primary",
+      "offline": {
+        "records": 20,
+        "counts": {
+          "drafted": 17,
+          "drafted_checks_passed": 17,
+          "refused": 3
+        },
+        "reasons": {
+          "missing_required_field": 3
+        },
+        "mean_words": 63.9,
+        "mean_sentence": 7.99,
+        "failures": []
+      },
+      "llm": {
+        "records": 20,
+        "counts": {
+          "drafted": 17,
+          "drafted_checks_passed": 17,
+          "rewrite_accepted": 15,
+          "rewrite_discarded": 2,
+          "refused": 3
+        },
+        "reasons": {
+          "discarded:drops_field_content": 2,
+          "missing_required_field": 3
+        },
+        "mean_words": 64.1,
+        "mean_sentence": 8.43,
+        "failures": []
+      },
+      "provenance": {
+        "id": "met",
+        "name": "The Metropolitan Museum of Art Open Access",
+        "license": "CC0-1.0",
+        "homepage": "https://www.metmuseum.org/",
+        "registered": true,
+        "ai_input": true,
+        "robots_verdict": "no_restriction_published",
+        "decision": "admitted"
+      }
+    }
+  ]
+}

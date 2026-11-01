@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Label Desk: a standalone, self-contained view of the grounded exhibition label pipeline" />
+  <title>Label Desk · standalone</title>
+  <style>
+/*INLINE:CSS*/
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-mark">LD</div>
+      <div>
+        <p class="eyebrow">AILT9019 · AI Literacy II · Group 10</p>
+        <h1>Label Desk</h1>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="status-pill" id="serverStatus"><span class="status-dot"></span>Standalone file</span>
+      <button class="ghost-button" id="resetButton" type="button">Reset</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="hero panel">
+      <div>
+        <p class="eyebrow accent">GROUNDED LABEL DRAFTING AID</p>
+        <h2>Turn a catalogue record into a reviewable label.</h2>
+        <p class="hero-copy">
+          Every sentence is a claim tied to one field of a frozen record. The check reads the
+          claims, not the prose. A record that cannot supply a required field is refused, never
+          filled in. This file needs no server: open it and it works.
+        </p>
+      </div>
+      <div class="hero-metrics">
+        <div><strong id="metricRecords">—</strong><span>records, three corpora</span></div>
+        <div><strong>100%</strong><span>claim precision gate</span></div>
+        <div><strong>0</strong><span>network calls, ever</span></div>
+      </div>
+    </section>
+
+    <div class="banner snapshot-banner">
+      <b>This is a snapshot, not a second implementation.</b>
+      <span>
+        Every label, claim, citation and check below was produced by the real Python pipeline at
+        build time (<code>tools/build_standalone.py</code>) and is embedded here verbatim. The page
+        looks results up; it does not compute them. Reproduce any of them with the command shown in
+        <em>04 · REPRODUCE</em>.
+      </span>
+    </div>
+
+    <section class="workspace-grid">
+      <div class="main-column">
+        <section class="panel record-panel">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">01 · INPUT RECORD</p>
+              <h3>Catalogue record</h3>
+            </div>
+            <span class="source-badge" id="sourceBadge">Frozen corpus</span>
+          </div>
+
+          <div class="corpus-tabs" id="corpusTabs" role="tablist" aria-label="Corpus"></div>
+
+          <div class="record-layout">
+            <div class="object-preview">
+              <div class="object-orbit"><div class="object-vase"></div></div>
+              <span class="object-caption">
+                Object preview<br />
+                <b id="previewNumber">—</b><br />
+                <a id="sourceLink" href="#" target="_blank" rel="noopener">Museum record</a>
+              </span>
+            </div>
+            <form id="recordForm" class="record-form">
+              <label class="wide">Catalogue number<select id="catalogueSelect"></select></label>
+              <label>Title<input id="fieldTitle" readonly /></label>
+              <label>Object date<input id="fieldDate" readonly /></label>
+              <label class="wide">Medium<input id="fieldMedium" readonly /></label>
+              <label class="wide">Place or culture<input id="fieldCulture" readonly /></label>
+              <label class="wide">Credit line<input id="fieldCredit" readonly /></label>
+              <div class="form-actions">
+                <button class="primary-button" type="submit" id="draftButton">Draft grounded label <span>→</span></button>
+                <button class="secondary-button" type="button" id="refusalButton">Test refusal path</button>
+              </div>
+              <label class="toggle wide">
+                <input type="checkbox" id="llmToggle" />
+                <span>
+                  Model rewrite (recorded). Kept only if it passes the same four checks; otherwise
+                  the offline draft is shown and the reason is reported.
+                </span>
+              </label>
+            </form>
+          </div>
+
+          <div class="probe-row">
+            <label class="probe">
+              Any catalogue number
+              <input id="probeNumber" placeholder="e.g. 99.99.99" autocomplete="off" />
+            </label>
+            <button class="ghost-button" type="button" id="probeButton">Look it up</button>
+          </div>
+          <div class="probe-row">
+            <label class="probe">
+              Ask a question
+              <input id="probeQuestion" placeholder='e.g. "what is it worth?"' autocomplete="off" />
+            </label>
+            <button class="ghost-button" type="button" id="askButton">Ask</button>
+          </div>
+        </section>
+
+        <section class="panel output-panel" aria-live="polite">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">02 · RESULT</p>
+              <h3 id="resultTitle">Grounded draft</h3>
+            </div>
+            <span class="result-status drafted" id="resultStatus">—</span>
+          </div>
+          <div class="result-card" id="resultCard">
+            <p class="label-text" id="labelText">Choose a record and draft a label.</p>
+            <div class="claim-list" id="claimList"></div>
+          </div>
+          <div class="citation-strip" id="citationStrip"></div>
+          <p class="panel-note" id="modelNote" hidden></p>
+          <p class="panel-note reason-note" id="reasonNote" hidden></p>
+        </section>
+      </div>
+
+      <aside class="side-column">
+        <section class="panel check-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">03 · SAFETY CHECK</p>
+              <h3>Grounding status</h3>
+            </div>
+            <span class="shield" id="shield">·</span>
+          </div>
+          <div class="check-score">
+            <strong id="scoreValue">—</strong>
+            <span id="scoreLabel">waiting for a draft</span>
+          </div>
+          <div class="check-list" id="checkList"></div>
+        </section>
+
+        <section class="panel ports-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">04 · REPRODUCE</p>
+              <h3>Same result from the CLI</h3>
+            </div>
+            <span class="link-icon">↗</span>
+          </div>
+          <p class="panel-note">This page shows the pipeline's output; it does not reimplement it.</p>
+          <div class="code-block" id="commandBlock">python3 -m labeldesk 14.40.377</div>
+          <div class="port-list">
+            <div class="port-row"><span class="file-chip">corpus</span><span class="port-line"></span><span class="port-value" id="corpusVersion">—</span></div>
+            <div class="port-row"><span class="file-chip">records</span><span class="port-line"></span><span class="port-value" id="corpusCount">—</span></div>
+            <div class="port-row"><span class="file-chip">sha256</span><span class="port-line"></span><span class="port-value" id="corpusChecksum">—</span></div>
+            <div class="port-row"><span class="file-chip">source</span><span class="port-line"></span><span class="port-value" id="corpusSource">—</span></div>
+          </div>
+        </section>
+
+        <section class="panel notes-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">05 · WHAT IT REFUSES</p>
+              <h3>Designed refusals</h3>
+            </div>
+          </div>
+          <ul class="notes-list">
+            <li><b>Missing field:</b> a blank title, date, medium, place or credit line stops the draft.</li>
+            <li><b>Unknown number:</b> a catalogue number outside the corpus is refused, not approximated.</li>
+            <li><b>Out of scope:</b> value, authenticity, insurance and rights questions are declined.</li>
+            <li><b>Source policy:</b> a corpus whose source forbids it never reaches the model at all.</li>
+          </ul>
+        </section>
+
+        <section class="panel sources-panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">06 · SOURCES</p>
+              <h3>What was admitted, what was refused</h3>
+            </div>
+          </div>
+          <p class="panel-note">
+            Seven sources were examined by reading their robots files. Two museums were refused,
+            and the refusal is recorded rather than routed around.
+          </p>
+          <div class="source-table-wrap">
+            <table class="source-table" id="sourceTable"></table>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Label Desk · AILT9019 Group 10 · built from <span id="footerCorpora">—</span></span>
+    <span id="footerHash">—</span>
+  </footer>
+
+  <script type="application/json" id="labeldesk-data">
+/*INLINE:DATA*/
+  </script>
+  <script>
+/*INLINE:JS*/
+  </script>
+</body>
+</html>

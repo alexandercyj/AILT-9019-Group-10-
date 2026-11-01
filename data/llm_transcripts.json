@@ -1,0 +1,1031 @@
+{
+  "meta": {
+    "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+    "model": "deepseek-v4.1-flash",
+    "note": "Raw model responses, one per catalogue number, re-parsed and re-checked on replay. Editing prompts/rewrite.txt invalidates every entry.",
+    "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+    "recorded_at": "2026-11-01T12:34:14Z",
+    "temperature": 0.0
+  },
+  "transcripts": {
+    "labeldesk-cleveland-corpus::1919.1.1": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1919.1.1",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Stained Glass Panel with Male Donor",
+      "recorded_at": "2026-11-01T12:34:06Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Stained Glass Panel with Male Donor.\", \"source_field\": \"title\", \"value_span\": \"Stained Glass Panel with Male Donor\"},\n  {\"text\": \"The catalogue dates the object to c. 1480.\", \"source_field\": \"object_date\", \"value_span\": \"c. 1480\"},\n  {\"text\": \"The medium is listed as pot metal, white glass with silver stain.\", \"source_field\": \"medium\", \"value_span\": \"pot metal, white glass with silver stain\"},\n  {\"text\": \"The place or culture given for the object is France.\", \"source_field\": \"place_or_culture\", \"value_span\": \"France\"},\n  {\"text\": \"The credit line reads Dudley P. Allen Fund.\", \"source_field\": \"credit_line\", \"value_span\": \"Dudley P. Allen Fund\"}\n]}",
+      "usage": {
+        "completion_tokens": 198,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 198
+        },
+        "prompt_tokens": 2336,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2336
+        },
+        "total_tokens": 2534
+      }
+    },
+    "labeldesk-cleveland-corpus::1926.428": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1926.428",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Pendant with the Virgin and Child",
+      "recorded_at": "2026-11-01T12:34:08Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given is Pendant with the Virgin and Child.\", \"source_field\": \"title\", \"value_span\": \"Pendant with the Virgin and Child\"},\n  {\"text\": \"The catalogue dates the object to c. 1160–1170.\", \"source_field\": \"object_date\", \"value_span\": \"c. 1160–1170\"},\n  {\"text\": \"The medium is gilded copper, champlevé enamel; the reverse decorated in vernis brun.\", \"source_field\": \"medium\", \"value_span\": \"gilded copper, champlevé enamel; the reverse decorated in vernis brun\"},\n  {\"text\": \"The place or culture is listed as Mosan, Meuse Valley, Romanesque period, 12th century.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Mosan, Meuse Valley, Romanesque period, 12th century\"},\n  {\"text\": \"The credit line reads Purchase from the J. H. Wade Fund.\", \"source_field\": \"credit_line\", \"value_span\": \"Purchase from the J. H. Wade Fund\"}\n]}",
+      "usage": {
+        "completion_tokens": 247,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 247
+        },
+        "prompt_tokens": 2419,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2419
+        },
+        "total_tokens": 2666
+      }
+    },
+    "labeldesk-cleveland-corpus::1935.310": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1935.310",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Disk Pendant (akrafokɔnmu)",
+      "recorded_at": "2026-11-01T12:34:11Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title of the object is Disk Pendant (akrafokɔnmu).\", \"source_field\": \"title\", \"value_span\": \"Disk Pendant (akrafokɔnmu)\"},\n  {\"text\": \"The catalogue dates the object to 1800s, before 1896.\", \"source_field\": \"object_date\", \"value_span\": \"1800s, before 1896\"},\n  {\"text\": \"The medium of the object is recorded as Gold.\", \"source_field\": \"medium\", \"value_span\": \"Gold\"},\n  {\"text\": \"The place or culture is given as Africa, West Africa, Ghana, Asante Empire/Kingdom, probably Kumasi, member of the goldsmiths’ guild.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Africa, West Africa, Ghana, Asante Empire/Kingdom, probably Kumasi, member of the goldsmiths’ guild\"},\n  {\"text\": \"The credit line reads Dudley P. Allen Fund.\", \"source_field\": \"credit_line\", \"value_span\": \"Dudley P. Allen Fund\"}\n]}",
+      "usage": {
+        "completion_tokens": 245,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 245
+        },
+        "prompt_tokens": 2404,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2404
+        },
+        "total_tokens": 2649
+      }
+    },
+    "labeldesk-cleveland-corpus::1939.509": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1939.509",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Pendant",
+      "recorded_at": "2026-11-01T12:33:58Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Pendant.\", \"source_field\": \"title\", \"value_span\": \"Pendant\"},\n  {\"text\": \"The catalogue dates the object to 400–700.\", \"source_field\": \"object_date\", \"value_span\": \"400–700\"},\n  {\"text\": \"The medium is recorded as cast gold.\", \"source_field\": \"medium\", \"value_span\": \"cast gold\"},\n  {\"text\": \"Its place or culture is given as Panama, International Style, 5th-8th century.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Panama, International Style, 5th-8th century\"},\n  {\"text\": \"The credit line reads The Norweb Collection.\", \"source_field\": \"credit_line\", \"value_span\": \"The Norweb Collection\"}\n]}",
+      "usage": {
+        "completion_tokens": 188,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 188
+        },
+        "prompt_tokens": 2323,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2323
+        },
+        "total_tokens": 2511
+      }
+    },
+    "labeldesk-cleveland-corpus::1964.88": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1964.88",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Armor for Man and Horse with Völs-Colonna Arms",
+      "recorded_at": "2026-11-01T12:33:53Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title is Armor for Man and Horse with Völs-Colonna Arms.\", \"source_field\": \"title\", \"value_span\": \"Armor for Man and Horse with Völs-Colonna Arms\"},\n  {\"text\": \"The catalogue dates the object to c. 1575.\", \"source_field\": \"object_date\", \"value_span\": \"c. 1575\"},\n  {\"text\": \"The medium is recorded as steel.\", \"source_field\": \"medium\", \"value_span\": \"steel\"},\n  {\"text\": \"Its place or culture is given as North Italy, 16th century.\", \"source_field\": \"place_or_culture\", \"value_span\": \"North Italy, 16th century\"},\n  {\"text\": \"The credit line reads John L. Severance Fund.\", \"source_field\": \"credit_line\", \"value_span\": \"John L. Severance Fund\"}\n]}",
+      "usage": {
+        "completion_tokens": 201,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 201
+        },
+        "prompt_tokens": 2350,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2350
+        },
+        "total_tokens": 2551
+      }
+    },
+    "labeldesk-cleveland-corpus::1965.15": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1965.15",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Portrait of the Jester Calabazas",
+      "recorded_at": "2026-11-01T12:34:14Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Portrait of the Jester Calabazas.\", \"source_field\": \"title\", \"value_span\": \"Portrait of the Jester Calabazas\"},\n  {\"text\": \"The catalogue dates the object to c. 1631–32.\", \"source_field\": \"object_date\", \"value_span\": \"c. 1631–32\"},\n  {\"text\": \"The medium is recorded as oil on canvas.\", \"source_field\": \"medium\", \"value_span\": \"oil on canvas\"},\n  {\"text\": \"The place or culture is given as Spain.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Spain\"},\n  {\"text\": \"The credit line reads Leonard C. Hanna Jr. Fund.\", \"source_field\": \"credit_line\", \"value_span\": \"Leonard C. Hanna Jr. Fund\"}\n]}",
+      "usage": {
+        "completion_tokens": 194,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 194
+        },
+        "prompt_tokens": 2334,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2334
+        },
+        "total_tokens": 2528
+      }
+    },
+    "labeldesk-cleveland-corpus::1968.284": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1968.284",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Ancestral Altar Tusk",
+      "recorded_at": "2026-11-01T12:34:00Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given to the object is Ancestral Altar Tusk.\", \"source_field\": \"title\", \"value_span\": \"Ancestral Altar Tusk\"},\n  {\"text\": \"The catalogue dates the object to c. 1820.\", \"source_field\": \"object_date\", \"value_span\": \"c. 1820\"},\n  {\"text\": \"The medium is recorded as Elephant ivory.\", \"source_field\": \"medium\", \"value_span\": \"Elephant ivory\"},\n  {\"text\": \"Its place or culture is given as Nigeria, Benin Kingdom, Ẹdo peoples, members of the Igbesanmwan (wood and ivory carvers) guild.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Nigeria, Benin Kingdom, Ẹdo peoples, members of the Igbesanmwan (wood and ivory carvers) guild\"},\n  {\"text\": \"The credit line reads Gift of Katherine C. White.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of Katherine C. White\"}\n]}",
+      "usage": {
+        "completion_tokens": 238,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 238
+        },
+        "prompt_tokens": 2402,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2402
+        },
+        "total_tokens": 2640
+      }
+    },
+    "labeldesk-cleveland-corpus::1970.36": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1970.36",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Fragment of a Processional Cross",
+      "recorded_at": "2026-11-01T12:33:51Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given is Fragment of a Processional Cross.\", \"source_field\": \"title\", \"value_span\": \"Fragment of a Processional Cross\"},\n  {\"text\": \"The catalogue dates the object to c. 1050.\", \"source_field\": \"object_date\", \"value_span\": \"c. 1050\"},\n  {\"text\": \"The medium is recorded as silver gilt, niello.\", \"source_field\": \"medium\", \"value_span\": \"silver gilt, niello\"},\n  {\"text\": \"The place or culture is given as Byzantium, Constantinople, Byzantine period.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Byzantium, Constantinople, Byzantine period\"},\n  {\"text\": \"The credit line reads Leonard C. Hanna Jr. Fund.\", \"source_field\": \"credit_line\", \"value_span\": \"Leonard C. Hanna Jr. Fund\"}\n]}",
+      "usage": {
+        "completion_tokens": 200,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 200
+        },
+        "prompt_tokens": 2348,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 0,
+          "image_tokens": 0,
+          "text_tokens": 2348
+        },
+        "total_tokens": 2548
+      }
+    },
+    "labeldesk-cleveland-corpus::1973.85": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1973.85",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Seated Buddha",
+      "recorded_at": "2026-11-01T12:34:03Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Seated Buddha.\", \"source_field\": \"title\", \"value_span\": \"Seated Buddha\"},\n  {\"text\": \"The catalogue dates the object to 1100s.\", \"source_field\": \"object_date\", \"value_span\": \"1100s\"},\n  {\"text\": \"The medium is recorded as gilded wood.\", \"source_field\": \"medium\", \"value_span\": \"gilded wood\"},\n  {\"text\": \"The place or culture is given as Japan, Heian period (794–1185).\", \"source_field\": \"place_or_culture\", \"value_span\": \"Japan, Heian period (794–1185)\"},\n  {\"text\": \"The credit line reads: Gift of Takako Setsu and her husband, Iwao, in memory of her father-in-law, Inosuke Setsu, and his long friendship with Sherman E. Lee.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of Takako Setsu and her husband, Iwao, in memory of her father-in-law, Inosuke Setsu, and his long friendship with Sherman E. Lee\"}\n]}",
+      "usage": {
+        "completion_tokens": 257,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 257
+        },
+        "prompt_tokens": 2423,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2423
+        },
+        "total_tokens": 2680
+      }
+    },
+    "labeldesk-cleveland-corpus::1979.71": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "catalogue_number": "1979.71",
+      "corpus": "labeldesk-cleveland-corpus",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Arhat",
+      "recorded_at": "2026-11-01T12:33:56Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Arhat.\", \"source_field\": \"title\", \"value_span\": \"Arhat\"},\n  {\"text\": \"The catalogue dates the object to 1235.\", \"source_field\": \"object_date\", \"value_span\": \"1235\"},\n  {\"text\": \"The medium is listed as Hanging scroll; ink and slight color on silk.\", \"source_field\": \"medium\", \"value_span\": \"Hanging scroll; ink and slight color on silk\"},\n  {\"text\": \"The place or culture is given as Korea, Goryeo dynasty (918–1392).\", \"source_field\": \"place_or_culture\", \"value_span\": \"Korea, Goryeo dynasty (918–1392)\"},\n  {\"text\": \"The credit line reads Purchase from the J. H. Wade Fund.\", \"source_field\": \"credit_line\", \"value_span\": \"Purchase from the J. H. Wade Fund\"}\n]}",
+      "usage": {
+        "completion_tokens": 212,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 212
+        },
+        "prompt_tokens": 2357,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2357
+        },
+        "total_tokens": 2569
+      }
+    },
+    "labeldesk-egyptian-corpus::04.18.29": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Amulet in the form of a Bird",
+      "recorded_at": "2026-11-01T11:54:46Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title of the object is Amulet in the form of a Bird.\", \"source_field\": \"title\", \"value_span\": \"Amulet in the form of a Bird\"},\n  {\"text\": \"The catalogue dates the object to ca. 1850–1775 B.C.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1850–1775 B.C.\"},\n  {\"text\": \"The medium of the object is recorded as Lapis lazuli.\", \"source_field\": \"medium\", \"value_span\": \"Lapis lazuli\"},\n  {\"text\": \"The place or culture given for the object is Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Gift of Egypt Exploration Fund, 1904.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of Egypt Exploration Fund, 1904\"}\n]}",
+      "usage": {
+        "completion_tokens": 210,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 210
+        },
+        "prompt_tokens": 2350,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2350
+        },
+        "total_tokens": 2560
+      }
+    },
+    "labeldesk-egyptian-corpus::11.215.285": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Pendant: Petals of Cornflower",
+      "recorded_at": "2026-11-01T11:54:39Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given to the object is Pendant: Petals of Cornflower.\", \"source_field\": \"title\", \"value_span\": \"Pendant: Petals of Cornflower\"},\n  {\"text\": \"The catalogue dates the object to ca. 1386–1347 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1386–1347 BCE\"},\n  {\"text\": \"The medium is recorded as Faience.\", \"source_field\": \"medium\", \"value_span\": \"Faience\"},\n  {\"text\": \"The place or culture is given as Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Rogers Fund, 1911.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund, 1911\"}\n]}",
+      "usage": {
+        "completion_tokens": 196,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 196
+        },
+        "prompt_tokens": 2336,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2336
+        },
+        "total_tokens": 2532
+      }
+    },
+    "labeldesk-egyptian-corpus::15.2.11": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Shabti of Amenhotep III",
+      "recorded_at": "2026-11-01T11:54:49Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Shabti of Amenhotep III.\", \"source_field\": \"title\", \"value_span\": \"Shabti of Amenhotep III\"},\n  {\"text\": \"The catalogue dates the object to ca. 1386–1347 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1386–1347 BCE\"},\n  {\"text\": \"The medium is listed as Ebony, yellow paste.\", \"source_field\": \"medium\", \"value_span\": \"Ebony, yellow paste\"},\n  {\"text\": \"The place or culture given for the object is Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Rogers Fund, 1915.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund, 1915\"}\n]}",
+      "usage": {
+        "completion_tokens": 202,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 202
+        },
+        "prompt_tokens": 2342,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2342
+        },
+        "total_tokens": 2544
+      }
+    },
+    "labeldesk-egyptian-corpus::15.2.16": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Black-topped Red Ware Beaker",
+      "recorded_at": "2026-11-01T11:54:36Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Black-topped Red Ware Beaker.\", \"source_field\": \"title\", \"value_span\": \"Black-topped Red Ware Beaker\"},\n  {\"text\": \"The catalogue dates the object to ca. 3850–2960 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 3850–2960 BCE\"},\n  {\"text\": \"The medium is recorded as Pottery.\", \"source_field\": \"medium\", \"value_span\": \"Pottery\"},\n  {\"text\": \"The place or culture is given as Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Rogers Fund, 1915.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund, 1915\"}\n]}",
+      "usage": {
+        "completion_tokens": 192,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 192
+        },
+        "prompt_tokens": 2330,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2330
+        },
+        "total_tokens": 2522
+      }
+    },
+    "labeldesk-egyptian-corpus::20.3.378": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Relief fragment, tomb of Meketre",
+      "recorded_at": "2026-11-01T11:54:51Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title reads Relief fragment, tomb of Meketre.\", \"source_field\": \"title\", \"value_span\": \"Relief fragment, tomb of Meketre\"},\n  {\"text\": \"The catalogue dates the object to ca. 1981–1975 B.C.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1981–1975 B.C.\"},\n  {\"text\": \"The medium is listed as Limestone, paint.\", \"source_field\": \"medium\", \"value_span\": \"Limestone, paint\"},\n  {\"text\": \"The place or culture is given as Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Rogers Fund and Edward S. Harkness Gift, 1920.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund and Edward S. Harkness Gift, 1920\"}\n]}",
+      "usage": {
+        "completion_tokens": 214,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 214
+        },
+        "prompt_tokens": 2370,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2370
+        },
+        "total_tokens": 2584
+      }
+    },
+    "labeldesk-egyptian-corpus::25.3.64a, b": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Jar with Lid",
+      "recorded_at": "2026-11-01T11:54:41Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Jar with Lid.\", \"source_field\": \"title\", \"value_span\": \"Jar with Lid\"},\n  {\"text\": \"The catalogue dates the object to ca. 1473–1458 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1473–1458 BCE\"},\n  {\"text\": \"The medium is recorded as Pottery.\", \"source_field\": \"medium\", \"value_span\": \"Pottery\"},\n  {\"text\": \"Its place or culture is given as Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Rogers Fund, 1925.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund, 1925\"}\n]}",
+      "usage": {
+        "completion_tokens": 185,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 185
+        },
+        "prompt_tokens": 2321,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2321
+        },
+        "total_tokens": 2506
+      }
+    },
+    "labeldesk-egyptian-corpus::26.7.1460": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Part (?) of a bracelet or armlet with uraei",
+      "recorded_at": "2026-11-01T11:54:53Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title reads Part (?) of a bracelet or armlet with uraei.\", \"source_field\": \"title\", \"value_span\": \"Part (?) of a bracelet or armlet with uraei\"},\n  {\"text\": \"The catalogue dates the object to 305 BCE–364 CE.\", \"source_field\": \"object_date\", \"value_span\": \"305 BCE–364 CE\"},\n  {\"text\": \"The medium is recorded as Silver.\", \"source_field\": \"medium\", \"value_span\": \"Silver\"},\n  {\"text\": \"The place or culture is given as Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Purchase, Edward S. Harkness Gift, 1926.\", \"source_field\": \"credit_line\", \"value_span\": \"Purchase, Edward S. Harkness Gift, 1926\"}\n]}",
+      "usage": {
+        "completion_tokens": 203,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 203
+        },
+        "prompt_tokens": 2351,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2351
+        },
+        "total_tokens": 2554
+      }
+    },
+    "labeldesk-egyptian-corpus::26.8.155": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Toe stall",
+      "recorded_at": "2026-11-01T11:54:34Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Toe stall.\", \"source_field\": \"title\", \"value_span\": \"Toe stall\"},\n  {\"text\": \"The catalogue dates the object to ca. 1479–1425 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1479–1425 BCE\"},\n  {\"text\": \"The medium of the object is recorded as Gold.\", \"source_field\": \"medium\", \"value_span\": \"Gold\"},\n  {\"text\": \"The place or culture given for the object is Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Fletcher Fund, 1921–1922.\", \"source_field\": \"credit_line\", \"value_span\": \"Fletcher Fund, 1921–1922\"}\n]}",
+      "usage": {
+        "completion_tokens": 192,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 192
+        },
+        "prompt_tokens": 2322,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2322
+        },
+        "total_tokens": 2514
+      }
+    },
+    "labeldesk-egyptian-corpus::29.3.1": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Large Kneeling Statue of Hatshepsut",
+      "recorded_at": "2026-11-01T11:54:32Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Large Kneeling Statue of Hatshepsut.\", \"source_field\": \"title\", \"value_span\": \"Large Kneeling Statue of Hatshepsut\"},\n  {\"text\": \"The catalogue dates the object to ca. 1473–1458 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1473–1458 BCE\"},\n  {\"text\": \"The medium is recorded as Granite.\", \"source_field\": \"medium\", \"value_span\": \"Granite\"},\n  {\"text\": \"The place or culture given for the object is Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Rogers Fund, 1929.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund, 1929\"}\n]}",
+      "usage": {
+        "completion_tokens": 202,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 202
+        },
+        "prompt_tokens": 2342,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 2304,
+          "image_tokens": 0,
+          "text_tokens": 2342
+        },
+        "total_tokens": 2544
+      }
+    },
+    "labeldesk-egyptian-corpus::31.3.88": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Leather bundle",
+      "recorded_at": "2026-11-01T11:54:44Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Leather bundle.\", \"source_field\": \"title\", \"value_span\": \"Leather bundle\"},\n  {\"text\": \"The catalogue dates the object to ca. 2050–2000 B.C.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 2050–2000 B.C.\"},\n  {\"text\": \"The medium is listed as Leather.\", \"source_field\": \"medium\", \"value_span\": \"Leather\"},\n  {\"text\": \"The place or culture is given as Egypt.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Egypt\"},\n  {\"text\": \"The credit line reads Rogers Fund, 1931.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund, 1931\"}\n]}",
+      "usage": {
+        "completion_tokens": 185,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 185
+        },
+        "prompt_tokens": 2322,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2322
+        },
+        "total_tokens": 2507
+      }
+    },
+    "labeldesk-frozen-corpus::14.40.377": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Vase",
+      "recorded_at": "2026-11-01T11:44:54Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Vase.\", \"source_field\": \"title\", \"value_span\": \"Vase\"},\n  {\"text\": \"The catalogue dates the object to 1713–22.\", \"source_field\": \"object_date\", \"value_span\": \"1713–22\"},\n  {\"text\": \"The medium is porcelain with peach-bloom glaze (Jingdezhen ware).\", \"source_field\": \"medium\", \"value_span\": \"Porcelain with peach-bloom glaze (Jingdezhen ware)\"},\n  {\"text\": \"The place or culture given for the object is China.\", \"source_field\": \"place_or_culture\", \"value_span\": \"China\"},\n  {\"text\": \"The credit line reads Bequest of Benjamin Altman, 1913.\", \"source_field\": \"credit_line\", \"value_span\": \"Bequest of Benjamin Altman, 1913\"}\n]}",
+      "usage": {
+        "completion_tokens": 204,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 204
+        },
+        "prompt_tokens": 2346,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 2304,
+          "image_tokens": 0,
+          "text_tokens": 2346
+        },
+        "total_tokens": 2550
+      }
+    },
+    "labeldesk-frozen-corpus::1970.103a–e": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Screen",
+      "recorded_at": "2026-11-01T11:45:06Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Screen.\", \"source_field\": \"title\", \"value_span\": \"Screen\"},\n  {\"text\": \"The catalogue dates the object to 1676.\", \"source_field\": \"object_date\", \"value_span\": \"1676\"},\n  {\"text\": \"The medium is listed as lacquer on wood, colors and gold.\", \"source_field\": \"medium\", \"value_span\": \"lacquer on wood, colors and gold\"},\n  {\"text\": \"The place or culture given for the object is China.\", \"source_field\": \"place_or_culture\", \"value_span\": \"China\"},\n  {\"text\": \"The credit line reads Gift of Mr. and Mrs. Scott Scammell, 1970.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of Mr. and Mrs. Scott Scammell, 1970\"}\n]}",
+      "usage": {
+        "completion_tokens": 199,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 199
+        },
+        "prompt_tokens": 2353,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2353
+        },
+        "total_tokens": 2552
+      }
+    },
+    "labeldesk-frozen-corpus::1978.11.10": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Terracotta lid",
+      "recorded_at": "2026-11-01T11:45:16Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Terracotta lid.\", \"source_field\": \"title\", \"value_span\": \"Terracotta lid\"},\n  {\"text\": \"The catalogue dates the object to mid-6th century BCE.\", \"source_field\": \"object_date\", \"value_span\": \"mid-6th century BCE\"},\n  {\"text\": \"The medium is recorded as Terracotta.\", \"source_field\": \"medium\", \"value_span\": \"Terracotta\"},\n  {\"text\": \"The place or culture is given as Greek, Chalcidian.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Greek, Chalcidian\"},\n  {\"text\": \"The credit line reads Purchase, Mrs. Helen H. Mertens Gift, 1978.\", \"source_field\": \"credit_line\", \"value_span\": \"Purchase, Mrs. Helen H. Mertens Gift, 1978\"}\n]}",
+      "usage": {
+        "completion_tokens": 206,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 206
+        },
+        "prompt_tokens": 2350,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2350
+        },
+        "total_tokens": 2556
+      }
+    },
+    "labeldesk-frozen-corpus::1980.43.2": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Robe",
+      "recorded_at": "2026-11-01T11:45:23Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Robe.\", \"source_field\": \"title\", \"value_span\": \"Robe\"},\n  {\"text\": \"The catalogue dates the object to 20th century.\", \"source_field\": \"object_date\", \"value_span\": \"20th century\"},\n  {\"text\": \"The medium is recorded as wool, silk, metal.\", \"source_field\": \"medium\", \"value_span\": \"wool, silk, metal\"},\n  {\"text\": \"Its place or culture is given as Tibet.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Tibet\"},\n  {\"text\": \"The credit line reads Gift of Faie Joyce, 1980.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of Faie Joyce, 1980\"}\n]}",
+      "usage": {
+        "completion_tokens": 185,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 185
+        },
+        "prompt_tokens": 2321,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2321
+        },
+        "total_tokens": 2506
+      }
+    },
+    "labeldesk-frozen-corpus::1987.424.9": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Jar",
+      "recorded_at": "2026-11-01T11:45:25Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Jar.\", \"source_field\": \"title\", \"value_span\": \"Jar\"},\n  {\"text\": \"The catalogue dates the object to 300 BCE–200 CE.\", \"source_field\": \"object_date\", \"value_span\": \"300 BCE–200 CE\"},\n  {\"text\": \"The medium is earthenware with buff slip and red oxide decoration.\", \"source_field\": \"medium\", \"value_span\": \"Earthenware with buff slip and red oxide decoration\"},\n  {\"text\": \"The place or culture is listed as Thailand (Ban Chiang culture).\", \"source_field\": \"place_or_culture\", \"value_span\": \"Thailand (Ban Chiang culture)\"},\n  {\"text\": \"The credit line reads Gift of Cynthia Hazen Polsky, 1987.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of Cynthia Hazen Polsky, 1987\"}\n]}",
+      "usage": {
+        "completion_tokens": 208,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 208
+        },
+        "prompt_tokens": 2356,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2356
+        },
+        "total_tokens": 2564
+      }
+    },
+    "labeldesk-frozen-corpus::1999.247.1": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Robe",
+      "recorded_at": "2026-11-01T11:45:03Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Robe.\", \"source_field\": \"title\", \"value_span\": \"Robe\"},\n  {\"text\": \"The catalogue dates the object to 19th century.\", \"source_field\": \"object_date\", \"value_span\": \"19th century\"},\n  {\"text\": \"The medium is recorded as appliquéd and embroidered elm fiber.\", \"source_field\": \"medium\", \"value_span\": \"appliquéd and embroidered elm fiber\"},\n  {\"text\": \"The place or culture is given as Japan (Ainu).\", \"source_field\": \"place_or_culture\", \"value_span\": \"Japan (Ainu)\"},\n  {\"text\": \"The credit line reads Gift of John B. Elliott through the Mercer Trust, 1999.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of John B. Elliott through the Mercer Trust, 1999\"}\n]}",
+      "usage": {
+        "completion_tokens": 209,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 209
+        },
+        "prompt_tokens": 2354,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2354
+        },
+        "total_tokens": 2563
+      }
+    },
+    "labeldesk-frozen-corpus::20.45": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Bowl",
+      "recorded_at": "2026-11-01T11:44:57Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Bowl.\", \"source_field\": \"title\", \"value_span\": \"Bowl\"},\n  {\"text\": \"The catalogue dates the object to first half of the 12th century.\", \"source_field\": \"object_date\", \"value_span\": \"first half of the 12th century\"},\n  {\"text\": \"The medium is recorded as Stoneware with blue glaze (Jun ware).\", \"source_field\": \"medium\", \"value_span\": \"Stoneware with blue glaze (Jun ware)\"},\n  {\"text\": \"The place or culture given for the object is China.\", \"source_field\": \"place_or_culture\", \"value_span\": \"China\"},\n  {\"text\": \"The credit line reads Rogers Fund, 1920.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund, 1920\"}\n]}",
+      "usage": {
+        "completion_tokens": 195,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 195
+        },
+        "prompt_tokens": 2331,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2331
+        },
+        "total_tokens": 2526
+      }
+    },
+    "labeldesk-frozen-corpus::2001.732": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Vase",
+      "recorded_at": "2026-11-01T11:45:08Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Vase.\", \"source_field\": \"title\", \"value_span\": \"Vase\"},\n  {\"text\": \"The catalogue dates the object to 2001.\", \"source_field\": \"object_date\", \"value_span\": \"2001\"},\n  {\"text\": \"The medium is stoneware with tinted blue clay bands.\", \"source_field\": \"medium\", \"value_span\": \"Stoneware with tinted blue clay bands\"},\n  {\"text\": \"The place or culture given for the object is Japan.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Japan\"},\n  {\"text\": \"The credit line reads Purchase, Barbara and William Karatz Gift, 2001.\", \"source_field\": \"credit_line\", \"value_span\": \"Purchase, Barbara and William Karatz Gift, 2001\"}\n]}",
+      "usage": {
+        "completion_tokens": 191,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 191
+        },
+        "prompt_tokens": 2327,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2327
+        },
+        "total_tokens": 2518
+      }
+    },
+    "labeldesk-frozen-corpus::2013.872": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Album of Sketches",
+      "recorded_at": "2026-11-01T11:45:30Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Album of Sketches.\", \"source_field\": \"title\", \"value_span\": \"Album of Sketches\"},\n  {\"text\": \"The catalogue dates the object to late 18th century (?).\", \"source_field\": \"object_date\", \"value_span\": \"late 18th century (?)\"},\n  {\"text\": \"The medium is a woodblock printed book (orihon, accordion-style); ink and color on paper.\", \"source_field\": \"medium\", \"value_span\": \"Woodblock printed book (orihon, accordion-style); ink and color on paper\"},\n  {\"text\": \"The place or culture given for the object is Japan.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Japan\"},\n  {\"text\": \"The credit line reads: Purchase, Mary and James G. Wallach Foundation Gift, 2013.\", \"source_field\": \"credit_line\", \"value_span\": \"Purchase, Mary and James G. Wallach Foundation Gift, 2013\"}\n]}",
+      "usage": {
+        "completion_tokens": 234,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 234
+        },
+        "prompt_tokens": 2389,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2389
+        },
+        "total_tokens": 2623
+      }
+    },
+    "labeldesk-frozen-corpus::2024.89.1": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Hunting screen",
+      "recorded_at": "2026-11-01T11:45:11Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Hunting screen.\", \"source_field\": \"title\", \"value_span\": \"Hunting screen\"},\n  {\"text\": \"The catalogue dates the object to 19th century.\", \"source_field\": \"object_date\", \"value_span\": \"19th century\"},\n  {\"text\": \"The medium is an Eight-panel folding screen, ink and color on paper.\", \"source_field\": \"medium\", \"value_span\": \"Eight-panel folding screen, ink and color on paper\"},\n  {\"text\": \"The place or culture given for the object is Korea.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Korea\"},\n  {\"text\": \"The credit line reads Gift of the children of Lea R. Sneider, 2024.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of the children of Lea R. Sneider, 2024\"}\n]}",
+      "usage": {
+        "completion_tokens": 207,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 207
+        },
+        "prompt_tokens": 2352,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2352
+        },
+        "total_tokens": 2559
+      }
+    },
+    "labeldesk-frozen-corpus::36.120.655": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Reading screen",
+      "recorded_at": "2026-11-01T11:45:28Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title of the object is Reading screen.\", \"source_field\": \"title\", \"value_span\": \"Reading screen\"},\n  {\"text\": \"The catalogue dates the object to ca. 1740.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1740\"},\n  {\"text\": \"The medium is recorded as clay, with a moulded frame and shaped supports glazed black.\", \"source_field\": \"medium\", \"value_span\": \"Clay; moulded frame and shaped supports glazed black\"},\n  {\"text\": \"The place or culture is given as Japan.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Japan\"},\n  {\"text\": \"The credit line reads: The Howard Mansfield Collection, Gift of Howard Mansfield, 1936.\", \"source_field\": \"credit_line\", \"value_span\": \"The Howard Mansfield Collection, Gift of Howard Mansfield, 1936\"}\n]}",
+      "usage": {
+        "completion_tokens": 206,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 206
+        },
+        "prompt_tokens": 2399,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2399
+        },
+        "total_tokens": 2605
+      }
+    },
+    "labeldesk-frozen-corpus::62.173.7": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Vessel",
+      "recorded_at": "2026-11-01T11:45:18Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Vessel.\", \"source_field\": \"title\", \"value_span\": \"Vessel\"},\n  {\"text\": \"The catalogue dates the object to ca. 5000–4500 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 5000–4500 BCE\"},\n  {\"text\": \"The medium is listed as Ceramic, paint.\", \"source_field\": \"medium\", \"value_span\": \"Ceramic, paint\"},\n  {\"text\": \"The place or culture is given as Iran.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Iran\"},\n  {\"text\": \"The credit line reads Purchase, Mrs. Constantine Sidamon-Eristoff Gift, 1962.\", \"source_field\": \"credit_line\", \"value_span\": \"Purchase, Mrs. Constantine Sidamon-Eristoff Gift, 1962\"}\n]}",
+      "usage": {
+        "completion_tokens": 202,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 202
+        },
+        "prompt_tokens": 2344,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 2304,
+          "image_tokens": 0,
+          "text_tokens": 2344
+        },
+        "total_tokens": 2546
+      }
+    },
+    "labeldesk-frozen-corpus::65.1.2": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Jar",
+      "recorded_at": "2026-11-01T11:45:01Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given to the object is Jar.\", \"source_field\": \"title\", \"value_span\": \"Jar\"},\n  {\"text\": \"The catalogue dates the object to late 19th–early 20th century.\", \"source_field\": \"object_date\", \"value_span\": \"late 19th–early 20th century\"},\n  {\"text\": \"The medium is porcelain with underglaze cobalt-blue decoration of banana leaves.\", \"source_field\": \"medium\", \"value_span\": \"Porcelain with underglaze cobalt-blue decoration of banana leaves\"},\n  {\"text\": \"The place or culture listed for the object is Korea.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Korea\"},\n  {\"text\": \"The credit line reads Seymour Fund, 1965.\", \"source_field\": \"credit_line\", \"value_span\": \"Seymour Fund, 1965\"}\n]}",
+      "usage": {
+        "completion_tokens": 203,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 203
+        },
+        "prompt_tokens": 2350,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2350
+        },
+        "total_tokens": 2553
+      }
+    },
+    "labeldesk-frozen-corpus::66.235": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Vessel",
+      "recorded_at": "2026-11-01T11:45:21Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Vessel.\", \"source_field\": \"title\", \"value_span\": \"Vessel\"},\n  {\"text\": \"The catalogue dates the object to ca. 3rd century BCE–1st century CE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 3rd century BCE–1st century CE\"},\n  {\"text\": \"The medium is listed as Bronze, silver.\", \"source_field\": \"medium\", \"value_span\": \"Bronze, silver\"},\n  {\"text\": \"The place or culture is given as Seleucid or Parthian.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Seleucid or Parthian\"},\n  {\"text\": \"The credit line reads Purchase, H. Dunscombe Colt Gift, 1966.\", \"source_field\": \"credit_line\", \"value_span\": \"Purchase, H. Dunscombe Colt Gift, 1966\"}\n]}",
+      "usage": {
+        "completion_tokens": 214,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 214
+        },
+        "prompt_tokens": 2364,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2364
+        },
+        "total_tokens": 2578
+      }
+    },
+    "labeldesk-frozen-corpus::67.182.1": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Vessel",
+      "recorded_at": "2026-11-01T11:45:35Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Vessel.\", \"source_field\": \"title\", \"value_span\": \"Vessel\"},\n  {\"text\": \"The catalogue dates the object to ca. 1900–1600 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"ca. 1900–1600 BCE\"},\n  {\"text\": \"The medium is recorded as Ceramic, paint.\", \"source_field\": \"medium\", \"value_span\": \"Ceramic, paint\"},\n  {\"text\": \"Its place or culture is given as Old Assyrian Trading Colony or Hittite.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Old Assyrian Trading Colony or Hittite\"},\n  {\"text\": \"The credit line reads Rogers Fund, 1967.\", \"source_field\": \"credit_line\", \"value_span\": \"Rogers Fund, 1967\"}\n]}",
+      "usage": {
+        "completion_tokens": 202,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 202
+        },
+        "prompt_tokens": 2345,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 2304,
+          "image_tokens": 0,
+          "text_tokens": 2345
+        },
+        "total_tokens": 2547
+      }
+    },
+    "labeldesk-frozen-corpus::74.51.524": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Amphora",
+      "recorded_at": "2026-11-01T11:45:14Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Amphora.\", \"source_field\": \"title\", \"value_span\": \"Amphora\"},\n  {\"text\": \"The catalogue dates the object to 600–480 BCE.\", \"source_field\": \"object_date\", \"value_span\": \"600–480 BCE\"},\n  {\"text\": \"The medium is recorded as Terracotta.\", \"source_field\": \"medium\", \"value_span\": \"Terracotta\"},\n  {\"text\": \"The place or culture is given as Cypriot.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Cypriot\"},\n  {\"text\": \"The credit line reads The Cesnola Collection, Purchased by subscription, 1874–76.\", \"source_field\": \"credit_line\", \"value_span\": \"The Cesnola Collection, Purchased by subscription, 1874–76\"}\n]}",
+      "usage": {
+        "completion_tokens": 197,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 197
+        },
+        "prompt_tokens": 2338,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2338
+        },
+        "total_tokens": 2535
+      }
+    },
+    "labeldesk-frozen-corpus::93.3.115": {
+      "base_url": "https://token-plan.cn-beijing.maas.aliyuncs.com/compatible-mode/v1",
+      "model": "deepseek-v4.1-flash",
+      "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e",
+      "record_title": "Table screen",
+      "recorded_at": "2026-11-01T11:44:59Z",
+      "response": "{\"claims\": [\n  {\"text\": \"The title given for the object is Table screen.\", \"source_field\": \"title\", \"value_span\": \"Table screen\"},\n  {\"text\": \"The catalogue dates the object to 1810.\", \"source_field\": \"object_date\", \"value_span\": \"1810\"},\n  {\"text\": \"The medium is paste covered with crackled glaze and decorated in polychrome enamels and gold (Satsuma ware).\", \"source_field\": \"medium\", \"value_span\": \"Paste covered with crackled glaze and decorated in polychrome enamels and gold (Satsuma ware)\"},\n  {\"text\": \"The place or culture given for the object is Japan.\", \"source_field\": \"place_or_culture\", \"value_span\": \"Japan\"},\n  {\"text\": \"The credit line reads Gift of Charles Stewart Smith, 1893.\", \"source_field\": \"credit_line\", \"value_span\": \"Gift of Charles Stewart Smith, 1893\"}\n]}",
+      "usage": {
+        "completion_tokens": 215,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": null,
+          "rejected_prediction_tokens": null,
+          "text_tokens": 215
+        },
+        "prompt_tokens": 2363,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": 0,
+          "text_tokens": 2363
+        },
+        "total_tokens": 2578
+      }
+    }
+  }
+}

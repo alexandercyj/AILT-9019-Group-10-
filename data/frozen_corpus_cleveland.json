@@ -1,0 +1,163 @@
+{
+  "corpus": {
+    "name": "labeldesk-cleveland-corpus",
+    "version": "1.0.0",
+    "source": "The Cleveland Museum of Art Open Access",
+    "source_api": "https://openaccess-api.clevelandart.org/api/artworks/{oid}",
+    "license": "CC0 1.0 (public domain)",
+    "fetched_at": "2026-11-01",
+    "record_count": 10,
+    "required_fields": [
+      "title",
+      "object_date",
+      "medium",
+      "place_or_culture",
+      "credit_line"
+    ],
+    "field_map": {
+      "catalogue_number": "accession_number",
+      "object_id": "id",
+      "title": "title",
+      "object_date": "creation_date",
+      "medium": "technique",
+      "place_or_culture": "culture",
+      "credit_line": "creditline",
+      "department": "department",
+      "is_public_domain": "share_license_status",
+      "source_url": "url"
+    },
+    "notes": "A second museum, a second API, the same five required fields. Records are filtered to share_license_status == 'CC0' at fetch time, so nothing outside the open-access set can reach the corpus. `culture` arrives as a list and is joined with '; '; the values themselves are untouched. Date wording is kept as the museum writes it ('c. 1050', '1100s', '1800s, before 1896'), which exercises the hedge and range rules on data the team did not choose the phrasing of."
+  },
+  "records": [
+    {
+      "catalogue_number": "1970.36",
+      "object_id": 145192,
+      "title": "Fragment of a Processional Cross",
+      "object_date": "c. 1050",
+      "medium": "silver gilt, niello",
+      "place_or_culture": "Byzantium, Constantinople, Byzantine period",
+      "credit_line": "Leonard C. Hanna Jr. Fund",
+      "department": "Medieval Art",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1970.36",
+      "boundary": "hedged date: c. 1050"
+    },
+    {
+      "catalogue_number": "1964.88",
+      "object_id": 141444,
+      "title": "Armor for Man and Horse with Völs-Colonna Arms",
+      "object_date": "c. 1575",
+      "medium": "steel",
+      "place_or_culture": "North Italy, 16th century",
+      "credit_line": "John L. Severance Fund",
+      "department": "Medieval Art",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1964.88",
+      "boundary": "hedged date with a qualifier: c. 1575"
+    },
+    {
+      "catalogue_number": "1979.71",
+      "object_id": 149683,
+      "title": "Arhat",
+      "object_date": "1235",
+      "medium": "Hanging scroll; ink and slight color on silk",
+      "place_or_culture": "Korea, Goryeo dynasty (918–1392)",
+      "credit_line": "Purchase from the J. H. Wade Fund",
+      "department": "Korean Art",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1979.71",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "1939.509",
+      "object_id": 118475,
+      "title": "Pendant",
+      "object_date": "400–700",
+      "medium": "cast gold",
+      "place_or_culture": "Panama, International Style, 5th-8th century",
+      "credit_line": "The Norweb Collection",
+      "department": "Art of the Americas",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1939.509",
+      "boundary": "bare range date: 400–700"
+    },
+    {
+      "catalogue_number": "1968.284",
+      "object_id": 143898,
+      "title": "Ancestral Altar Tusk",
+      "object_date": "c. 1820",
+      "medium": "Elephant ivory",
+      "place_or_culture": "Nigeria, Benin Kingdom, Ẹdo peoples, members of the Igbesanmwan (wood and ivory carvers) guild",
+      "credit_line": "Gift of Katherine C. White",
+      "department": "African Art",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1968.284",
+      "boundary": "hedged date: c. 1820"
+    },
+    {
+      "catalogue_number": "1973.85",
+      "object_id": 147588,
+      "title": "Seated Buddha",
+      "object_date": "1100s",
+      "medium": "gilded wood",
+      "place_or_culture": "Japan, Heian period (794–1185)",
+      "credit_line": "Gift of Takako Setsu and her husband, Iwao, in memory of her father-in-law, Inosuke Setsu, and his long friendship with Sherman E. Lee",
+      "department": "Japanese Art",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1973.85",
+      "boundary": "century-style date: 1100s"
+    },
+    {
+      "catalogue_number": "1919.1.1",
+      "object_id": 99417,
+      "title": "Stained Glass Panel with Male Donor",
+      "object_date": "c. 1480",
+      "medium": "pot metal, white glass with silver stain",
+      "place_or_culture": "France",
+      "credit_line": "Dudley P. Allen Fund",
+      "department": "Medieval Art",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1919.1.1",
+      "boundary": "hedged date: c. 1480"
+    },
+    {
+      "catalogue_number": "1926.428",
+      "object_id": 108743,
+      "title": "Pendant with the Virgin and Child",
+      "object_date": "c. 1160–1170",
+      "medium": "gilded copper, champlevé enamel; the reverse decorated in vernis brun",
+      "place_or_culture": "Mosan, Meuse Valley, Romanesque period, 12th century",
+      "credit_line": "Purchase from the J. H. Wade Fund",
+      "department": "Medieval Art",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1926.428",
+      "boundary": "hedged range: c. 1160–1170"
+    },
+    {
+      "catalogue_number": "1935.310",
+      "object_id": 115163,
+      "title": "Disk Pendant (akrafokɔnmu)",
+      "object_date": "1800s, before 1896",
+      "medium": "Gold",
+      "place_or_culture": "Africa, West Africa, Ghana, Asante Empire/Kingdom, probably Kumasi, member of the goldsmiths’ guild",
+      "credit_line": "Dudley P. Allen Fund",
+      "department": "African Art",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1935.310",
+      "boundary": "date with a qualifier: 1800s, before 1896"
+    },
+    {
+      "catalogue_number": "1965.15",
+      "object_id": 141549,
+      "title": "Portrait of the Jester Calabazas",
+      "object_date": "c. 1631–32",
+      "medium": "oil on canvas",
+      "place_or_culture": "Spain",
+      "credit_line": "Leonard C. Hanna Jr. Fund",
+      "department": "European Painting and Sculpture",
+      "is_public_domain": true,
+      "source_url": "https://clevelandart.org/art/1965.15",
+      "boundary": "hedged range: c. 1631–32"
+    }
+  ]
+}

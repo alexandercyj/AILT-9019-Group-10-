@@ -1,0 +1,153 @@
+/* Additions used only by the standalone build. Everything else comes from styles.css,
+   which is inlined verbatim so the standalone file and the served page look the same. */
+
+.snapshot-banner {
+  border-color: #cfe0da;
+  background: #eef7f4;
+  color: #174a45;
+}
+
+.corpus-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.corpus-tab {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fbfcfb;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .03em;
+}
+
+.corpus-tab[aria-selected="true"] {
+  border-color: var(--teal);
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+
+.corpus-tab small {
+  display: block;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .02em;
+  opacity: .8;
+}
+
+.probe-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+
+.probe {
+  flex: 1;
+  display: grid;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.probe input {
+  width: 100%;
+  min-height: 38px;
+  padding: 8px 11px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  outline: none;
+  background: #fbfcfb;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.probe input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(20, 125, 120, .12);
+}
+
+.reason-note {
+  margin: 10px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--red);
+  border-radius: 0 7px 7px 0;
+  background: var(--red-soft);
+  color: #7d2f2c;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.reason-note[hidden] { display: none; }
+
+.source-table-wrap {
+  overflow-x: auto;
+}
+
+.source-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10.5px;
+}
+
+.source-table th,
+.source-table td {
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.source-table th {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.source-table td:first-child {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+  color: var(--navy);
+  white-space: nowrap;
+}
+
+.source-table tr.is-refused td {
+  background: #fff9f8;
+}
+
+.tag {
+  display: inline-block;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.tag.admitted { color: var(--teal); background: var(--teal-soft); }
+.tag.refused { color: var(--red); background: var(--red-soft); }
+.tag.deferred,
+.tag.reference_only,
+.tag.admitted_not_frozen { color: var(--amber); background: var(--amber-soft); }
+
+.claim-tag .claim-field {
+  margin-left: 6px;
+  font-weight: 600;
+  opacity: .65;
+}
+
+@media (max-width: 680px) {
+  .probe-row { flex-direction: column; align-items: stretch; }
+}

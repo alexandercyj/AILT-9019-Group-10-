@@ -6,8 +6,13 @@ uses: it serves the static page, lists the frozen corpus, and runs
 `labeldesk.draft` for the record the user picks. There is no second
 implementation of the logic in JavaScript.
 
-    python3 server.py            # http://127.0.0.1:8000
+The model layer is reachable from the page through the same call, and only when
+the page asks for it: `{"llm": "auto"}` means "use the model if a key is set,
+otherwise replay the transcript". A page that never asks never calls out.
+
+    python3 server.py                        # http://127.0.0.1:8000
     python3 server.py --port 8080
+    python3 server.py --corpus cleveland     # a registered alias, or a path
 """
 
 from __future__ import annotations
@@ -19,6 +24,8 @@ from pathlib import Path
 from urllib.parse import unquote, urlparse
 
 from labeldesk import __version__, draft, load_corpus
+from labeldesk.llm import config_from_env, prompt_hash, resolve_mode
+from labeldesk.sources import aliases, provenance, resolve_corpus
 from labeldesk.validate import missing_fields
 
 ROOT = Path(__file__).resolve().parent
@@ -29,6 +36,8 @@ STATIC_FILES = {
     "/app.js": ("app.js", "application/javascript; charset=utf-8"),
 }
 
+# Set in main(); the handler reads it. One corpus per process, chosen at start-up,
+# so the page cannot ask for records the process was not started with.
 CORPUS = load_corpus()
 
 
@@ -44,6 +53,8 @@ def corpus_payload() -> dict:
             "checksum": CORPUS.checksum,
             "fetched_at": CORPUS.meta["fetched_at"],
         },
+        "provenance": provenance(CORPUS),
+        "corpora": sorted(aliases()),
         "records": [
             {
                 **record,
@@ -67,6 +78,19 @@ class Handler(BaseHTTPRequestHandler):
 
         if path == "/api/records":
             return self._json(200, corpus_payload())
+
+        if path == "/api/llm":
+            config = config_from_env()
+            return self._json(
+                200,
+                {
+                    "model": config.model,
+                    "base_url": config.base_url,
+                    "has_key": config.has_key,
+                    "default_mode": resolve_mode("auto", config),
+                    "prompt_sha256": prompt_hash(),
+                },
+            )
 
         if path.startswith("/api/record/"):
             number = unquote(path[len("/api/record/") :])
@@ -92,7 +116,12 @@ class Handler(BaseHTTPRequestHandler):
         if not number:
             return self._json(400, {"error": "catalogue_number_required"})
 
-        result = draft(CORPUS, number, question=payload.get("question"))
+        # Only an explicit request reaches the model; the default stays offline.
+        llm = payload.get("llm")
+        if llm not in (None, False, "auto", "live", "replay"):
+            return self._json(400, {"error": "bad_llm_mode", "got": llm})
+
+        result = draft(CORPUS, number, question=payload.get("question"), llm=llm)
         return self._json(200, result)
 
     def _json(self, status: int, payload: dict) -> None:
@@ -115,10 +144,18 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Serve the Label Desk browser view.")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--host", default="127.0.0.1")
+    parser.add_argument(
+        "--corpus", metavar="ALIAS_OR_PATH", help="a registered alias (primary, egyptian, cleveland) or a path"
+    )
     args = parser.parse_args()
 
+    global CORPUS
+    CORPUS = load_corpus(resolve_corpus(args.corpus))
+
     server = ThreadingHTTPServer((args.host, args.port), Handler)
+    prov = provenance(CORPUS)
     print(f"Label Desk {__version__} · {len(CORPUS)} records · sha256 {CORPUS.short_checksum}")
+    print(f"Corpus  {CORPUS.meta['name']} · source {prov.get('id') or 'unregistered'} · ai_input {'yes' if prov.get('ai_input') else 'no'}")
     print(f"Serving http://{args.host}:{args.port}/  (Ctrl-C to stop)")
     try:
         server.serve_forever()

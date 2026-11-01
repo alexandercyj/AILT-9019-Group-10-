@@ -1,2 +1,10 @@
-# Test suite only. The core path (labeldesk/) uses the standard library alone.
+# Core path: the standard library alone. Nothing here is needed to run a label.
+# `python3 -m labeldesk <number>` works with an empty environment.
+
+# Test suite only.
 pytest==9.1.1
+
+# Optional model layer (--llm). The SDK is used when it is installed; without it
+# labeldesk posts to the same compatible-mode endpoint over plain HTTP, so this
+# line is a preference, not a requirement.
+openai>=1.40,<3

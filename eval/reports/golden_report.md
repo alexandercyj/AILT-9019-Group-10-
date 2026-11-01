@@ -1,6 +1,6 @@
 # Golden-set evaluation
 
-Generated 2026-10-26 15:51 UTC · Label Desk 1.0.0 · corpus sha256 `962e03aba0b6`
+Generated 2026-11-01 12:55 UTC · Label Desk 1.1.0 · corpus sha256 `962e03aba0b6` · **model off**
 
 ## Gates
 
@@ -18,23 +18,23 @@ Generated 2026-10-26 15:51 UTC · Label Desk 1.0.0 · corpus sha256 `962e03aba0b
 
 ## Record cases
 
-| Case | Catalogue | Expected | Actual | Words | Claim precision | Citations | Restatements | Result |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| g01 | 14.40.377 | drafted | drafted | 65 | 100% | 100% | 7/7 | PASS |
-| g02 | 20.45 | drafted | drafted | 60 | 100% | 100% | 6/6 | PASS |
-| g03 | 93.3.115 | drafted | drafted | 67 | 100% | 100% | 6/6 | PASS |
-| g04 | 65.1.2 | drafted | drafted | 60 | 100% | 100% | 6/6 | PASS |
-| g05 | 1999.247.1 | drafted | drafted | 63 | 100% | 100% | 5/5 | PASS |
-| g06 | 1970.103a–e | drafted | drafted | 63 | 100% | 100% | 6/6 | PASS |
-| g07 | 2001.732 | drafted | drafted | 67 | 100% | 100% | 5/5 | PASS |
-| g08 | 74.51.524 | drafted | drafted | 63 | 100% | 100% | 5/5 | PASS |
-| g09 | 1978.11.10 | drafted | drafted | 66 | 100% | 100% | 5/5 | PASS |
-| g10 | 62.173.7 | drafted | drafted | 64 | 100% | 100% | 5/5 | PASS |
-| g11 | 36.120.655 | drafted | drafted | 69 | 100% | 100% | 6/6 | PASS |
-| g12 | 2013.872 | drafted | drafted | 60 | 100% | 100% | 5/5 | PASS |
-| g13 | 67.182.1 | drafted | drafted | 66 | 100% | 100% | 5/5 | PASS |
-| g14 | 62.98.1 | refused | refused | 0 | — | — | 0/0 | PASS |
-| g15 | 09.13.5 | refused | refused | 0 | — | — | 0/0 | PASS |
+| Case | Catalogue | Expected | Actual | Source | Words | Claim precision | Citations | Restatements | Result |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| g01 | 14.40.377 | drafted | drafted | offline_template | 65 | 100% | 100% | 7/7 | PASS |
+| g02 | 20.45 | drafted | drafted | offline_template | 60 | 100% | 100% | 6/6 | PASS |
+| g03 | 93.3.115 | drafted | drafted | offline_template | 67 | 100% | 100% | 6/6 | PASS |
+| g04 | 65.1.2 | drafted | drafted | offline_template | 60 | 100% | 100% | 6/6 | PASS |
+| g05 | 1999.247.1 | drafted | drafted | offline_template | 63 | 100% | 100% | 5/5 | PASS |
+| g06 | 1970.103a–e | drafted | drafted | offline_template | 63 | 100% | 100% | 6/6 | PASS |
+| g07 | 2001.732 | drafted | drafted | offline_template | 67 | 100% | 100% | 5/5 | PASS |
+| g08 | 74.51.524 | drafted | drafted | offline_template | 63 | 100% | 100% | 5/5 | PASS |
+| g09 | 1978.11.10 | drafted | drafted | offline_template | 66 | 100% | 100% | 5/5 | PASS |
+| g10 | 62.173.7 | drafted | drafted | offline_template | 64 | 100% | 100% | 5/5 | PASS |
+| g11 | 36.120.655 | drafted | drafted | offline_template | 69 | 100% | 100% | 6/6 | PASS |
+| g12 | 2013.872 | drafted | drafted | offline_template | 60 | 100% | 100% | 5/5 | PASS |
+| g13 | 67.182.1 | drafted | drafted | offline_template | 66 | 100% | 100% | 5/5 | PASS |
+| g14 | 62.98.1 | refused | refused | none | 0 | — | — | 0/0 | PASS |
+| g15 | 09.13.5 | refused | refused | none | 0 | — | — | 0/0 | PASS |
 
 ## Request cases
 

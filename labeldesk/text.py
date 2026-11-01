@@ -33,6 +33,43 @@ CARRIER_WORDS: frozenset[str] = frozenset(
     """.split()
 )
 
+# Words that talk about the record and its reporting, never about the object.
+#
+# The offline templates only ever say "records", "reads" and "is given as", so the
+# carrier list above was enough for them. Natural prose reports a field in more
+# ways — "the catalogue keeps the approximation", "the title field gives ..." — and
+# every one of those words was being rejected as an unsupported fact. None of them
+# can invent a place, a date, a number or a name, which is what the check exists to
+# catch, so they are listed separately and excluded from the fact-carrying tokens
+# alongside the carrier words.
+#
+# This is the check's one hand-tuned vocabulary, and the boundary is the point: a
+# word belongs here only if it describes the *record's* act of reporting. Anything
+# that describes the object — its type, style, material, place, date, function —
+# must still come from the cited value. Widening this list can therefore let a
+# clumsier sentence through; it cannot let a new fact through.
+REPORTING_WORDS: frozenset[str] = frozenset(
+    """
+    keep keeps keeping kept
+    give gives giving
+    list lists listed
+    state states stated
+    note notes noted
+    show shows shown
+    report reports reported
+    describe describes described
+    call calls called
+    write writes written
+    word words wording
+    range ranges
+    uncertainty doubt
+    entry entries value values
+    text exactly verbatim
+    """.split()
+)
+
+FREE_WORDS: frozenset[str] = CARRIER_WORDS | REPORTING_WORDS
+
 # Uncertainty the museum itself records, grouped by meaning. A claim may use any
 # member of the family its cited value uses, but may not drop the family: the
 # record's "probably Iran" must not become a flat "Iran".
@@ -55,14 +92,14 @@ def tokenize(text: str) -> list[str]:
 def content_tokens(text: str) -> list[str]:
     """Tokens that carry a fact.
 
-    Carrier words and hedges are excluded: hedges are validated by family in the
+    Free words and hedges are excluded: hedges are validated by family in the
     grounding check instead, so "probably made in Iran" is not rejected for the
     word "probably".
     """
     return [
         token
         for token in tokenize(text)
-        if token not in CARRIER_WORDS and token not in HEDGE_TOKENS
+        if token not in FREE_WORDS and token not in HEDGE_TOKENS
     ]
 
 

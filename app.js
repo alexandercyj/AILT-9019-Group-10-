@@ -31,9 +31,12 @@ const els = {
   corpusVersion: document.querySelector("#corpusVersion"),
   corpusCount: document.querySelector("#corpusCount"),
   corpusChecksum: document.querySelector("#corpusChecksum"),
+  corpusSource: document.querySelector("#corpusSource"),
   draftButton: document.querySelector("#draftButton"),
   refusalButton: document.querySelector("#refusalButton"),
   resetButton: document.querySelector("#resetButton"),
+  llmToggle: document.querySelector("#llmToggle"),
+  modelNote: document.querySelector("#modelNote"),
 };
 
 const CHECK_ORDER = [
@@ -89,7 +92,10 @@ async function draft() {
     const response = await fetch("/api/draft", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ catalogue_number: number }),
+      body: JSON.stringify({
+        catalogue_number: number,
+        llm: els.llmToggle.checked ? "auto" : null,
+      }),
     });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     renderResult(await response.json());
@@ -102,6 +108,23 @@ async function draft() {
   }
 }
 
+function renderModelNote(result) {
+  const block = result.llm;
+  if (!block || !block.requested) {
+    els.modelNote.hidden = true;
+    els.modelNote.textContent = "";
+    return;
+  }
+  els.modelNote.hidden = false;
+  if (block.applied) {
+    els.modelNote.textContent = `Model ${block.model} (${block.mode}) · rewrite accepted · ${result.word_count} words`;
+    return;
+  }
+  els.modelNote.textContent =
+    `Model ${block.model} (${block.mode}) · rewrite discarded: ${block.reason} · ` +
+    `offline draft shown instead, because a rewrite is never printed unchecked`;
+}
+
 function renderResult(result) {
   const refused = result.status === "refused";
   els.resultStatus.textContent = refused ? "REFUSED" : "DRAFTED";
@@ -109,6 +132,7 @@ function renderResult(result) {
   els.resultCard.classList.toggle("refused", refused);
   els.resultTitle.textContent = refused ? "Safe refusal" : "Grounded draft";
   els.labelText.textContent = refused ? result.reason_text : result.label;
+  renderModelNote(result);
 
   els.claimList.innerHTML = refused
     ? `<span class="claim-tag">Reason · ${result.reason}</span>`
@@ -182,6 +206,12 @@ async function boot() {
     els.corpusVersion.textContent = `v${data.corpus.version}`;
     els.corpusCount.textContent = `${data.corpus.record_count}`;
     els.corpusChecksum.textContent = data.corpus.checksum.slice(0, 12);
+    // The register's answer for this corpus, so the page says where the records
+    // came from and whether the source permits the model, not just how many there are.
+    const prov = data.provenance || {};
+    els.corpusSource.textContent = prov.registered
+      ? `${prov.id} · ${prov.license} · ai ${prov.ai_input ? "yes" : "no"}`
+      : "unregistered · ai no";
 
     showBanner(false);
     setStatus("Local pipeline connected", true);

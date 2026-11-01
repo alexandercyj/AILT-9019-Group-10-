@@ -1,0 +1,166 @@
+{
+  "corpus": {
+    "name": "labeldesk-egyptian-corpus",
+    "version": "1.0.0",
+    "source": "The Metropolitan Museum of Art Open Access · Egyptian Art",
+    "source_api": "https://collectionapi.metmuseum.org/public/collection/v1/objects/{oid}",
+    "license": "CC0 1.0 (public domain)",
+    "fetched_at": "2026-11-01",
+    "record_count": 10,
+    "required_fields": [
+      "title",
+      "object_date",
+      "medium",
+      "place_or_culture",
+      "credit_line"
+    ],
+    "field_map": {
+      "catalogue_number": "accessionNumber",
+      "object_id": "objectID",
+      "title": "title",
+      "object_date": "objectDate",
+      "medium": "medium",
+      "place_or_culture": [
+        "country",
+        "culture"
+      ],
+      "credit_line": "creditLine",
+      "department": "department",
+      "is_public_domain": "isPublicDomain",
+      "source_url": "objectURL"
+    },
+    "notes": "Second department, same five required fields, different field map: place is taken from `country` because this department leaves `culture` blank. Kept as evidence that the pipeline is data-agnostic and that the mapping lives in the corpus file rather than in code. One record carries a '(?)' doubt marker and a disjunctive title, so the hedge rule is exercised on this data too."
+  },
+  "records": [
+    {
+      "catalogue_number": "29.3.1",
+      "object_id": 544449,
+      "title": "Large Kneeling Statue of Hatshepsut",
+      "object_date": "ca. 1473–1458 BCE",
+      "medium": "Granite",
+      "place_or_culture": "Egypt",
+      "credit_line": "Rogers Fund, 1929",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/544449",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "26.8.155",
+      "object_id": 547650,
+      "title": "Toe stall",
+      "object_date": "ca. 1479–1425 BCE",
+      "medium": "Gold",
+      "place_or_culture": "Egypt",
+      "credit_line": "Fletcher Fund, 1921–1922",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/547650",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "15.2.16",
+      "object_id": 551844,
+      "title": "Black-topped Red Ware Beaker",
+      "object_date": "ca. 3850–2960 BCE",
+      "medium": "Pottery",
+      "place_or_culture": "Egypt",
+      "credit_line": "Rogers Fund, 1915",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/551844",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "11.215.285",
+      "object_id": 559015,
+      "title": "Pendant: Petals of Cornflower",
+      "object_date": "ca. 1386–1347 BCE",
+      "medium": "Faience",
+      "place_or_culture": "Egypt",
+      "credit_line": "Rogers Fund, 1911",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/559015",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "25.3.64a, b",
+      "object_id": 548765,
+      "title": "Jar with Lid",
+      "object_date": "ca. 1473–1458 BCE",
+      "medium": "Pottery",
+      "place_or_culture": "Egypt",
+      "credit_line": "Rogers Fund, 1925",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/548765",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "31.3.88",
+      "object_id": 556712,
+      "title": "Leather bundle",
+      "object_date": "ca. 2050–2000 B.C.",
+      "medium": "Leather",
+      "place_or_culture": "Egypt",
+      "credit_line": "Rogers Fund, 1931",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/556712",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "04.18.29",
+      "object_id": 558515,
+      "title": "Amulet in the form of a Bird",
+      "object_date": "ca. 1850–1775 B.C.",
+      "medium": "Lapis lazuli",
+      "place_or_culture": "Egypt",
+      "credit_line": "Gift of Egypt Exploration Fund, 1904",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/558515",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "15.2.11",
+      "object_id": 544493,
+      "title": "Shabti of Amenhotep III",
+      "object_date": "ca. 1386–1347 BCE",
+      "medium": "Ebony, yellow paste",
+      "place_or_culture": "Egypt",
+      "credit_line": "Rogers Fund, 1915",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/544493",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "20.3.378",
+      "object_id": 562777,
+      "title": "Relief fragment, tomb of Meketre",
+      "object_date": "ca. 1981–1975 B.C.",
+      "medium": "Limestone, paint",
+      "place_or_culture": "Egypt",
+      "credit_line": "Rogers Fund and Edward S. Harkness Gift, 1920",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/562777",
+      "boundary": null
+    },
+    {
+      "catalogue_number": "26.7.1460",
+      "object_id": 551867,
+      "title": "Part (?) of a bracelet or armlet with uraei",
+      "object_date": "305 BCE–364 CE",
+      "medium": "Silver",
+      "place_or_culture": "Egypt",
+      "credit_line": "Purchase, Edward S. Harkness Gift, 1926",
+      "department": "Egyptian Art",
+      "is_public_domain": true,
+      "source_url": "https://www.metmuseum.org/art/collection/search/551867",
+      "boundary": "doubt marker and disjunction in the title: Part (?) of a bracelet or armlet"
+    }
+  ]
+}

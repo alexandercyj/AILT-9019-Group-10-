@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import re
 
-from .factsheet import Fact, build_factsheet
+from .factsheet import build_factsheet
 from .text import words
 
 NOTICE = "Draft for curator review, not an official record."
@@ -81,7 +81,13 @@ def _claims_for(record: dict, medium_span: str) -> list[dict]:
     return claims
 
 
-def _assemble(claims: list[dict]) -> tuple[str, list[str]]:
+def assemble(claims: list[dict]) -> tuple[str, list[str]]:
+    """Join claims, add carrier-only sentences until the word band is reached.
+
+    Public because the model layer uses the same assembly: a rewrite that comes
+    back short gets the same fact-free framing sentences the offline draft uses,
+    rather than being pushed to pad its own sentences with words about the record.
+    """
     body = " ".join(claim["text"] for claim in claims)
     padding: list[str] = []
     total = words(body) + words(NOTICE)
@@ -101,7 +107,7 @@ def render_label(record: dict) -> dict:
 
     for span in medium_variants(str(record.get("medium", ""))):
         claims = _claims_for(record, span)
-        label, padding = _assemble(claims)
+        label, padding = assemble(claims)
         count = words(label)
         candidate = {"claims": claims, "label": label, "padding": padding, "word_count": count}
         if fallback is None:

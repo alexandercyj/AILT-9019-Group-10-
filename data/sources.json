@@ -1,0 +1,267 @@
+{
+  "register": {
+    "version": "1.0.0",
+    "updated": "2026-11-01",
+    "purpose": "Where every record in this repository came from, what the host allows, and what the tool is therefore permitted to do with it.",
+    "how_to_read": [
+      "robots: the file that was actually fetched, its HTTP status, a sha256 prefix of the body, and the verdict reached from it.",
+      "license: the terms the host publishes for the records, not the terms for the website.",
+      "policy.ai_input: may a record from this source be sent to the model layer (--llm)?",
+      "policy.record_source: may records from this source be used as label input at all?",
+      "decision: admitted, refused, or reference_only, with the reason in one sentence.",
+      "A refusal here is a result, not a gap. It is the same posture the pipeline takes on a missing field."
+    ]
+  },
+  "sources": [
+    {
+      "id": "met",
+      "name": "The Metropolitan Museum of Art Open Access",
+      "homepage": "https://www.metmuseum.org/",
+      "access": {
+        "method": "api",
+        "endpoint": "https://collectionapi.metmuseum.org/public/collection/v1/objects/{objectID}",
+        "key_required": false,
+        "documented_at": "https://metmuseum.github.io/"
+      },
+      "robots": {
+        "url": "https://collectionapi.metmuseum.org/robots.txt",
+        "http_status": 404,
+        "body_sha256_prefix": null,
+        "checked": "2026-11-01",
+        "verdict": "no_restriction_published",
+        "notes": "The API host publishes no robots.txt. The website host is behind a bot checkpoint, which is why the tool uses the documented API and never the website."
+      },
+      "license": {
+        "id": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "attribution_required": false
+      },
+      "policy": {
+        "ai_input": true,
+        "redistribute": true,
+        "record_source": true,
+        "notes": "Public-domain records, published for reuse."
+      },
+      "decision": {
+        "status": "admitted",
+        "reason": "Documented open API, CC0 records, no key."
+      },
+      "corpora": [
+        { "alias": "primary", "name": "labeldesk-frozen-corpus", "file": "data/frozen_corpus.json" },
+        { "alias": "egyptian", "name": "labeldesk-egyptian-corpus", "file": "data/frozen_corpus_egyptian.json" }
+      ]
+    },
+    {
+      "id": "cleveland",
+      "name": "The Cleveland Museum of Art Open Access",
+      "homepage": "https://www.clevelandart.org/",
+      "access": {
+        "method": "api",
+        "endpoint": "https://openaccess-api.clevelandart.org/api/artworks/",
+        "key_required": false,
+        "documented_at": "https://openaccess-api.clevelandart.org/"
+      },
+      "robots": {
+        "url": "https://openaccess-api.clevelandart.org/robots.txt",
+        "http_status": 200,
+        "body_sha256_prefix": "832f89b496dedcc1",
+        "checked": "2026-11-01",
+        "verdict": "allowed",
+        "notes": "The API host disallows one crawler (Amazonbot) and nothing else. The museum's website separately sets Crawl-delay: 10 and Disallow: /api on its own host; the tool uses neither, and keeps a 0.5 s gap between API calls."
+      },
+      "license": {
+        "id": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "attribution_required": false
+      },
+      "policy": {
+        "ai_input": true,
+        "redistribute": true,
+        "record_source": true,
+        "notes": "Records flagged CC0 by the API are filtered in at fetch time; the rest are dropped."
+      },
+      "decision": {
+        "status": "admitted",
+        "reason": "Documented open API, CC0 records, robots allows it."
+      },
+      "corpora": [
+        { "alias": "cleveland", "name": "labeldesk-cleveland-corpus", "file": "data/frozen_corpus_cleveland.json" }
+      ]
+    },
+    {
+      "id": "british-museum",
+      "name": "The British Museum",
+      "homepage": "https://www.britishmuseum.org/",
+      "access": {
+        "method": "website",
+        "endpoint": "https://www.britishmuseum.org/collection/object/{id}",
+        "key_required": false,
+        "documented_at": null
+      },
+      "robots": {
+        "url": "https://www.britishmuseum.org/robots.txt",
+        "http_status": 200,
+        "body_sha256_prefix": "43269ab2a79051de",
+        "checked": "2026-11-01",
+        "verdict": "restricted",
+        "notes": "Allow: / for user-agent *, but Content-Signal: search=yes, ai-train=no, use=reference, and a long Disallow list of training crawlers. Crawling for reference is permitted; AI training is not; ai-input is neither granted nor restricted, so the conservative reading applies."
+      },
+      "license": {
+        "id": "no-open-licence-published",
+        "url": "https://www.britishmuseum.org/terms-use",
+        "attribution_required": true
+      },
+      "policy": {
+        "ai_input": false,
+        "redistribute": false,
+        "record_source": false,
+        "notes": "Collection data carries no open licence, and the site answers non-browser clients with a Cloudflare challenge (HTTP 403). Getting past that challenge would be evasion, not permission."
+      },
+      "decision": {
+        "status": "refused",
+        "reason": "No open licence for the records, ai-train=no in the content signals, and the site is bot-protected. Records may only enter through tools/import_records.py, supplied by a person who has legitimate access."
+      },
+      "corpora": []
+    },
+    {
+      "id": "palace-museum",
+      "name": "The Palace Museum (故宫博物院)",
+      "homepage": "https://www.dpm.org.cn/",
+      "access": {
+        "method": "website",
+        "endpoint": null,
+        "key_required": false,
+        "documented_at": null
+      },
+      "robots": {
+        "url": "https://www.dpm.org.cn/robots.txt",
+        "http_status": 404,
+        "body_sha256_prefix": "6091d3cf6514efb5",
+        "checked": "2026-11-01",
+        "verdict": "not_published",
+        "notes": "The request returns a 70-byte meta refresh to /Home.html rather than a robots file. Collection paths tried returned 404 with the same redirect. A missing robots.txt is not a grant, and nothing else on the site supplies one."
+      },
+      "license": {
+        "id": "no-open-licence-published",
+        "url": "https://www.dpm.org.cn/",
+        "attribution_required": true
+      },
+      "policy": {
+        "ai_input": false,
+        "redistribute": false,
+        "record_source": false,
+        "notes": "No robots policy, no open data licence, no API, and no reachable collection endpoint. There is no basis on which to harvest records, so none were."
+      },
+      "decision": {
+        "status": "refused",
+        "reason": "No robots.txt, no open licence, no API. Records may only enter through tools/import_records.py, supplied by a person who has legitimate access."
+      },
+      "corpora": []
+    },
+    {
+      "id": "artic",
+      "name": "The Art Institute of Chicago",
+      "homepage": "https://www.artic.edu/",
+      "access": {
+        "method": "api",
+        "endpoint": "https://api.artic.edu/api/v1/artworks",
+        "key_required": false,
+        "documented_at": "https://api.artic.edu/docs/"
+      },
+      "robots": {
+        "url": "https://api.artic.edu/robots.txt",
+        "http_status": 403,
+        "body_sha256_prefix": null,
+        "checked": "2026-11-01",
+        "verdict": "unreachable",
+        "notes": "Cloudflare managed challenge returned for every request from this network, with a browser user-agent and without one. The body is a challenge page, not a robots file, so no verdict can be reached. No hash is recorded: a challenge page is generated per request, so hashing it would report drift on every run without anything having changed. The status is the fact worth comparing."
+      },
+      "license": {
+        "id": "CC0-1.0",
+        "url": "https://www.artic.edu/open-access",
+        "attribution_required": false
+      },
+      "policy": {
+        "ai_input": false,
+        "redistribute": false,
+        "record_source": false,
+        "notes": "The proposal names this museum as the fallback dataset. It stays named as the fallback: the licence and the API are right, the network path is not. Re-check with tools/check_sources.py before relying on it."
+      },
+      "decision": {
+        "status": "deferred",
+        "reason": "Declared fallback in the proposal. Not frozen because the API answers with a bot challenge from this network; nothing was attempted past the challenge."
+      },
+      "corpora": []
+    },
+    {
+      "id": "wikidata",
+      "name": "Wikidata",
+      "homepage": "https://www.wikidata.org/",
+      "access": {
+        "method": "api",
+        "endpoint": "https://www.wikidata.org/w/api.php",
+        "key_required": false,
+        "documented_at": "https://www.wikidata.org/w/api.php?action=help"
+      },
+      "robots": {
+        "url": "https://www.wikidata.org/robots.txt",
+        "http_status": 200,
+        "body_sha256_prefix": "31077e60ea72809f",
+        "checked": "2026-11-01",
+        "verdict": "allowed",
+        "notes": "The Action API host is allowed; only a list of known-bad crawlers is disallowed. The SPARQL host is a different matter: query.wikidata.org/robots.txt disallows /sparql and /bigdata outright, so no SPARQL query is used anywhere in this repository."
+      },
+      "license": {
+        "id": "CC0-1.0",
+        "url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+        "attribution_required": false
+      },
+      "policy": {
+        "ai_input": true,
+        "redistribute": true,
+        "record_source": false,
+        "notes": "Rejected as a record source, not as a data source. An aggregator record has an inventory number and a material, but no credit line, so it cannot satisfy the five-field contract. Filling that field from the label's own wording would be the exact failure the tool exists to prevent."
+      },
+      "decision": {
+        "status": "reference_only",
+        "reason": "Openly licensed and reachable, but an aggregator record cannot supply a credit line. Useful for cross-checking an object; not usable as label input."
+      },
+      "corpora": []
+    },
+    {
+      "id": "nga",
+      "name": "National Gallery of Art, Washington",
+      "homepage": "https://www.nga.gov/",
+      "access": {
+        "method": "bulk",
+        "endpoint": "https://github.com/NationalGalleryOfArt/opendata",
+        "key_required": false,
+        "documented_at": "https://github.com/NationalGalleryOfArt/opendata"
+      },
+      "robots": {
+        "url": null,
+        "http_status": null,
+        "body_sha256_prefix": null,
+        "checked": "2026-11-01",
+        "verdict": "not_applicable",
+        "notes": "The data is a CC0 bulk dump on GitHub, fetched as a file rather than crawled from the museum's site, so no robots policy applies to this project's access."
+      },
+      "license": {
+        "id": "CC0-1.0",
+        "url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "attribution_required": false
+      },
+      "policy": {
+        "ai_input": true,
+        "redistribute": true,
+        "record_source": true,
+        "notes": "Admitted in principle; not frozen, because the dump is far larger than a 10-record corpus warrants and the repository keeps its data small on purpose."
+      },
+      "decision": {
+        "status": "admitted_not_frozen",
+        "reason": "CC0 and reachable, but nothing in the project needs a second bulk source yet."
+      },
+      "corpora": []
+    }
+  ]
+}

@@ -74,6 +74,10 @@
                 <button class="primary-button" type="submit" id="draftButton">Draft grounded label <span>→</span></button>
                 <button class="secondary-button" type="button" id="refusalButton">Test refusal path</button>
               </div>
+              <label class="toggle wide">
+                <input type="checkbox" id="llmToggle" />
+                <span>Model rewrite (optional). Kept only if it passes the same four checks; otherwise the offline draft is shown.</span>
+              </label>
             </form>
           </div>
         </section>
@@ -91,6 +95,7 @@
             <div class="claim-list" id="claimList"></div>
           </div>
           <div class="citation-strip" id="citationStrip"></div>
+          <p class="panel-note" id="modelNote" hidden></p>
         </section>
       </div>
 
@@ -124,6 +129,7 @@
             <div class="port-row"><span class="file-chip">corpus</span><span class="port-line"></span><span class="port-value" id="corpusVersion">—</span></div>
             <div class="port-row"><span class="file-chip">records</span><span class="port-line"></span><span class="port-value" id="corpusCount">—</span></div>
             <div class="port-row"><span class="file-chip">sha256</span><span class="port-line"></span><span class="port-value" id="corpusChecksum">—</span></div>
+            <div class="port-row"><span class="file-chip">source</span><span class="port-line"></span><span class="port-value" id="corpusSource">—</span></div>
           </div>
         </section>
 

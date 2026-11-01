@@ -6,6 +6,9 @@ __pycache__/
 data/.rebuilt.json
 .workbuddy-ai/
 
+# model layer credentials: never commit a key. .env.example is the committed shape.
+.env
+
 # local editor noise
 .Rhistory
 .DS_Store
