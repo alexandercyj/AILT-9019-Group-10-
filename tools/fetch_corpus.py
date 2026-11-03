@@ -49,6 +49,7 @@ USER_AGENT = "LabelDesk-AILT9019/1.1 (course project; educational use)"
 # pipeline cannot disagree about what "complete" means.
 sys.path.insert(0, str(ROOT))
 from labeldesk.corpus import REQUIRED_FIELDS  # noqa: E402
+from labeldesk.net import ssl_context  # noqa: E402
 MET_API = "https://collectionapi.metmuseum.org/public/collection/v1/objects/{oid}"
 CMA_API = "https://openaccess-api.clevelandart.org/api/artworks/{oid}"
 
@@ -199,7 +200,7 @@ PRESETS: dict[str, dict] = {
 
 def _get_json(url: str) -> dict:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(request, timeout=30) as response:
+    with urllib.request.urlopen(request, timeout=30, context=ssl_context()) as response:
         return json.load(response)
 
 

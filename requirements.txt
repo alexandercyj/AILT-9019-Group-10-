@@ -8,3 +8,10 @@ pytest==9.1.1
 # labeldesk posts to the same compatible-mode endpoint over plain HTTP, so this
 # line is a preference, not a requirement.
 openai>=1.40,<3
+
+# Root certificates for the only HTTPS calls the project makes: the museum open
+# APIs behind `python3 server.py`'s live fetch, and the live model endpoint. A
+# Python that already ships a root store (system pythons) does not need it; the
+# python.org macOS installer ships none, and without this every live call fails
+# certificate verification.
+certifi

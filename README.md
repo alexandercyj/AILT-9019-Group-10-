@@ -35,11 +35,11 @@ cost prose quality; it cannot cost a fact or a citation.
 | --- | --- |
 | Corpora | 20 records (Met, 4 departments) · 10 (Met, Egyptian Art) · 10 (Cleveland Museum of Art) |
 | Sources checked | 7, of which 2 admitted, 2 refused, 1 deferred, 1 reference-only, 1 not frozen |
-| Tests | 191 |
+| Tests | 201 |
 | Golden set | 17/17 cases, both model-off and model-on |
 | Cross-corpus run | 40 records, 0 check failures, 35/37 rewrites accepted |
 | Claim precision · citation resolution | 100% · 100%, every run |
-| Network at run time | none, unless `--llm` is passed |
+| Network at run time | none, unless `--llm` or a live fetch is asked for |
 
 ---
 
@@ -204,8 +204,25 @@ python3 server.py            # http://127.0.0.1:8000
 The page posts the selected catalogue number to the same Python pipeline and draws the
 result. It contains no second implementation of the renderer or the check, so the two
 paths cannot disagree. Add `#refuse` to the URL (`http://127.0.0.1:8000/#refuse`) to open
-on the refusal path. A "Model rewrite" checkbox posts `{"llm": "auto"}`; unchecked, the
+on the refusal path. A "model rewrite" checkbox posts `{"llm": "auto"}`; unchecked, the
 page never asks for a model call.
+
+The page can also leave the frozen corpus. The "Try a record that is not in the corpus"
+box posts to `/api/fetch`, which reads that one record from the Met or Cleveland open
+API at request time and drafts it through the identical pipeline — same refusals, same
+four checks, same model guardrail, nothing written to disk. A record the API returns
+without a required field is refused, not filled in: the Met's European Paintings
+department leaves `culture` blank, which is why a famous painting can be a refusal and a
+vase is not. Live fetch needs network access and a root certificate store (see Setup);
+the page says so honestly when either is missing.
+
+An "ask something" box demonstrates the out-of-scope refusal with the CLI's own wording.
+
+HTTPS verification note: the only outbound calls this project makes are the museum open
+APIs and the optional model endpoint, and both verify TLS through `labeldesk/net.py`,
+which prefers `certifi` when it is installed. The python.org macOS installer ships
+without any root store, so on that build `certifi` is not optional in practice — it is
+listed in `requirements.txt`.
 
 ---
 
@@ -224,7 +241,7 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `191 passed`. The suite is not a smoke test — it breaks the output on purpose
+Expected: `201 passed`. The suite is not a smoke test — it breaks the output on purpose
 and requires the check to catch it:
 
 | Test file | What it proves |
@@ -240,6 +257,7 @@ and requires the check to catch it:
 | `tests/test_third_corpus.py` | The second museum does too, on dates the team did not phrase. |
 | `tests/test_sources.py` | Every shipped corpus is registered, and the pipeline refuses the model for one that is not. |
 | `tests/test_import.py` | A CSV with an unquoted comma is refused rather than silently misaligned. |
+| `tests/test_server.py` | The HTTP surface over a real socket: frozen drafts and refusals, and live fetch drafting outside records — grounded, policy-gated, offline-mocked. |
 | `tests/test_standalone.py` | Every label in `labeldesk.html` equals a fresh pipeline run, and the file has no external reference. |
 | `tests/test_skill.py` | The skill file describes the program that actually runs. |
 

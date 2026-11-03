@@ -14,6 +14,7 @@
   --white: #ffffff;
   --navy: #173640;
   --teal: #147d78;
+  --teal-deep: #0f6661;
   --teal-soft: #dff2ee;
   --amber: #b67827;
   --amber-soft: #fff1d9;
@@ -27,22 +28,22 @@
 body { margin: 0; background: var(--paper); color: var(--ink); min-width: 320px; }
 button, input, select { font: inherit; }
 button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
 .topbar { min-height: 76px; padding: 16px clamp(20px, 4vw, 58px); background: var(--white); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .brand-wrap, .top-actions, .section-heading, .form-actions, .check-row, .port-row, .footer { display: flex; align-items: center; }
 .brand-wrap { gap: 12px; }
 .brand-mark { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--navy); color: #fff; font-size: 13px; font-weight: 800; letter-spacing: .04em; }
-.eyebrow { margin: 0 0 5px; color: var(--muted); font-size: 10px; line-height: 1.2; font-weight: 800; letter-spacing: .14em; }
+.eyebrow { margin: 0 0 5px; color: var(--muted); font-size: 10px; line-height: 1.2; font-weight: 800; letter-spacing: .1em; }
 .eyebrow.accent { color: var(--teal); }
-h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3, h4, p { margin-top: 0; }
 h1 { margin-bottom: 0; font-size: 18px; line-height: 1.1; }
 h2 { max-width: 650px; margin-bottom: 10px; font-size: clamp(27px, 4vw, 44px); line-height: 1.05; letter-spacing: -0.02em; }
 h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 .top-actions { gap: 14px; }
 .status-pill, .source-badge, .result-status { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; border-radius: 999px; font-size: 11px; font-weight: 800; letter-spacing: .04em; }
 .status-pill { padding: 8px 11px; color: var(--teal); background: var(--teal-soft); }
-.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); }
-.ghost-button, .secondary-button { border: 1px solid var(--line); background: transparent; color: var(--ink); }
-.ghost-button { padding: 8px 12px; border-radius: 7px; font-size: 12px; }
+.status-pill.is-bad { color: var(--red); background: var(--red-soft); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .app-shell { max-width: 1440px; margin: 0 auto; padding: 30px clamp(20px, 4vw, 58px) 28px; }
 .panel { background: var(--white); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
 .hero { padding: clamp(24px, 4vw, 43px); display: flex; justify-content: space-between; gap: 36px; align-items: flex-end; background: linear-gradient(110deg, #fff 0%, #f7fbf9 65%, #eaf5f1 100%); }
@@ -57,14 +58,13 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 .section-heading { justify-content: space-between; gap: 15px; margin-bottom: 20px; }
 .section-heading.compact { margin-bottom: 17px; }
 .source-badge { padding: 7px 10px; color: var(--amber); background: var(--amber-soft); }
+.source-badge.is-live { color: var(--teal); background: var(--teal-soft); }
 .record-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 24px; }
-.object-preview { min-height: 310px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: #eff5f2; display: flex; flex-direction: column; justify-content: space-between; }
-.object-orbit { position: relative; flex: 1; min-height: 210px; display: grid; place-items: center; }
-.object-orbit::before, .object-orbit::after { content: ""; position: absolute; border: 1px solid #bfd5ce; border-radius: 50%; transform: rotate(-18deg); }
-.object-orbit::before { width: 150px; height: 75px; }
-.object-orbit::after { width: 190px; height: 105px; opacity: .55; }
-.object-vase { position: relative; z-index: 1; width: 80px; height: 132px; border: 4px solid var(--navy); border-top-width: 7px; border-radius: 42% 42% 35% 35% / 18% 18% 13% 13%; background: repeating-linear-gradient(90deg, transparent 0 12px, rgba(20,125,120,.18) 12px 15px); transform: perspective(150px) rotateX(-4deg); }
-.object-vase::before { content: ""; position: absolute; width: 46px; height: 14px; left: 13px; top: -17px; border: 4px solid var(--navy); border-radius: 50%; background: #eff5f2; }
+.object-preview { min-height: 310px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: #eff5f2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+.object-plate { flex: 1; min-height: 210px; border: 1px solid #cfdcd6; border-radius: 6px; background: radial-gradient(circle at 50% 36%, rgba(20, 125, 120, .07), transparent 62%), linear-gradient(160deg, #fbfdfc, #edf3f0); display: grid; place-content: center; justify-items: center; gap: 12px; padding: 18px; text-align: center; }
+.plate-initials { font-family: Georgia, "Times New Roman", serif; font-size: 54px; line-height: 1; color: var(--navy); letter-spacing: .04em; }
+.plate-rule { width: 44px; border-top: 2px solid var(--teal); }
+.plate-number { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .06em; }
 .object-caption { color: var(--muted); font-size: 11px; line-height: 1.5; }
 .object-caption b { color: var(--ink); font-weight: 700; }
 .record-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-content: start; }
@@ -80,12 +80,23 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 .code-block { margin-bottom: 16px; padding: 12px 13px; border: 1px solid var(--line); border-radius: 7px; background: #f2f6f5; color: var(--navy); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; overflow-x: auto; }
 .object-caption a { color: var(--teal); text-decoration: none; font-weight: 700; }
 .object-caption a:hover { text-decoration: underline; }
-.record-form input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20,125,120,.12); }
+.record-form input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20, 125, 120, .12); }
 .form-actions { grid-column: 1 / -1; gap: 10px; margin-top: 5px; flex-wrap: wrap; }
-.primary-button, .secondary-button { min-height: 42px; padding: 0 15px; border-radius: 7px; font-weight: 800; font-size: 12px; }
-.primary-button { border: 1px solid var(--teal); background: var(--teal); color: #fff; }
-.primary-button span { margin-left: 10px; font-size: 17px; line-height: 0; }
-.secondary-button { background: #fff; color: var(--red); border-color: #efc4c1; }
+.primary-button, .secondary-button, .ghost-button { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 8px; border: 1px solid transparent; font-weight: 700; font-size: 13px; line-height: 1; transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease; }
+.primary-button { background: var(--teal); border-color: var(--teal); color: #fff; }
+.primary-button:hover:not(:disabled) { background: var(--teal-deep); border-color: var(--teal-deep); }
+.primary-button:active:not(:disabled) { background: #0b5651; border-color: #0b5651; }
+.secondary-button { background: #fff; border-color: var(--line); color: var(--ink); }
+.secondary-button:hover:not(:disabled) { border-color: var(--teal); color: var(--teal); }
+.ghost-button { padding: 8px 12px; min-height: 34px; border-radius: 7px; background: transparent; border-color: var(--line); color: var(--ink); font-size: 12px; }
+.ghost-button:hover:not(:disabled) { background: #edf3f1; border-color: #c5d4cf; }
+.primary-button:focus-visible, .secondary-button:focus-visible, .ghost-button:focus-visible, .chip:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(20, 125, 120, .28); }
+.primary-button:disabled, .secondary-button:disabled, .ghost-button:disabled { opacity: .6; }
+.button-icon { display: inline-flex; width: 14px; height: 14px; }
+.button-icon svg, .link-icon svg, .shield svg, .check-icon svg, .tag-icon svg { width: 100%; height: 100%; }
+.is-loading .button-icon { display: none; }
+.is-loading::before { content: ""; width: 13px; height: 13px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: ld-spin .7s linear infinite; }
+@keyframes ld-spin { to { transform: rotate(360deg); } }
 .result-status { padding: 7px 10px; color: var(--teal); background: var(--teal-soft); }
 .result-status.refused { color: var(--red); background: var(--red-soft); }
 .result-card { min-height: 190px; padding: 22px; border-left: 3px solid var(--teal); background: #f8fbfa; }
@@ -96,14 +107,18 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 .claim-tag { color: var(--navy); background: #e7efec; }
 .citation-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .citation-tag { color: var(--teal); background: var(--teal-soft); }
-.shield, .link-icon { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 7px; color: var(--teal); background: var(--teal-soft); font-weight: 900; }
-.link-icon { color: var(--navy); background: #e9eff0; }
+.tag-icon { display: inline-flex; width: 10px; height: 10px; margin-right: 5px; }
+.shield, .link-icon { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 7px; color: var(--teal); background: var(--teal-soft); }
+.shield { padding: 6px; }
+.shield.is-bad { color: var(--red); background: var(--red-soft); }
+.link-icon { color: var(--navy); background: #e9eff0; padding: 7px; }
 .check-score { padding: 16px 0 18px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 10px; }
 .check-score strong { color: var(--teal); font-size: 36px; letter-spacing: -0.04em; }
 .check-score span, .panel-note { color: var(--muted); font-size: 12px; }
 .check-list { display: grid; gap: 14px; padding-top: 17px; }
 .check-row { align-items: flex-start; gap: 10px; }
-.check-icon { flex: 0 0 auto; width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--teal); font-size: 11px; font-weight: 900; }
+.check-icon { flex: 0 0 auto; width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--teal); padding: 4px; }
+.check-icon.is-bad { background: var(--red); }
 .check-row b, .check-row small { display: block; }
 .check-row b { margin-bottom: 3px; font-size: 12px; }
 .check-row small { color: var(--muted); font-size: 11px; line-height: 1.35; }
@@ -113,18 +128,30 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 .file-chip { flex: 0 0 auto; padding: 5px 7px; border-radius: 4px; background: #edf2f1; color: var(--navy); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
 .port-line { flex: 1; border-top: 1px dashed #b6c7c4; }
 .port-value { flex: 0 0 auto; color: var(--teal); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 800; }
-.inline-suggestion { margin-top: 20px; padding: 13px; border: 1px solid #f0d6a7; border-radius: 7px; background: #fff9ed; }
-.inline-suggestion span { color: var(--amber); font-size: 10px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
-.inline-suggestion p { margin: 6px 0 0; color: #7d5a2a; font-size: 11px; line-height: 1.55; }
 .notes-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px; }
 .notes-list li { padding-left: 15px; border-left: 2px solid #b7d9d4; color: var(--muted); font-size: 12px; line-height: 1.5; }
 .notes-list b { color: var(--ink); }
-.footer { max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 58px) 26px; justify-content: space-between; gap: 15px; color: var(--muted); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; }
+.footer { max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 58px) 26px; justify-content: space-between; gap: 15px; color: var(--muted); font-size: 11px; }
 .record-form .toggle { display: flex; align-items: flex-start; gap: 9px; color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
 .record-form .toggle input[type="checkbox"] { width: 15px; min-height: 0; height: 15px; margin: 2px 0 0; padding: 0; accent-color: var(--teal); }
 #modelNote { margin: 12px 0 0; padding: 9px 12px; border-radius: 8px; background: var(--teal-soft); color: var(--navy); font-size: 12px; line-height: 1.45; }
+.ask-row { display: flex; align-items: flex-end; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line); }
+.probe { flex: 1; display: grid; gap: 7px; color: var(--muted); font-size: 11px; font-weight: 800; }
+.probe input, .probe select { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; outline: none; background: #fbfcfb; color: var(--ink); font-size: 13px; font-weight: 500; }
+.probe input:focus, .probe select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20, 125, 120, .12); }
+.fetch-box { margin-top: 16px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: #f8fbfa; }
+.fetch-head h4 { margin: 0 0 5px; font-size: 13px; }
+.fetch-head p { margin: 0 0 13px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.fetch-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.fetch-row .probe { flex: 1.4; min-width: 150px; }
+.fetch-row .probe-grow { flex: 2; min-width: 160px; }
+.fetch-examples { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
+.chip { padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); font-size: 11px; font-weight: 700; transition: border-color .15s ease, color .15s ease; }
+.chip:hover { border-color: var(--teal); color: var(--teal); }
+.fetch-status { margin: 12px 0 0; padding: 9px 12px; border-radius: 8px; background: var(--red-soft); color: #7d2f2c; font-size: 12px; line-height: 1.45; }
+.fetch-status[hidden] { display: none; }
 @media (max-width: 980px) { .hero { align-items: stretch; flex-direction: column; } .hero-metrics { min-width: 0; padding: 18px 0 0; border-top: 1px solid var(--line); border-left: 0; } .workspace-grid { grid-template-columns: 1fr; } .side-column { grid-template-columns: repeat(2, minmax(0, 1fr)); } .notes-panel { grid-column: 1 / -1; } }
-@media (max-width: 680px) { .topbar { align-items: flex-start; flex-direction: column; } .top-actions { width: 100%; justify-content: space-between; } .record-layout { grid-template-columns: 1fr; } .object-preview { min-height: 220px; } .record-form { grid-template-columns: 1fr; } .side-column { grid-template-columns: 1fr; } .hero-metrics { gap: 10px; } .label-text { font-size: 17px; } .footer { align-items: flex-start; flex-direction: column; } }
+@media (max-width: 680px) { .topbar { align-items: flex-start; flex-direction: column; } .top-actions { width: 100%; justify-content: space-between; } .record-layout { grid-template-columns: 1fr; } .object-preview { min-height: 220px; } .object-plate { min-height: 170px; } .record-form { grid-template-columns: 1fr; } .side-column { grid-template-columns: 1fr; } .hero-metrics { gap: 10px; } .label-text { font-size: 17px; } .footer { align-items: flex-start; flex-direction: column; } .ask-row, .fetch-row { flex-direction: column; align-items: stretch; } }
 
 
 /* Additions used only by the standalone build. Everything else comes from styles.css,
@@ -287,41 +314,43 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     <div class="brand-wrap">
       <div class="brand-mark">LD</div>
       <div>
-        <p class="eyebrow">AILT9019 · AI Literacy II · Group 10</p>
+        <p class="eyebrow">AILT9019 · Group 10</p>
         <h1>Label Desk</h1>
       </div>
     </div>
     <div class="top-actions">
       <span class="status-pill" id="serverStatus"><span class="status-dot"></span>Standalone file</span>
-      <button class="ghost-button" id="resetButton" type="button">Reset</button>
+      <button class="ghost-button" id="resetButton" type="button">Start over</button>
     </div>
   </header>
 
   <main class="app-shell">
     <section class="hero panel">
       <div>
-        <p class="eyebrow accent">GROUNDED LABEL DRAFTING AID</p>
-        <h2>Turn a catalogue record into a reviewable label.</h2>
+        <p class="eyebrow accent">Exhibition labels, drafted one record at a time</p>
+        <h2>A label draft you can check sentence by sentence.</h2>
         <p class="hero-copy">
-          Every sentence is a claim tied to one field of a frozen record. The check reads the
-          claims, not the prose. A record that cannot supply a required field is refused, never
-          filled in. This file needs no server: open it and it works.
+          Every label below was drafted by the real pipeline and embedded in this file at
+          build time. Each sentence restates one field of the catalogue record it cites, and
+          the checks on the right read the sentences back against that record. When a record
+          cannot support a sentence, the tool refuses instead of guessing. No server, no
+          network: open the file and it works.
         </p>
       </div>
       <div class="hero-metrics">
         <div><strong id="metricRecords">—</strong><span>records, three corpora</span></div>
-        <div><strong>100%</strong><span>claim precision gate</span></div>
+        <div><strong>4</strong><span>checks before a draft shows</span></div>
         <div><strong>0</strong><span>network calls, ever</span></div>
       </div>
     </section>
 
     <div class="banner snapshot-banner">
-      <b>This is a snapshot, not a second implementation.</b>
+      <b>A snapshot of one implementation, not a second one.</b>
       <span>
-        Every label, claim, citation and check below was produced by the real Python pipeline at
-        build time (<code>tools/build_standalone.py</code>) and is embedded here verbatim. The page
-        looks results up; it does not compute them. Reproduce any of them with the command shown in
-        <em>04 · REPRODUCE</em>.
+        Every label, claim, citation and check below was produced by the Python package at
+        build time (<code>tools/build_standalone.py</code>) and is embedded here verbatim. The
+        page looks results up; it computes nothing. Reproduce any of them with the command
+        shown under <em>Reproduce it</em>.
       </span>
     </div>
 
@@ -330,7 +359,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
         <section class="panel record-panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">01 · INPUT RECORD</p>
+              <p class="eyebrow">The record</p>
               <h3>Catalogue record</h3>
             </div>
             <span class="source-badge" id="sourceBadge">Frozen corpus</span>
@@ -340,10 +369,12 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 
           <div class="record-layout">
             <div class="object-preview">
-              <div class="object-orbit"><div class="object-vase"></div></div>
+              <div class="object-plate">
+                <span class="plate-initials" id="plateInitials">·</span>
+                <span class="plate-rule"></span>
+                <span class="plate-number" id="previewNumber">—</span>
+              </div>
               <span class="object-caption">
-                Object preview<br />
-                <b id="previewNumber">—</b><br />
                 <a id="sourceLink" href="#" target="_blank" rel="noopener">Museum record</a>
               </span>
             </div>
@@ -355,14 +386,17 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
               <label class="wide">Place or culture<input id="fieldCulture" readonly /></label>
               <label class="wide">Credit line<input id="fieldCredit" readonly /></label>
               <div class="form-actions">
-                <button class="primary-button" type="submit" id="draftButton">Draft grounded label <span>→</span></button>
-                <button class="secondary-button" type="button" id="refusalButton">Test refusal path</button>
+                <button class="primary-button" type="submit" id="draftButton">
+                  <span class="button-label">Draft label</span>
+                  <span class="button-icon" data-icon="arrow-right"></span>
+                </button>
+                <button class="secondary-button" type="button" id="refusalButton">Show a refusal</button>
               </div>
               <label class="toggle wide">
                 <input type="checkbox" id="llmToggle" />
                 <span>
-                  Model rewrite (recorded). Kept only if it passes the same four checks; otherwise
-                  the offline draft is shown and the reason is reported.
+                  Show the recorded model rewrite. It is used only when it passed the same
+                  four checks; otherwise you see the offline draft and the reason.
                 </span>
               </label>
             </form>
@@ -370,15 +404,15 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 
           <div class="probe-row">
             <label class="probe">
-              Any catalogue number
+              A catalogue number not in this corpus
               <input id="probeNumber" placeholder="e.g. 99.99.99" autocomplete="off" />
             </label>
             <button class="ghost-button" type="button" id="probeButton">Look it up</button>
           </div>
           <div class="probe-row">
             <label class="probe">
-              Ask a question
-              <input id="probeQuestion" placeholder='e.g. "what is it worth?"' autocomplete="off" />
+              Ask something about this record
+              <input id="probeQuestion" placeholder='for example: "what is it worth?"' autocomplete="off" />
             </label>
             <button class="ghost-button" type="button" id="askButton">Ask</button>
           </div>
@@ -387,13 +421,13 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
         <section class="panel output-panel" aria-live="polite">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">02 · RESULT</p>
-              <h3 id="resultTitle">Grounded draft</h3>
+              <p class="eyebrow">The draft</p>
+              <h3 id="resultTitle">Draft</h3>
             </div>
             <span class="result-status drafted" id="resultStatus">—</span>
           </div>
           <div class="result-card" id="resultCard">
-            <p class="label-text" id="labelText">Choose a record and draft a label.</p>
+            <p class="label-text" id="labelText">Choose a record to see its draft.</p>
             <div class="claim-list" id="claimList"></div>
           </div>
           <div class="citation-strip" id="citationStrip"></div>
@@ -406,8 +440,8 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
         <section class="panel check-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">03 · SAFETY CHECK</p>
-              <h3>Grounding status</h3>
+              <p class="eyebrow">The check</p>
+              <h3>Four checks, read the claims</h3>
             </div>
             <span class="shield" id="shield">·</span>
           </div>
@@ -421,12 +455,12 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
         <section class="panel ports-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">04 · REPRODUCE</p>
-              <h3>Same result from the CLI</h3>
+              <p class="eyebrow">Reproduce it</p>
+              <h3>Same result from the command line</h3>
             </div>
-            <span class="link-icon">↗</span>
+            <span class="link-icon" data-icon="external"></span>
           </div>
-          <p class="panel-note">This page shows the pipeline's output; it does not reimplement it.</p>
+          <p class="panel-note">The logic lives in the Python package; this page only shows what it returned.</p>
           <div class="code-block" id="commandBlock">python3 -m labeldesk 14.40.377</div>
           <div class="port-list">
             <div class="port-row"><span class="file-chip">corpus</span><span class="port-line"></span><span class="port-value" id="corpusVersion">—</span></div>
@@ -439,28 +473,28 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
         <section class="panel notes-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">05 · WHAT IT REFUSES</p>
-              <h3>Designed refusals</h3>
+              <p class="eyebrow">When it says no</p>
+              <h3>Refusals are deliberate</h3>
             </div>
           </div>
           <ul class="notes-list">
-            <li><b>Missing field:</b> a blank title, date, medium, place or credit line stops the draft.</li>
-            <li><b>Unknown number:</b> a catalogue number outside the corpus is refused, not approximated.</li>
-            <li><b>Out of scope:</b> value, authenticity, insurance and rights questions are declined.</li>
-            <li><b>Source policy:</b> a corpus whose source forbids it never reaches the model at all.</li>
+            <li><b>A blank field.</b> A record missing a title, date, medium, place or credit line is not drafted. The gap is reported, not filled in from elsewhere.</li>
+            <li><b>An unknown number.</b> A catalogue number outside the corpus is refused, not approximated with a look-alike object.</li>
+            <li><b>A question out of scope.</b> Value, authenticity, insurance and rights questions are declined; the tool holds no data to answer them.</li>
+            <li><b>A source that opts out.</b> A corpus whose register entry forbids model input never reaches the model, whatever is asked.</li>
           </ul>
         </section>
 
         <section class="panel sources-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">06 · SOURCES</p>
+              <p class="eyebrow">Sources</p>
               <h3>What was admitted, what was refused</h3>
             </div>
           </div>
           <p class="panel-note">
-            Seven sources were examined by reading their robots files. Two museums were refused,
-            and the refusal is recorded rather than routed around.
+            Seven sources were read by reading their robots files. Two museums were refused,
+            and the refusals are recorded here rather than routed around.
           </p>
           <div class="source-table-wrap">
             <table class="source-table" id="sourceTable"></table>
@@ -472,7 +506,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 
   <footer class="footer">
     <span>Label Desk · AILT9019 Group 10 · built from <span id="footerCorpora">—</span></span>
-    <span id="footerHash">—</span>
+    <span>A draft is a starting point, not a label. · <span id="footerHash">—</span></span>
   </footer>
 
   <script type="application/json" id="labeldesk-data">
@@ -502,6 +536,25 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   var META = DATA.meta;
   var CORPORA = DATA.corpora;
 
+  // Icons are inline SVG so buttons and badges render the same on every
+  // platform — no font glyphs that can fall back to a mismatched sticker.
+  var ICONS = {
+    "arrow-right":
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h10"/><path d="M9 3.5 13.5 8 9 12.5"/></svg>',
+    external:
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4"/><path d="M5.5 4H12v6.5"/></svg>',
+    citation:
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v7a3 3 0 0 0 3 3h7"/></svg>',
+    check:
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg>',
+    warn:
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 4v5.5"/><circle cx="8" cy="12.2" r="1.1" fill="currentColor" stroke="none"/></svg>'
+  };
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-icon]"), function (slot) {
+    slot.innerHTML = ICONS[slot.getAttribute("data-icon")] || "";
+  });
+
   var CHECK_ORDER = [
     ["field_existence", "Field existence", "Every claim cites a supplied field."],
     ["value_containment", "Value containment", "Every claim stays inside its cited value."],
@@ -526,6 +579,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     refusalButton: document.getElementById("refusalButton"),
     resetButton: document.getElementById("resetButton"),
     llmToggle: document.getElementById("llmToggle"),
+    plateInitials: document.getElementById("plateInitials"),
     previewNumber: document.getElementById("previewNumber"),
     sourceLink: document.getElementById("sourceLink"),
     sourceBadge: document.getElementById("sourceBadge"),
@@ -644,6 +698,16 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     }).join("");
   }
 
+  function plateInitials(title) {
+    var words = String(title || "")
+      .split(/\s+/)
+      .map(function (word) { return word.replace(/[^A-Za-zÀ-ÿ0-9]/g, ""); })
+      .filter(function (word) { return word && !/^(a|an|the|of|and)$/i.test(word); });
+    if (!words.length) return "?";
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+
   function fillRecord(record) {
     FIELDS.forEach(function (pair) {
       var input = document.getElementById(pair[1]);
@@ -652,14 +716,15 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
       input.value = value ? value : "— (missing)";
       input.classList.toggle("missing", !!missing);
     });
+    els.plateInitials.textContent = plateInitials(record ? record.title : "");
     els.previewNumber.textContent = record ? record.catalogue_number : "—";
     if (record && record.source_url) {
       els.sourceLink.href = record.source_url;
-      els.sourceLink.textContent = "Museum record";
+      els.sourceLink.textContent = "Open the museum record";
       els.sourceLink.removeAttribute("aria-disabled");
     } else {
       els.sourceLink.href = "#";
-      els.sourceLink.textContent = "No record URL";
+      els.sourceLink.textContent = "No museum link in the record";
       els.sourceLink.setAttribute("aria-disabled", "true");
     }
   }
@@ -688,26 +753,24 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     if (!checks) {
       els.score.textContent = "—";
       els.scoreLabel.textContent = "refused before any check";
-      els.shield.textContent = "✕";
-      els.shield.style.color = "var(--red)";
-      els.shield.style.background = "var(--red-soft)";
+      els.shield.innerHTML = ICONS.warn;
+      els.shield.classList.add("is-bad");
       els.checkList.innerHTML =
-        '<div class="check-row"><span class="check-icon" style="background:var(--red)">✕</span>' +
+        '<div class="check-row"><span class="check-icon is-bad">' + ICONS.warn + "</span>" +
         "<div><b>Not run</b><small>A refusal produces no label, so there is nothing to check.</small></div></div>";
       return;
     }
     els.score.textContent = Math.round(checks.claim_precision * 100) + "%";
     els.scoreLabel.textContent = checks.passed ? "all four checks pass" : "a check failed";
-    els.shield.textContent = checks.passed ? "✓" : "✕";
-    els.shield.style.color = checks.passed ? "var(--teal)" : "var(--red)";
-    els.shield.style.background = checks.passed ? "var(--teal-soft)" : "var(--red-soft)";
+    els.shield.innerHTML = checks.passed ? ICONS.check : ICONS.warn;
+    els.shield.classList.toggle("is-bad", !checks.passed);
     els.checkList.innerHTML = CHECK_ORDER.map(function (row) {
       var check = checks[row[0]] || {};
       var ok = !!check.passed;
       return (
         '<div class="check-row">' +
-        '<span class="check-icon"' + (ok ? "" : ' style="background:var(--red)"') + ">" +
-        (ok ? "✓" : "✕") + "</span>" +
+        '<span class="check-icon' + (ok ? "" : " is-bad") + '">' +
+        (ok ? ICONS.check : ICONS.warn) + "</span>" +
         "<div><b>" + row[1] + "</b><small>" + escapeHtml(check.detail || row[2]) + "</small></div>" +
         "</div>"
       );
@@ -723,7 +786,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     }).join("");
     els.citationStrip.innerHTML = (result.citations || []).map(function (citation) {
       return (
-        '<span class="citation-tag">' + escapeHtml(citation.field) + " → " +
+        '<span class="citation-tag"><span class="tag-icon">' + ICONS.citation + "</span>" +
         escapeHtml(citation.value_span) + "</span>"
       );
     }).join("");
@@ -758,7 +821,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   }
 
   function showDrafted(result, number) {
-    els.resultTitle.textContent = "Grounded draft";
+    els.resultTitle.textContent = "Draft";
     els.resultStatus.textContent = "DRAFTED · " + result.word_count + " words";
     els.resultStatus.className = "result-status drafted";
     els.resultCard.className = "result-card";
@@ -771,7 +834,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   }
 
   function showRefused(result, number) {
-    els.resultTitle.textContent = "Refused";
+    els.resultTitle.textContent = "Refusal";
     els.resultStatus.textContent = "REFUSED · " + result.reason;
     els.resultStatus.className = "result-status refused";
     els.resultCard.className = "result-card refused";

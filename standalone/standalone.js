@@ -21,6 +21,25 @@
   var META = DATA.meta;
   var CORPORA = DATA.corpora;
 
+  // Icons are inline SVG so buttons and badges render the same on every
+  // platform — no font glyphs that can fall back to a mismatched sticker.
+  var ICONS = {
+    "arrow-right":
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h10"/><path d="M9 3.5 13.5 8 9 12.5"/></svg>',
+    external:
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4"/><path d="M5.5 4H12v6.5"/></svg>',
+    citation:
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v7a3 3 0 0 0 3 3h7"/></svg>',
+    check:
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg>',
+    warn:
+      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M8 4v5.5"/><circle cx="8" cy="12.2" r="1.1" fill="currentColor" stroke="none"/></svg>'
+  };
+
+  Array.prototype.forEach.call(document.querySelectorAll("[data-icon]"), function (slot) {
+    slot.innerHTML = ICONS[slot.getAttribute("data-icon")] || "";
+  });
+
   var CHECK_ORDER = [
     ["field_existence", "Field existence", "Every claim cites a supplied field."],
     ["value_containment", "Value containment", "Every claim stays inside its cited value."],
@@ -45,6 +64,7 @@
     refusalButton: document.getElementById("refusalButton"),
     resetButton: document.getElementById("resetButton"),
     llmToggle: document.getElementById("llmToggle"),
+    plateInitials: document.getElementById("plateInitials"),
     previewNumber: document.getElementById("previewNumber"),
     sourceLink: document.getElementById("sourceLink"),
     sourceBadge: document.getElementById("sourceBadge"),
@@ -163,6 +183,16 @@
     }).join("");
   }
 
+  function plateInitials(title) {
+    var words = String(title || "")
+      .split(/\s+/)
+      .map(function (word) { return word.replace(/[^A-Za-zÀ-ÿ0-9]/g, ""); })
+      .filter(function (word) { return word && !/^(a|an|the|of|and)$/i.test(word); });
+    if (!words.length) return "?";
+    if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+    return (words[0][0] + words[1][0]).toUpperCase();
+  }
+
   function fillRecord(record) {
     FIELDS.forEach(function (pair) {
       var input = document.getElementById(pair[1]);
@@ -171,14 +201,15 @@
       input.value = value ? value : "— (missing)";
       input.classList.toggle("missing", !!missing);
     });
+    els.plateInitials.textContent = plateInitials(record ? record.title : "");
     els.previewNumber.textContent = record ? record.catalogue_number : "—";
     if (record && record.source_url) {
       els.sourceLink.href = record.source_url;
-      els.sourceLink.textContent = "Museum record";
+      els.sourceLink.textContent = "Open the museum record";
       els.sourceLink.removeAttribute("aria-disabled");
     } else {
       els.sourceLink.href = "#";
-      els.sourceLink.textContent = "No record URL";
+      els.sourceLink.textContent = "No museum link in the record";
       els.sourceLink.setAttribute("aria-disabled", "true");
     }
   }
@@ -207,26 +238,24 @@
     if (!checks) {
       els.score.textContent = "—";
       els.scoreLabel.textContent = "refused before any check";
-      els.shield.textContent = "✕";
-      els.shield.style.color = "var(--red)";
-      els.shield.style.background = "var(--red-soft)";
+      els.shield.innerHTML = ICONS.warn;
+      els.shield.classList.add("is-bad");
       els.checkList.innerHTML =
-        '<div class="check-row"><span class="check-icon" style="background:var(--red)">✕</span>' +
+        '<div class="check-row"><span class="check-icon is-bad">' + ICONS.warn + "</span>" +
         "<div><b>Not run</b><small>A refusal produces no label, so there is nothing to check.</small></div></div>";
       return;
     }
     els.score.textContent = Math.round(checks.claim_precision * 100) + "%";
     els.scoreLabel.textContent = checks.passed ? "all four checks pass" : "a check failed";
-    els.shield.textContent = checks.passed ? "✓" : "✕";
-    els.shield.style.color = checks.passed ? "var(--teal)" : "var(--red)";
-    els.shield.style.background = checks.passed ? "var(--teal-soft)" : "var(--red-soft)";
+    els.shield.innerHTML = checks.passed ? ICONS.check : ICONS.warn;
+    els.shield.classList.toggle("is-bad", !checks.passed);
     els.checkList.innerHTML = CHECK_ORDER.map(function (row) {
       var check = checks[row[0]] || {};
       var ok = !!check.passed;
       return (
         '<div class="check-row">' +
-        '<span class="check-icon"' + (ok ? "" : ' style="background:var(--red)"') + ">" +
-        (ok ? "✓" : "✕") + "</span>" +
+        '<span class="check-icon' + (ok ? "" : " is-bad") + '">' +
+        (ok ? ICONS.check : ICONS.warn) + "</span>" +
         "<div><b>" + row[1] + "</b><small>" + escapeHtml(check.detail || row[2]) + "</small></div>" +
         "</div>"
       );
@@ -242,7 +271,7 @@
     }).join("");
     els.citationStrip.innerHTML = (result.citations || []).map(function (citation) {
       return (
-        '<span class="citation-tag">' + escapeHtml(citation.field) + " → " +
+        '<span class="citation-tag"><span class="tag-icon">' + ICONS.citation + "</span>" +
         escapeHtml(citation.value_span) + "</span>"
       );
     }).join("");
@@ -277,7 +306,7 @@
   }
 
   function showDrafted(result, number) {
-    els.resultTitle.textContent = "Grounded draft";
+    els.resultTitle.textContent = "Draft";
     els.resultStatus.textContent = "DRAFTED · " + result.word_count + " words";
     els.resultStatus.className = "result-status drafted";
     els.resultCard.className = "result-card";
@@ -290,7 +319,7 @@
   }
 
   function showRefused(result, number) {
-    els.resultTitle.textContent = "Refused";
+    els.resultTitle.textContent = "Refusal";
     els.resultStatus.textContent = "REFUSED · " + result.reason;
     els.resultStatus.className = "result-status refused";
     els.resultCard.className = "result-card refused";

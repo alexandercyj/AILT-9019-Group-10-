@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Label Desk: grounded exhibition label drafting aid" />
-  <title>Label Desk | Grounded exhibition labels</title>
+  <meta name="description" content="Label Desk: cited exhibition label drafts, checked against the catalogue record they came from" />
+  <title>Label Desk</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -12,36 +12,38 @@
     <div class="brand-wrap">
       <div class="brand-mark">LD</div>
       <div>
-        <p class="eyebrow">AILT9019 · AI Literacy II</p>
+        <p class="eyebrow">AILT9019 · Group 10</p>
         <h1>Label Desk</h1>
       </div>
     </div>
     <div class="top-actions">
       <span class="status-pill" id="serverStatus"><span class="status-dot"></span>Connecting</span>
-      <button class="ghost-button" id="resetButton" type="button">Reset</button>
+      <button class="ghost-button" id="resetButton" type="button">Back to the first record</button>
     </div>
   </header>
 
   <main class="app-shell">
     <section class="hero panel">
       <div>
-        <p class="eyebrow accent">GROUNDED LABEL DRAFTING AID</p>
-        <h2>Turn a catalogue record into a reviewable label.</h2>
+        <p class="eyebrow accent">Exhibition labels, drafted one record at a time</p>
+        <h2>A label draft you can check sentence by sentence.</h2>
         <p class="hero-copy">
-          Every sentence is a claim tied to one field of the frozen record. The check below reads the
-          claims, not the prose. A record that cannot supply a required field is refused, never filled in.
+          Pick a catalogue record and Label Desk writes a short wall-label draft. Every sentence
+          restates one field of the record, and the panel on the right reads each sentence back
+          against that record. When the record cannot support a sentence, the tool says so instead
+          of guessing. A draft is a starting point: a curator still reads it before it goes anywhere.
         </p>
       </div>
       <div class="hero-metrics">
-        <div><strong>100%</strong><span>claim precision gate</span></div>
-        <div><strong>60–80</strong><span>label word band</span></div>
-        <div><strong>0</strong><span>network calls at run time</span></div>
+        <div><strong id="metricRecords">—</strong><span>records in this corpus</span></div>
+        <div><strong>4</strong><span>checks before a draft shows</span></div>
+        <div><strong>0</strong><span>calls out unless you ask for one</span></div>
       </div>
     </section>
 
     <div class="banner" id="banner" hidden>
-      <b>Pipeline not reachable.</b>
-      <span>Start the local server with <code>python3 server.py</code>, then reload this page. The view calls the same Python pipeline as the command line.</span>
+      <b>The pipeline is not reachable.</b>
+      <span>Start the local server with <code>python3 server.py</code>, then reload this page. The page only displays what the pipeline returns; it computes nothing itself.</span>
     </div>
 
     <section class="workspace-grid">
@@ -49,18 +51,20 @@
         <section class="panel record-panel">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">01 · INPUT RECORD</p>
+              <p class="eyebrow">The record</p>
               <h3>Catalogue record</h3>
             </div>
-            <span class="source-badge">Frozen corpus · CC0</span>
+            <span class="source-badge" id="sourceBadge">Frozen corpus · CC0</span>
           </div>
           <div class="record-layout">
             <div class="object-preview">
-              <div class="object-orbit"><div class="object-vase"></div></div>
+              <div class="object-plate">
+                <span class="plate-initials" id="plateInitials">·</span>
+                <span class="plate-rule"></span>
+                <span class="plate-number" id="previewNumber">—</span>
+              </div>
               <span class="object-caption">
-                Object preview<br />
-                <b id="previewNumber">—</b><br />
-                <a id="sourceLink" href="#" target="_blank" rel="noopener">Met object record</a>
+                <a id="sourceLink" href="#" target="_blank" rel="noopener">Museum record</a>
               </span>
             </div>
             <form id="recordForm" class="record-form">
@@ -71,27 +75,63 @@
               <label class="wide">Place or culture<input id="fieldCulture" readonly /></label>
               <label class="wide">Credit line<input id="fieldCredit" readonly /></label>
               <div class="form-actions">
-                <button class="primary-button" type="submit" id="draftButton">Draft grounded label <span>→</span></button>
-                <button class="secondary-button" type="button" id="refusalButton">Test refusal path</button>
+                <button class="primary-button" type="submit" id="draftButton">
+                  <span class="button-label">Draft label</span>
+                  <span class="button-icon" data-icon="arrow-right"></span>
+                </button>
+                <button class="secondary-button" type="button" id="refusalButton">Show a refusal</button>
               </div>
               <label class="toggle wide">
                 <input type="checkbox" id="llmToggle" />
-                <span>Model rewrite (optional). Kept only if it passes the same four checks; otherwise the offline draft is shown.</span>
+                <span>Let the model reword the draft. A rewrite is used only if it passes the same
+                four checks; otherwise you see the offline draft, with the reason the rewrite was
+                set aside.</span>
               </label>
             </form>
+          </div>
+
+          <div class="ask-row">
+            <label class="probe">
+              Ask something about this record
+              <input id="askInput" placeholder='for example: "what is it worth?"' autocomplete="off" />
+            </label>
+            <button class="ghost-button" type="button" id="askButton">Ask</button>
+          </div>
+
+          <div class="fetch-box">
+            <div class="fetch-head">
+              <h4>Try a record that is not in the corpus</h4>
+              <p>
+                Fetch one object straight from the museum's open API and run it through the same
+                checks. Nothing is stored; the record is drafted once and forgotten.
+              </p>
+            </div>
+            <div class="fetch-row">
+              <label class="probe">
+                Museum
+                <select id="liveProvider"></select>
+              </label>
+              <label class="probe probe-grow">
+                Object ID
+                <input id="liveObjectId" inputmode="numeric" placeholder="e.g. 436535" autocomplete="off" />
+              </label>
+              <button class="secondary-button" type="button" id="liveFetchButton">Fetch and draft</button>
+            </div>
+            <div class="fetch-examples" id="liveExamples"></div>
+            <p class="fetch-status" id="liveStatus" hidden></p>
           </div>
         </section>
 
         <section class="panel output-panel" aria-live="polite">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">02 · RESULT</p>
-              <h3 id="resultTitle">Grounded draft</h3>
+              <p class="eyebrow">The draft</p>
+              <h3 id="resultTitle">Draft</h3>
             </div>
             <span class="result-status drafted" id="resultStatus">—</span>
           </div>
           <div class="result-card" id="resultCard">
-            <p class="label-text" id="labelText">Choose a record and draft a label.</p>
+            <p class="label-text" id="labelText">Pick a record above, or fetch one live, to see a draft.</p>
             <div class="claim-list" id="claimList"></div>
           </div>
           <div class="citation-strip" id="citationStrip"></div>
@@ -103,8 +143,8 @@
         <section class="panel check-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">03 · SAFETY CHECK</p>
-              <h3>Grounding status</h3>
+              <p class="eyebrow">The check</p>
+              <h3>Four checks, read the claims</h3>
             </div>
             <span class="shield" id="shield">·</span>
           </div>
@@ -118,12 +158,12 @@
         <section class="panel ports-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">04 · REPRODUCE</p>
-              <h3>Same result from the CLI</h3>
+              <p class="eyebrow">Reproduce it</p>
+              <h3>Same result from the command line</h3>
             </div>
-            <span class="link-icon">↗</span>
+            <span class="link-icon" data-icon="external"></span>
           </div>
-          <p class="panel-note">This page calls the pipeline; it does not reimplement it.</p>
+          <p class="panel-note">The logic lives in the Python package; this page only shows what it returns.</p>
           <div class="code-block" id="commandBlock">python3 -m labeldesk 14.40.377</div>
           <div class="port-list">
             <div class="port-row"><span class="file-chip">corpus</span><span class="port-line"></span><span class="port-value" id="corpusVersion">—</span></div>
@@ -136,14 +176,15 @@
         <section class="panel notes-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">05 · WHAT IT REFUSES</p>
-              <h3>Designed refusals</h3>
+              <p class="eyebrow">When it says no</p>
+              <h3>Refusals are deliberate</h3>
             </div>
           </div>
           <ul class="notes-list">
-            <li><b>Missing field:</b> a blank title, date, medium, place or credit line stops the draft.</li>
-            <li><b>Unknown number:</b> a catalogue number outside the corpus is refused, not approximated.</li>
-            <li><b>Out of scope:</b> value, authenticity, insurance and rights questions are declined.</li>
+            <li><b>A blank field.</b> A record missing a title, date, medium, place or credit line is not drafted. The gap is reported, not filled in from elsewhere.</li>
+            <li><b>An unknown number.</b> A catalogue number outside the corpus is refused, not approximated with a look-alike object.</li>
+            <li><b>A question out of scope.</b> Value, authenticity, insurance and rights questions are declined; the tool holds no data to answer them.</li>
+            <li><b>A source that opts out.</b> A record whose registered source forbids model input never reaches the model, whatever the page asks for.</li>
           </ul>
         </section>
       </aside>
@@ -151,8 +192,8 @@
   </main>
 
   <footer class="footer">
-    <span>Label Desk prototype · AILT9019 Group 10</span>
-    <span>Offline-first · curator review required</span>
+    <span>Label Desk · AILT9019 Group 10</span>
+    <span>A draft is a starting point, not a label.</span>
   </footer>
   <script src="app.js"></script>
 </body>

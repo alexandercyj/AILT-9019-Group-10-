@@ -42,6 +42,7 @@ from pathlib import Path
 
 from .corpus import FIELD_LABELS, REQUIRED_FIELDS, ROOT
 from .grounding import run_checks
+from .net import ssl_context
 from .render import assemble
 from .text import FREE_WORDS, content_tokens, normalise, words
 
@@ -282,7 +283,7 @@ def _post_with_urllib(config: LLMConfig, messages: list[dict]) -> tuple[str, dic
         },
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=config.timeout) as response:
+    with urllib.request.urlopen(request, timeout=config.timeout, context=ssl_context()) as response:
         payload = json.load(response)
     return payload["choices"][0]["message"].get("content") or "", payload.get("usage", {})
 

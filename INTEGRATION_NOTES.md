@@ -22,7 +22,10 @@ actually there.
 
 - `python3 -m labeldesk <catalogue number>` prints the result for a human.
 - `server.py` serves `index.html` and exposes `POST /api/draft`, which calls the same
-  `labeldesk.draft()` function and returns the same JSON.
+  `labeldesk.draft()` function and returns the same JSON. `POST /api/fetch` reads one
+  record from a museum's open API at request time, wraps it in an ephemeral corpus that
+  borrows the registered corpus name so provenance and the licence gate resolve
+  unchanged, and drafts it through that same function. Nothing is written to disk.
 - `skills/labeldesk/SKILL.md` documents that same command for another agent environment.
   It adds no code: the contract is the CLI's JSON.
 - `labeldesk.html` is one file that opens in a browser with nothing installed.
@@ -67,15 +70,16 @@ so `--check` is a real staleness test rather than a same-day coincidence.
 | Method | Path | Purpose |
 | --- | --- | --- |
 | GET | `/` | The single-page browser view. |
-| GET | `/api/records` | Corpus metadata and all records, each with a `missing` field list. |
+| GET | `/api/records` | Corpus metadata, all records with `missing` lists, and the `live_providers` offer (names, endpoints, example object IDs). |
 | GET | `/api/record/<catalogue number>` | One record, or 404 `out_of_corpus`. |
 | GET | `/api/llm` | Model endpoint, whether a key is set, default mode, prompt hash. |
 | POST | `/api/draft` | `{"catalogue_number": "...", "question": "...", "llm": "auto"}` → the full result object. |
+| POST | `/api/fetch` | `{"provider": "met" \| "cleveland", "object_id": N, "llm": "auto"}` → one live record plus the full result object for it. 400 on a bad provider or ID, 502 with the upstream status when the museum's API cannot be reached. |
 
 No CORS headers: the page and the API are the same origin. The server binds to
 `127.0.0.1` by default and has no write endpoints. `llm` is validated against the four
 accepted values and defaults to off, so a page that does not ask never triggers a model
-call.
+call. A live fetch is also a read: the record exists only in the response.
 
 ## Where the model layer sits
 
@@ -152,6 +156,29 @@ catalogue numbers are unique inside a museum and not across museums — two coll
 both number something "1", and a flat key would let one corpus replay another's answer. The
 plain key is still accepted on read, because the first transcripts were recorded before there
 was a second museum; `tests/test_llm.py` asserts that none remain unscoped.
+
+## Live fetch: a corpus of one
+
+`POST /api/fetch` is the browser view's one door to the outside. It reuses
+`tools/fetch_corpus.py` for the HTTP and the normalisation, builds a single-record
+`Corpus` whose `meta.name` is the registered corpus name for that museum's frozen file,
+and calls `labeldesk.draft()` — the same function the CLI and `/api/draft` call. Borrowing
+the registered name is deliberate: `sources.py` resolves provenance and the `ai_input`
+policy by it, so the licence gate applies to a live record exactly as it does to a frozen
+one, with no new policy surface and no special cases. `Corpus.path` is never read during a
+draft; it only satisfies the shape.
+
+The field map for a live Met record reads `culture` first and falls back to `country`, so
+any department works, not only the two that were frozen. Records that still come back
+incomplete — the Met's European Paintings department leaves `culture` blank, for example —
+hit the ordinary `missing_required_field` refusal. That is the grounding guarantee doing
+its job on data nobody curated.
+
+Two TLS notes. The project makes exactly two kinds of outbound call: the museum open APIs
+and the optional model endpoint. Both verify through `labeldesk/net.py`, which uses
+`certifi` when it is installed and the process default otherwise (so `SSL_CERT_FILE` still
+works where a network needs its own store). The python.org macOS installer ships no root
+store at all, which is why `certifi` is in `requirements.txt` rather than a preference.
 
 ## Versioning
 
