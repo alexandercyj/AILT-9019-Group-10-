@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Label Desk: cited exhibition label drafts, checked against the catalogue record they came from" />
+  <meta name="description" content="Label Desk: a grounded exhibition-label desk. Find a collection by name or ID, read a structured introduction, and see which parts came from the web and which from a model." />
   <title>Label Desk</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -25,19 +25,20 @@
   <main class="app-shell">
     <section class="hero panel">
       <div>
-        <p class="eyebrow accent">Exhibition labels, drafted one record at a time</p>
-        <h2>A label draft you can check sentence by sentence.</h2>
+        <p class="eyebrow accent">Exhibition labels, grounded one record at a time</p>
+        <h2>Find a collection, read a structured introduction, check every part.</h2>
         <p class="hero-copy">
-          Pick a catalogue record and Label Desk writes a short wall-label draft. Every sentence
-          restates one field of the record, and the panel on the right reads each sentence back
-          against that record. When the record cannot support a sentence, the tool says so instead
-          of guessing. A draft is a starting point: a curator still reads it before it goes anywhere.
+          Pick a catalogue record, fetch one by object ID, or search a museum's open
+          API by collection name. Label Desk drafts a structured introduction whose
+          every field carries a source tag — web data or model output, never mixed.
+          The panel on the right reads the draft back against the record; when the
+          record cannot support a sentence, the tool says so instead of guessing.
         </p>
       </div>
       <div class="hero-metrics">
         <div><strong id="metricRecords">—</strong><span>records in this corpus</span></div>
+        <div><strong id="metricMuseums">2</strong><span>museum APIs for live lookup</span></div>
         <div><strong>4</strong><span>checks before a draft shows</span></div>
-        <div><strong>0</strong><span>calls out unless you ask for one</span></div>
       </div>
     </section>
 
@@ -56,6 +57,7 @@
             </div>
             <span class="source-badge" id="sourceBadge">Frozen corpus · CC0</span>
           </div>
+          <p class="provenance-line" id="provenanceLine">Corpus…</p>
           <div class="record-layout">
             <div class="object-preview">
               <div class="object-plate">
@@ -90,17 +92,37 @@
             </form>
           </div>
 
-          <div class="ask-row">
-            <label class="probe">
-              Ask something about this record
-              <input id="askInput" placeholder='for example: "what is it worth?"' autocomplete="off" />
-            </label>
-            <button class="ghost-button" type="button" id="askButton">Ask</button>
+          <div class="search-box">
+            <div class="search-head">
+              <h4>Find a collection by name</h4>
+              <p>
+                Type a collection name and the server asks the museum's open search API for
+                candidates. Pick one and it is drafted through the same pipeline as any other
+                record. Nothing is stored.
+              </p>
+            </div>
+            <div class="search-row">
+              <label class="probe">
+                Museum
+                <select id="searchProvider"></select>
+              </label>
+              <label class="probe probe-grow">
+                Collection name
+                <input id="nameInput" placeholder="e.g. Wheat Field with Cypresses" autocomplete="off" />
+              </label>
+              <button class="secondary-button" type="button" id="nameSearchButton">Search</button>
+            </div>
+            <p class="search-status" id="nameStatus" hidden></p>
+            <div class="search-results" id="searchResults" hidden></div>
+            <p class="search-note">
+              Not found, or want the wider web? <a id="googleLink" href="https://www.google.com/" target="_blank" rel="noopener">Search Google for this name</a> —
+              the museum APIs above stay the only source the pipeline will draft from.
+            </p>
           </div>
 
           <div class="fetch-box">
             <div class="fetch-head">
-              <h4>Try a record that is not in the corpus</h4>
+              <h4>Or fetch a record by object ID</h4>
               <p>
                 Fetch one object straight from the museum's open API and run it through the same
                 checks. Nothing is stored; the record is drafted once and forgotten.
@@ -120,19 +142,35 @@
             <div class="fetch-examples" id="liveExamples"></div>
             <p class="fetch-status" id="liveStatus" hidden></p>
           </div>
+
+          <div class="ask-row">
+            <label class="probe">
+              Ask something about this record
+              <input id="askInput" placeholder='for example: "what is it worth?"' autocomplete="off" />
+            </label>
+            <button class="ghost-button" type="button" id="askButton">Ask</button>
+          </div>
         </section>
 
         <section class="panel output-panel" aria-live="polite">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">The draft</p>
-              <h3 id="resultTitle">Draft</h3>
+              <p class="eyebrow">The result</p>
+              <h3 id="resultTitle">Structured introduction</h3>
             </div>
             <span class="result-status drafted" id="resultStatus">—</span>
           </div>
           <div class="result-card" id="resultCard">
-            <p class="label-text" id="labelText">Pick a record above, or fetch one live, to see a draft.</p>
-            <div class="claim-list" id="claimList"></div>
+            <p class="panel-note" id="introHint">Pick a record above, search one by name, or fetch one live to see a structured introduction.</p>
+            <div id="introList"></div>
+            <div class="intro-summary" id="introSummary">
+              <div class="intro-subhead">
+                <h4>Summary</h4>
+                <span id="summaryTag"></span>
+              </div>
+              <p class="label-text" id="labelText"></p>
+              <div class="claim-list" id="claimList"></div>
+            </div>
           </div>
           <div class="citation-strip" id="citationStrip"></div>
           <p class="panel-note" id="modelNote" hidden></p>
@@ -155,44 +193,48 @@
           <div class="check-list" id="checkList"></div>
         </section>
 
-        <section class="panel ports-panel">
+        <section class="panel legend-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">Reproduce it</p>
-              <h3>Same result from the command line</h3>
-            </div>
-            <span class="link-icon" data-icon="external"></span>
-          </div>
-          <p class="panel-note">The logic lives in the Python package; this page only shows what it returns.</p>
-          <div class="code-block" id="commandBlock">python3 -m labeldesk 14.40.377</div>
-          <div class="port-list">
-            <div class="port-row"><span class="file-chip">corpus</span><span class="port-line"></span><span class="port-value" id="corpusVersion">—</span></div>
-            <div class="port-row"><span class="file-chip">records</span><span class="port-line"></span><span class="port-value" id="corpusCount">—</span></div>
-            <div class="port-row"><span class="file-chip">sha256</span><span class="port-line"></span><span class="port-value" id="corpusChecksum">—</span></div>
-            <div class="port-row"><span class="file-chip">source</span><span class="port-line"></span><span class="port-value" id="corpusSource">—</span></div>
-          </div>
-        </section>
-
-        <section class="panel notes-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">When it says no</p>
-              <h3>Refusals are deliberate</h3>
+              <p class="eyebrow">The labels</p>
+              <h3>Where each part comes from</h3>
             </div>
           </div>
-          <ul class="notes-list">
-            <li><b>A blank field.</b> A record missing a title, date, medium, place or credit line is not drafted. The gap is reported, not filled in from elsewhere.</li>
-            <li><b>An unknown number.</b> A catalogue number outside the corpus is refused, not approximated with a look-alike object.</li>
-            <li><b>A question out of scope.</b> Value, authenticity, insurance and rights questions are declined; the tool holds no data to answer them.</li>
-            <li><b>A source that opts out.</b> A record whose registered source forbids model input never reaches the model, whatever the page asks for.</li>
+          <ul class="legend-list">
+            <li class="legend-row">
+              <span class="source-tag web">Web source</span>
+              <div>
+                <b>Web source</b>
+                <small>Field values are copied verbatim from the museum's open access record — the frozen corpus, or the museum's API for a live lookup.</small>
+              </div>
+            </li>
+            <li class="legend-row">
+              <span class="source-tag offline">Offline renderer</span>
+              <div>
+                <b>Offline renderer</b>
+                <small>Summary and label text are drafted deterministically from the record. No model is called unless you ask for one.</small>
+              </div>
+            </li>
+            <li class="legend-row">
+              <span class="source-tag ai">AI generated</span>
+              <div>
+                <b>AI generated</b>
+                <small>Shown only when a model rewrite was requested — and only after it passed the same four checks as the offline draft.</small>
+              </div>
+            </li>
           </ul>
+          <p class="legend-note">
+            <b>When it says no.</b> A record with a blank field, a catalogue number outside
+            the corpus, or an out-of-scope question (value, authenticity, rights) is refused —
+            the gap is reported, never filled in from elsewhere.
+          </p>
         </section>
       </aside>
     </section>
   </main>
 
   <footer class="footer">
-    <span>Label Desk · AILT9019 Group 10</span>
+    <span>Label Desk · AILT9019 Group 10 · <span id="footerMeta">—</span></span>
     <span>A draft is a starting point, not a label.</span>
   </footer>
   <script src="app.js"></script>

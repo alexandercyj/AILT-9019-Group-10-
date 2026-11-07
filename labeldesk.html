@@ -6,6 +6,17 @@
   <meta name="description" content="Label Desk: a standalone, self-contained view of the grounded exhibition label pipeline" />
   <title>Label Desk · standalone</title>
   <style>
+/* Label Desk shared styles, inlined verbatim into the standalone build.
+ *
+ * Layout rules worth keeping in mind when editing:
+ *   - every grid container caps its tracks with minmax(0, ...): a long
+ *     unbreakable string in one card must never push its track past the
+ *     column, because that is what used to blow the right column open;
+ *   - grid and flex children get min-width: 0 for the same reason;
+ *   - the workspace collapses to one column at 1180px, the band where the
+ *     record form used to be squeezed next to the fixed 230px preview.
+ */
+
 :root {
   --ink: #17242c;
   --muted: #6f7d82;
@@ -30,9 +41,9 @@ button, input, select { font: inherit; }
 button { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
 .topbar { min-height: 76px; padding: 16px clamp(20px, 4vw, 58px); background: var(--white); border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.brand-wrap, .top-actions, .section-heading, .form-actions, .check-row, .port-row, .footer { display: flex; align-items: center; }
+.brand-wrap, .top-actions, .section-heading, .form-actions, .check-row, .legend-row, .footer { display: flex; align-items: center; }
 .brand-wrap { gap: 12px; }
-.brand-mark { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--navy); color: #fff; font-size: 13px; font-weight: 800; letter-spacing: .04em; }
+.brand-mark { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; background: var(--navy); color: #fff; font-size: 13px; font-weight: 800; letter-spacing: .04em; flex: 0 0 auto; }
 .eyebrow { margin: 0 0 5px; color: var(--muted); font-size: 10px; line-height: 1.2; font-weight: 800; letter-spacing: .1em; }
 .eyebrow.accent { color: var(--teal); }
 h1, h2, h3, h4, p { margin-top: 0; }
@@ -46,20 +57,30 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
 .app-shell { max-width: 1440px; margin: 0 auto; padding: 30px clamp(20px, 4vw, 58px) 28px; }
 .panel { background: var(--white); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
-.hero { padding: clamp(24px, 4vw, 43px); display: flex; justify-content: space-between; gap: 36px; align-items: flex-end; background: linear-gradient(110deg, #fff 0%, #f7fbf9 65%, #eaf5f1 100%); }
+
+/* Hero: wraps instead of squeezing the metrics strip on mid widths. */
+.hero { padding: clamp(24px, 4vw, 43px); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 28px; align-items: flex-end; background: linear-gradient(110deg, #fff 0%, #f7fbf9 65%, #eaf5f1 100%); }
 .hero-copy { max-width: 580px; margin-bottom: 0; color: var(--muted); font-size: 15px; line-height: 1.6; }
-.hero-metrics { min-width: 390px; padding-left: 28px; border-left: 1px solid var(--line); display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.hero-metrics { flex: 1 1 380px; min-width: 0; padding-left: 28px; border-left: 1px solid var(--line); display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 18px; }
 .hero-metrics div { display: grid; gap: 5px; }
 .hero-metrics strong { color: var(--teal); font-size: 25px; }
 .hero-metrics span { color: var(--muted); font-size: 11px; line-height: 1.3; }
+
+/* Workspace: one column well before the record form would get squeezed. */
 .workspace-grid { margin-top: 22px; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, .85fr); gap: 22px; align-items: start; }
-.main-column, .side-column { display: grid; gap: 22px; }
-.record-panel, .output-panel, .check-panel, .ports-panel, .notes-panel { padding: 24px; }
+.main-column, .side-column { min-width: 0; display: grid; gap: 22px; grid-template-columns: minmax(0, 1fr); }
+.record-panel, .output-panel, .check-panel, .legend-panel { padding: 24px; }
 .section-heading { justify-content: space-between; gap: 15px; margin-bottom: 20px; }
+.section-heading > div { min-width: 0; }
 .section-heading.compact { margin-bottom: 17px; }
 .source-badge { padding: 7px 10px; color: var(--amber); background: var(--amber-soft); }
 .source-badge.is-live { color: var(--teal); background: var(--teal-soft); }
-.record-layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 24px; }
+
+/* One compact provenance line replaces the old ports panel. */
+.provenance-line { margin: -8px 0 18px; color: var(--muted); font-size: 11px; line-height: 1.6; overflow-wrap: anywhere; }
+.provenance-line code { padding: 1px 5px; border-radius: 4px; background: #edf2f1; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
+
+.record-layout { display: grid; grid-template-columns: minmax(180px, 230px) minmax(0, 1fr); gap: 24px; }
 .object-preview { min-height: 310px; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: #eff5f2; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
 .object-plate { flex: 1; min-height: 210px; border: 1px solid #cfdcd6; border-radius: 6px; background: radial-gradient(circle at 50% 36%, rgba(20, 125, 120, .07), transparent 62%), linear-gradient(160deg, #fbfdfc, #edf3f0); display: grid; place-content: center; justify-items: center; gap: 12px; padding: 18px; text-align: center; }
 .plate-initials { font-family: Georgia, "Times New Roman", serif; font-size: 54px; line-height: 1; color: var(--navy); letter-spacing: .04em; }
@@ -67,91 +88,152 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 .plate-number { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .06em; }
 .object-caption { color: var(--muted); font-size: 11px; line-height: 1.5; }
 .object-caption b { color: var(--ink); font-weight: 700; }
+.object-caption a { color: var(--teal); text-decoration: none; font-weight: 700; }
+.object-caption a:hover { text-decoration: underline; }
 .record-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-content: start; }
 .record-form label { display: grid; gap: 7px; color: var(--muted); font-size: 11px; font-weight: 800; }
-.record-form input { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; outline: none; color: var(--ink); background: #fbfcfb; font-size: 13px; }
-.record-form select { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; outline: none; color: var(--ink); background: #fbfcfb; font-size: 13px; }
+.record-form input, .record-form select { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; outline: none; color: var(--ink); background: #fbfcfb; font-size: 13px; }
 .record-form input[readonly] { color: #33454e; cursor: default; }
 .record-form input.missing { color: var(--red); background: var(--red-soft); border-color: #efc4c1; font-style: italic; }
 .record-form label.wide { grid-column: 1 / -1; }
+.record-form input:focus, .record-form select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20, 125, 120, .12); }
 .banner { margin-top: 22px; padding: 14px 16px; border: 1px solid #efc4c1; border-radius: 9px; background: var(--red-soft); color: #7d2f2c; font-size: 12px; line-height: 1.55; display: flex; gap: 8px; flex-wrap: wrap; }
 .banner[hidden] { display: none; }
 .banner code { padding: 1px 5px; border-radius: 4px; background: rgba(0, 0, 0, .06); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-.code-block { margin-bottom: 16px; padding: 12px 13px; border: 1px solid var(--line); border-radius: 7px; background: #f2f6f5; color: var(--navy); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; overflow-x: auto; }
-.object-caption a { color: var(--teal); text-decoration: none; font-weight: 700; }
-.object-caption a:hover { text-decoration: underline; }
-.record-form input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20, 125, 120, .12); }
 .form-actions { grid-column: 1 / -1; gap: 10px; margin-top: 5px; flex-wrap: wrap; }
+
+/* Buttons share one height so rows of inputs align on their bottoms. */
 .primary-button, .secondary-button, .ghost-button { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 16px; border-radius: 8px; border: 1px solid transparent; font-weight: 700; font-size: 13px; line-height: 1; transition: background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease; }
 .primary-button { background: var(--teal); border-color: var(--teal); color: #fff; }
 .primary-button:hover:not(:disabled) { background: var(--teal-deep); border-color: var(--teal-deep); }
 .primary-button:active:not(:disabled) { background: #0b5651; border-color: #0b5651; }
 .secondary-button { background: #fff; border-color: var(--line); color: var(--ink); }
 .secondary-button:hover:not(:disabled) { border-color: var(--teal); color: var(--teal); }
-.ghost-button { padding: 8px 12px; min-height: 34px; border-radius: 7px; background: transparent; border-color: var(--line); color: var(--ink); font-size: 12px; }
+.ghost-button { padding: 8px 12px; min-height: 40px; border-radius: 7px; background: transparent; border-color: var(--line); color: var(--ink); font-size: 12px; }
 .ghost-button:hover:not(:disabled) { background: #edf3f1; border-color: #c5d4cf; }
-.primary-button:focus-visible, .secondary-button:focus-visible, .ghost-button:focus-visible, .chip:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(20, 125, 120, .28); }
+.primary-button:focus-visible, .secondary-button:focus-visible, .ghost-button:focus-visible, .chip:focus-visible, .result-candidate:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(20, 125, 120, .28); }
 .primary-button:disabled, .secondary-button:disabled, .ghost-button:disabled { opacity: .6; }
 .button-icon { display: inline-flex; width: 14px; height: 14px; }
-.button-icon svg, .link-icon svg, .shield svg, .check-icon svg, .tag-icon svg { width: 100%; height: 100%; }
+.button-icon svg, .shield svg, .check-icon svg, .tag-icon svg { width: 100%; height: 100%; }
 .is-loading .button-icon { display: none; }
 .is-loading::before { content: ""; width: 13px; height: 13px; border-radius: 50%; border: 2px solid currentColor; border-top-color: transparent; animation: ld-spin .7s linear infinite; }
 @keyframes ld-spin { to { transform: rotate(360deg); } }
+
 .result-status { padding: 7px 10px; color: var(--teal); background: var(--teal-soft); }
 .result-status.refused { color: var(--red); background: var(--red-soft); }
-.result-card { min-height: 190px; padding: 22px; border-left: 3px solid var(--teal); background: #f8fbfa; }
+.result-card { min-height: 120px; padding: 6px 22px 22px; border-left: 3px solid var(--teal); background: #f8fbfa; border-radius: 0 0 0 0; }
 .result-card.refused { border-left-color: var(--red); background: #fff9f8; }
-.label-text { margin-bottom: 20px; font-family: Georgia, serif; font-size: 20px; line-height: 1.55; }
+
+/* Structured introduction: one row per field, each with its source tag. */
+.intro-row { display: grid; grid-template-columns: 130px minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 10px 0; border-bottom: 1px dashed var(--line); }
+.intro-row:last-of-type { border-bottom: none; }
+.intro-key { color: var(--muted); font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.intro-value { min-width: 0; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.intro-value.is-missing { color: var(--red); font-style: italic; }
+.intro-summary { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.intro-subhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.intro-subhead h4 { margin: 0; font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.label-text { margin-bottom: 16px; font-family: Georgia, serif; font-size: 19px; line-height: 1.55; }
 .claim-list { display: flex; flex-wrap: wrap; gap: 7px; }
-.claim-tag, .citation-tag { display: inline-flex; align-items: center; padding: 6px 8px; border-radius: 5px; font-size: 10px; font-weight: 800; }
+.claim-tag, .citation-tag, .source-tag { display: inline-flex; align-items: center; padding: 6px 8px; border-radius: 5px; font-size: 10px; font-weight: 800; white-space: nowrap; }
 .claim-tag { color: var(--navy); background: #e7efec; }
 .citation-strip { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .citation-tag { color: var(--teal); background: var(--teal-soft); }
-.tag-icon { display: inline-flex; width: 10px; height: 10px; margin-right: 5px; }
-.shield, .link-icon { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 7px; color: var(--teal); background: var(--teal-soft); }
-.shield { padding: 6px; }
+.tag-icon { display: inline-flex; width: 10px; height: 10px; margin-right: 5px; flex: 0 0 auto; }
+
+/* Source tags: the page's contract for telling web data from AI output. */
+.source-tag.web { color: var(--teal); background: var(--teal-soft); }
+.source-tag.offline { color: var(--navy); background: #e7efec; }
+.source-tag.ai { color: var(--amber); background: var(--amber-soft); }
+.source-tag.refused { color: var(--red); background: var(--red-soft); }
+
+.shield { width: 27px; height: 27px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 7px; color: var(--teal); background: var(--teal-soft); padding: 6px; }
 .shield.is-bad { color: var(--red); background: var(--red-soft); }
-.link-icon { color: var(--navy); background: #e9eff0; padding: 7px; }
 .check-score { padding: 16px 0 18px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; gap: 10px; }
 .check-score strong { color: var(--teal); font-size: 36px; letter-spacing: -0.04em; }
 .check-score span, .panel-note { color: var(--muted); font-size: 12px; }
-.check-list { display: grid; gap: 14px; padding-top: 17px; }
+.check-list { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; padding-top: 17px; }
 .check-row { align-items: flex-start; gap: 10px; }
+.check-row > div { min-width: 0; }
 .check-icon { flex: 0 0 auto; width: 19px; height: 19px; display: grid; place-items: center; border-radius: 50%; color: #fff; background: var(--teal); padding: 4px; }
 .check-icon.is-bad { background: var(--red); }
 .check-row b, .check-row small { display: block; }
 .check-row b { margin-bottom: 3px; font-size: 12px; }
 .check-row small { color: var(--muted); font-size: 11px; line-height: 1.35; }
-.panel-note { margin: -6px 0 17px; line-height: 1.5; }
-.port-list { display: grid; gap: 13px; }
-.port-row { gap: 9px; min-width: 0; }
-.file-chip { flex: 0 0 auto; padding: 5px 7px; border-radius: 4px; background: #edf2f1; color: var(--navy); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; }
-.port-line { flex: 1; border-top: 1px dashed #b6c7c4; }
-.port-value { flex: 0 0 auto; color: var(--teal); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; font-weight: 800; }
-.notes-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px; }
-.notes-list li { padding-left: 15px; border-left: 2px solid #b7d9d4; color: var(--muted); font-size: 12px; line-height: 1.5; }
-.notes-list b { color: var(--ink); }
-.footer { max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 58px) 26px; justify-content: space-between; gap: 15px; color: var(--muted); font-size: 11px; }
-.record-form .toggle { display: flex; align-items: flex-start; gap: 9px; color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
-.record-form .toggle input[type="checkbox"] { width: 15px; min-height: 0; height: 15px; margin: 2px 0 0; padding: 0; accent-color: var(--teal); }
-#modelNote { margin: 12px 0 0; padding: 9px 12px; border-radius: 8px; background: var(--teal-soft); color: var(--navy); font-size: 12px; line-height: 1.45; }
-.ask-row { display: flex; align-items: flex-end; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line); }
-.probe { flex: 1; display: grid; gap: 7px; color: var(--muted); font-size: 11px; font-weight: 800; }
-.probe input, .probe select { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; outline: none; background: #fbfcfb; color: var(--ink); font-size: 13px; font-weight: 500; }
-.probe input:focus, .probe select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20, 125, 120, .12); }
-.fetch-box { margin-top: 16px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: #f8fbfa; }
-.fetch-head h4 { margin: 0 0 5px; font-size: 13px; }
-.fetch-head p { margin: 0 0 13px; color: var(--muted); font-size: 12px; line-height: 1.55; }
-.fetch-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
-.fetch-row .probe { flex: 1.4; min-width: 150px; }
-.fetch-row .probe-grow { flex: 2; min-width: 160px; }
+.panel-note { margin: -6px 0 17px; line-height: 1.5; overflow-wrap: anywhere; }
+
+/* Legend: what each source tag on the page means. */
+.legend-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px; }
+.legend-row { align-items: flex-start; gap: 10px; }
+.legend-row .source-tag { flex: 0 0 auto; margin-top: 1px; }
+.legend-row div { min-width: 0; }
+.legend-row b { display: block; margin-bottom: 3px; font-size: 12px; }
+.legend-row small { color: var(--muted); font-size: 11px; line-height: 1.45; }
+.legend-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px dashed var(--line); color: var(--muted); font-size: 11px; line-height: 1.55; }
+.legend-note b { color: var(--ink); }
+
+/* Search-by-name box: same shape as the object-ID fetch box. */
+.search-box, .fetch-box { margin-top: 16px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: #f8fbfa; }
+.search-head h4, .fetch-head h4 { margin: 0 0 5px; font-size: 13px; }
+.search-head p, .fetch-head p { margin: 0 0 13px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.search-row, .fetch-row { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.search-row .probe, .fetch-row .probe { flex: 1.4; min-width: 150px; }
+.search-row .probe-grow, .fetch-row .probe-grow { flex: 2; min-width: 170px; }
+.search-note { margin: 11px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.search-note a, .google-link { color: var(--teal); font-weight: 700; text-decoration: none; }
+.search-note a:hover, .google-link:hover { text-decoration: underline; }
+.search-status, .fetch-status { margin: 12px 0 0; padding: 9px 12px; border-radius: 8px; background: var(--red-soft); color: #7d2f2c; font-size: 12px; line-height: 1.45; overflow-wrap: anywhere; }
+.search-status.is-empty { background: var(--amber-soft); color: #7a5218; }
+.search-status[hidden], .fetch-status[hidden] { display: none; }
+.search-results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; margin-top: 12px; }
+.search-results[hidden] { display: none; }
+
+/* One candidate card per API hit: click drafts it like any live record. */
+.result-candidate { display: grid; gap: 4px; justify-items: start; width: 100%; padding: 11px 13px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); text-align: left; transition: border-color .15s ease, box-shadow .15s ease; }
+.result-candidate:hover { border-color: var(--teal); box-shadow: 0 4px 14px rgba(20, 125, 120, .08); }
+.result-candidate b { font-size: 13px; line-height: 1.35; }
+.result-candidate small { color: var(--muted); font-size: 11px; line-height: 1.45; overflow-wrap: anywhere; }
+.result-candidate .source-tag { margin-top: 3px; }
 .fetch-examples { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
 .chip { padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); font-size: 11px; font-weight: 700; transition: border-color .15s ease, color .15s ease; }
 .chip:hover { border-color: var(--teal); color: var(--teal); }
-.fetch-status { margin: 12px 0 0; padding: 9px 12px; border-radius: 8px; background: var(--red-soft); color: #7d2f2c; font-size: 12px; line-height: 1.45; }
-.fetch-status[hidden] { display: none; }
-@media (max-width: 980px) { .hero { align-items: stretch; flex-direction: column; } .hero-metrics { min-width: 0; padding: 18px 0 0; border-top: 1px solid var(--line); border-left: 0; } .workspace-grid { grid-template-columns: 1fr; } .side-column { grid-template-columns: repeat(2, minmax(0, 1fr)); } .notes-panel { grid-column: 1 / -1; } }
-@media (max-width: 680px) { .topbar { align-items: flex-start; flex-direction: column; } .top-actions { width: 100%; justify-content: space-between; } .record-layout { grid-template-columns: 1fr; } .object-preview { min-height: 220px; } .object-plate { min-height: 170px; } .record-form { grid-template-columns: 1fr; } .side-column { grid-template-columns: 1fr; } .hero-metrics { gap: 10px; } .label-text { font-size: 17px; } .footer { align-items: flex-start; flex-direction: column; } .ask-row, .fetch-row { flex-direction: column; align-items: stretch; } }
+.ask-row { display: flex; align-items: flex-end; gap: 10px; margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--line); }
+.probe { flex: 1; min-width: 0; display: grid; gap: 7px; color: var(--muted); font-size: 11px; font-weight: 800; }
+.probe input, .probe select { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 7px; outline: none; background: #fbfcfb; color: var(--ink); font-size: 13px; font-weight: 500; }
+.probe input:focus, .probe select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(20, 125, 120, .12); }
+.record-form .toggle { display: flex; align-items: flex-start; gap: 9px; color: var(--muted); font-size: 12px; font-weight: 500; line-height: 1.45; }
+.record-form .toggle input[type="checkbox"] { width: 15px; min-height: 0; height: 15px; margin: 2px 0 0; padding: 0; accent-color: var(--teal); }
+#modelNote { margin: 12px 0 0; padding: 9px 12px; border-radius: 8px; background: var(--teal-soft); color: var(--navy); font-size: 12px; line-height: 1.45; }
+#modelNote[hidden] { display: none; }
+
+/* Footer wraps instead of pushing a long hash across the page. */
+.footer { max-width: 1440px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 58px) 26px; justify-content: space-between; gap: 10px 24px; row-gap: 6px; flex-wrap: wrap; color: var(--muted); font-size: 11px; }
+.footer span { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+
+@media (max-width: 1180px) {
+  .workspace-grid { grid-template-columns: minmax(0, 1fr); }
+  .side-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .legend-panel { grid-column: 1 / -1; }
+}
+@media (max-width: 980px) {
+  .hero { align-items: stretch; flex-direction: column; }
+  .hero-metrics { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 18px; }
+}
+@media (max-width: 680px) {
+  .topbar { align-items: flex-start; flex-direction: column; }
+  .top-actions { width: 100%; justify-content: space-between; }
+  .record-layout { grid-template-columns: minmax(0, 1fr); }
+  .object-preview { min-height: 220px; }
+  .object-plate { min-height: 170px; }
+  .record-form { grid-template-columns: minmax(0, 1fr); }
+  .side-column { grid-template-columns: minmax(0, 1fr); }
+  .hero-metrics { gap: 10px; }
+  .intro-row { grid-template-columns: minmax(0, 1fr); gap: 4px 12px; }
+  .intro-row .source-tag { justify-self: start; }
+  .label-text { font-size: 17px; }
+  .footer { align-items: flex-start; flex-direction: column; }
+  .ask-row, .search-row, .fetch-row { flex-direction: column; align-items: stretch; }
+}
 
 
 /* Additions used only by the standalone build. Everything else comes from styles.css,
@@ -206,6 +288,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 
 .probe {
   flex: 1;
+  min-width: 0;
   display: grid;
   gap: 7px;
   color: var(--muted);
@@ -215,7 +298,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 
 .probe input {
   width: 100%;
-  min-height: 38px;
+  min-height: 40px;
   padding: 8px 11px;
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -243,60 +326,6 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 }
 
 .reason-note[hidden] { display: none; }
-
-.source-table-wrap {
-  overflow-x: auto;
-}
-
-.source-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 10.5px;
-}
-
-.source-table th,
-.source-table td {
-  padding: 7px 8px;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-  vertical-align: top;
-}
-
-.source-table th {
-  color: var(--muted);
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.source-table td:first-child {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-weight: 700;
-  color: var(--navy);
-  white-space: nowrap;
-}
-
-.source-table tr.is-refused td {
-  background: #fff9f8;
-}
-
-.tag {
-  display: inline-block;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.tag.admitted { color: var(--teal); background: var(--teal-soft); }
-.tag.refused { color: var(--red); background: var(--red-soft); }
-.tag.deferred,
-.tag.reference_only,
-.tag.admitted_not_frozen { color: var(--amber); background: var(--amber-soft); }
 
 .claim-tag .claim-field {
   margin-left: 6px;
@@ -350,7 +379,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
         Every label, claim, citation and check below was produced by the Python package at
         build time (<code>tools/build_standalone.py</code>) and is embedded here verbatim. The
         page looks results up; it computes nothing. Reproduce any of them with the command
-        shown under <em>Reproduce it</em>.
+        printed in the footer.
       </span>
     </div>
 
@@ -364,6 +393,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
             </div>
             <span class="source-badge" id="sourceBadge">Frozen corpus</span>
           </div>
+          <p class="provenance-line" id="provenanceLine">Corpus…</p>
 
           <div class="corpus-tabs" id="corpusTabs" role="tablist" aria-label="Corpus"></div>
 
@@ -402,6 +432,30 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
             </form>
           </div>
 
+          <div class="search-box">
+            <div class="search-head">
+              <h4>Find a collection by name</h4>
+              <p>
+                Type a collection name to look through the records embedded in this file.
+                This page never touches the network, so only the three frozen corpora can be
+                searched here; the served page adds the museums' live search APIs.
+              </p>
+            </div>
+            <div class="search-row">
+              <label class="probe probe-grow">
+                Collection name
+                <input id="nameInput" placeholder="e.g. Wheat Field with Cypresses" autocomplete="off" />
+              </label>
+              <button class="secondary-button" type="button" id="nameSearchButton">Search</button>
+            </div>
+            <p class="search-status" id="nameStatus" hidden></p>
+            <div class="search-results" id="searchResults" hidden></div>
+            <p class="search-note">
+              Not in the frozen corpora? <a id="googleLink" href="https://www.google.com/" target="_blank" rel="noopener">Search Google for this name</a> —
+              this page opens a link only; it still calls nothing.
+            </p>
+          </div>
+
           <div class="probe-row">
             <label class="probe">
               A catalogue number not in this corpus
@@ -421,14 +475,22 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
         <section class="panel output-panel" aria-live="polite">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">The draft</p>
-              <h3 id="resultTitle">Draft</h3>
+              <p class="eyebrow">The result</p>
+              <h3 id="resultTitle">Structured introduction</h3>
             </div>
             <span class="result-status drafted" id="resultStatus">—</span>
           </div>
           <div class="result-card" id="resultCard">
-            <p class="label-text" id="labelText">Choose a record to see its draft.</p>
-            <div class="claim-list" id="claimList"></div>
+            <p class="panel-note" id="introHint">Choose a record to see its structured introduction.</p>
+            <div id="introList"></div>
+            <div class="intro-summary">
+              <div class="intro-subhead">
+                <h4>Summary</h4>
+                <span id="summaryTag"></span>
+              </div>
+              <p class="label-text" id="labelText">Choose a record to see its draft.</p>
+              <div class="claim-list" id="claimList"></div>
+            </div>
           </div>
           <div class="citation-strip" id="citationStrip"></div>
           <p class="panel-note" id="modelNote" hidden></p>
@@ -452,53 +514,41 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
           <div class="check-list" id="checkList"></div>
         </section>
 
-        <section class="panel ports-panel">
+        <section class="panel legend-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">Reproduce it</p>
-              <h3>Same result from the command line</h3>
-            </div>
-            <span class="link-icon" data-icon="external"></span>
-          </div>
-          <p class="panel-note">The logic lives in the Python package; this page only shows what it returned.</p>
-          <div class="code-block" id="commandBlock">python3 -m labeldesk 14.40.377</div>
-          <div class="port-list">
-            <div class="port-row"><span class="file-chip">corpus</span><span class="port-line"></span><span class="port-value" id="corpusVersion">—</span></div>
-            <div class="port-row"><span class="file-chip">records</span><span class="port-line"></span><span class="port-value" id="corpusCount">—</span></div>
-            <div class="port-row"><span class="file-chip">sha256</span><span class="port-line"></span><span class="port-value" id="corpusChecksum">—</span></div>
-            <div class="port-row"><span class="file-chip">source</span><span class="port-line"></span><span class="port-value" id="corpusSource">—</span></div>
-          </div>
-        </section>
-
-        <section class="panel notes-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">When it says no</p>
-              <h3>Refusals are deliberate</h3>
+              <p class="eyebrow">The labels</p>
+              <h3>Where each part comes from</h3>
             </div>
           </div>
-          <ul class="notes-list">
-            <li><b>A blank field.</b> A record missing a title, date, medium, place or credit line is not drafted. The gap is reported, not filled in from elsewhere.</li>
-            <li><b>An unknown number.</b> A catalogue number outside the corpus is refused, not approximated with a look-alike object.</li>
-            <li><b>A question out of scope.</b> Value, authenticity, insurance and rights questions are declined; the tool holds no data to answer them.</li>
-            <li><b>A source that opts out.</b> A corpus whose register entry forbids model input never reaches the model, whatever is asked.</li>
+          <ul class="legend-list">
+            <li class="legend-row">
+              <span class="source-tag web">Web source</span>
+              <div>
+                <b>Web source</b>
+                <small>Field values are copied verbatim from the museum's open access record, frozen into the corpus at fetch time.</small>
+              </div>
+            </li>
+            <li class="legend-row">
+              <span class="source-tag offline">Offline renderer</span>
+              <div>
+                <b>Offline renderer</b>
+                <small>Summary and label text are drafted deterministically from the record. No model is involved.</small>
+              </div>
+            </li>
+            <li class="legend-row">
+              <span class="source-tag ai">AI generated</span>
+              <div>
+                <b>AI generated</b>
+                <small>Shown only for a recorded model rewrite — and only because it passed the same four checks as the offline draft.</small>
+              </div>
+            </li>
           </ul>
-        </section>
-
-        <section class="panel sources-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">Sources</p>
-              <h3>What was admitted, what was refused</h3>
-            </div>
-          </div>
-          <p class="panel-note">
-            Seven sources were read by reading their robots files. Two museums were refused,
-            and the refusals are recorded here rather than routed around.
+          <p class="legend-note">
+            <b>When it says no.</b> A record with a blank field, a catalogue number outside
+            the corpora, or an out-of-scope question (value, authenticity, rights) is
+            refused — the gap is reported, never filled in from elsewhere.
           </p>
-          <div class="source-table-wrap">
-            <table class="source-table" id="sourceTable"></table>
-          </div>
         </section>
       </aside>
     </section>
@@ -506,7 +556,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
 
   <footer class="footer">
     <span>Label Desk · AILT9019 Group 10 · built from <span id="footerCorpora">—</span></span>
-    <span>A draft is a starting point, not a label. · <span id="footerHash">—</span></span>
+    <span>Reproduce any draft with <code>python3 -m labeldesk "&lt;catalogue number&gt;"</code> · <span id="footerHash">—</span></span>
   </footer>
 
   <script type="application/json" id="labeldesk-data">
@@ -517,17 +567,24 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
  *
  * This file computes no labels, no claims, no citations and no checks. Every one of
  * those was produced by labeldesk at build time (tools/build_standalone.py) and is
- * embedded above as JSON. What runs here is presentation, plus two lookups that are
+ * embedded above as JSON. What runs here is presentation, plus lookups that are
  * pure functions of the embedded data:
  *
- *   1. is this catalogue number in this corpus?      -> array membership
+ *   1. is this catalogue number in this corpus?        -> array membership
  *   2. does this question contain an out-of-scope term? -> substring test over the
  *      term list the build copied out of labeldesk.pipeline
+ *   3. which embedded records match a collection name?  -> substring test over the
+ *      embedded titles, so the name search is as honest as the rest of the page
  *
- * Both are the same decisions the CLI makes, made over data the build embedded, so
+ * All are the same decisions the CLI makes, made over data the build embedded, so
  * the page cannot disagree with the pipeline about a record. It can only fail to
  * contain one, which is why the refusal text is built from the pipeline's own
  * template rather than typed out here.
+ *
+ * The page also carries the source contract: every part of the structured
+ * introduction is tagged with where it came from — web source for field values
+ * copied verbatim from the museum record, offline renderer for the deterministic
+ * draft, AI generated for a recorded model rewrite that passed the same checks.
  */
 (function () {
   "use strict";
@@ -541,8 +598,6 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   var ICONS = {
     "arrow-right":
       '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h10"/><path d="M9 3.5 13.5 8 9 12.5"/></svg>',
-    external:
-      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4"/><path d="M5.5 4H12v6.5"/></svg>',
     citation:
       '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v7a3 3 0 0 0 3 3h7"/></svg>',
     check:
@@ -583,9 +638,13 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     previewNumber: document.getElementById("previewNumber"),
     sourceLink: document.getElementById("sourceLink"),
     sourceBadge: document.getElementById("sourceBadge"),
+    provenanceLine: document.getElementById("provenanceLine"),
     resultTitle: document.getElementById("resultTitle"),
     resultStatus: document.getElementById("resultStatus"),
     resultCard: document.getElementById("resultCard"),
+    introHint: document.getElementById("introHint"),
+    introList: document.getElementById("introList"),
+    summaryTag: document.getElementById("summaryTag"),
     labelText: document.getElementById("labelText"),
     claimList: document.getElementById("claimList"),
     citationStrip: document.getElementById("citationStrip"),
@@ -595,16 +654,15 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     scoreLabel: document.getElementById("scoreLabel"),
     shield: document.getElementById("shield"),
     checkList: document.getElementById("checkList"),
-    command: document.getElementById("commandBlock"),
-    corpusVersion: document.getElementById("corpusVersion"),
-    corpusCount: document.getElementById("corpusCount"),
-    corpusChecksum: document.getElementById("corpusChecksum"),
-    corpusSource: document.getElementById("corpusSource"),
     probeNumber: document.getElementById("probeNumber"),
     probeButton: document.getElementById("probeButton"),
     probeQuestion: document.getElementById("probeQuestion"),
     askButton: document.getElementById("askButton"),
-    sourceTable: document.getElementById("sourceTable"),
+    nameInput: document.getElementById("nameInput"),
+    nameSearchButton: document.getElementById("nameSearchButton"),
+    nameStatus: document.getElementById("nameStatus"),
+    searchResults: document.getElementById("searchResults"),
+    googleLink: document.getElementById("googleLink"),
     metricRecords: document.getElementById("metricRecords"),
     footerCorpora: document.getElementById("footerCorpora"),
     footerHash: document.getElementById("footerHash")
@@ -618,7 +676,13 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     return 0;
   })();
 
-  var state = { corpus: DEFAULT_CORPUS, number: null, mode: "offline" };
+  var state = {
+    corpus: DEFAULT_CORPUS,
+    number: null,
+    mode: "offline",
+    // How the current record is labelled in the structured introduction.
+    sourceLabel: "Frozen corpus"
+  };
 
   // ------------------------------------------------------------------ helpers
 
@@ -634,8 +698,12 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     return CORPORA[state.corpus];
   }
 
-  function recordFor(number) {
-    var list = corpus().records;
+  function currentRecord() {
+    return recordIn(corpus(), state.number);
+  }
+
+  function recordIn(entry, number) {
+    var list = entry.records;
     for (var i = 0; i < list.length; i += 1) {
       if (list[i].catalogue_number === number) return list[i];
     }
@@ -673,18 +741,27 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     }).join("");
   }
 
+  function sourceLabelFor(entry) {
+    var prov = entry.provenance || {};
+    return prov.registered
+      ? "Frozen corpus · " + prov.id + " · " + prov.license
+      : "Frozen corpus · unregistered";
+  }
+
   function renderCorpusMeta() {
     var entry = corpus();
     var prov = entry.provenance || {};
-    els.corpusVersion.textContent = "v" + entry.corpus.version;
-    els.corpusCount.textContent = String(entry.corpus.record_count);
-    els.corpusChecksum.textContent = String(entry.corpus.checksum).slice(0, 12);
-    els.corpusSource.textContent = prov.registered
-      ? prov.id + " · " + prov.license + " · ai " + (prov.ai_input ? "yes" : "no")
-      : "unregistered · ai no";
     els.sourceBadge.textContent = prov.registered
       ? "Frozen corpus · " + prov.license
       : "Frozen corpus";
+    state.sourceLabel = sourceLabelFor(entry);
+    els.provenanceLine.innerHTML =
+      "Corpus <b>" + escapeHtml(entry.corpus.name) + "</b> · v" + escapeHtml(entry.corpus.version) +
+      " · " + escapeHtml(entry.corpus.license) + " · " + entry.corpus.record_count + " records" +
+      " · sha256 <code>" + escapeHtml(String(entry.corpus.checksum).slice(0, 12)) + "</code>" +
+      " · source register: " + (prov.registered
+        ? escapeHtml(prov.id) + " · ai input " + (prov.ai_input ? "yes" : "no")
+        : "unregistered");
   }
 
   function renderSelect() {
@@ -729,25 +806,47 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     }
   }
 
-  function commandFor(number) {
-    var entry = corpus();
-    var parts = ["python3 -m labeldesk", '"' + number + '"'];
-    if (entry.alias !== "primary") parts.push("--corpus " + entry.alias);
-    if (state.mode === "replay") parts.push("--llm --replay");
-    return parts.join(" ");
+  // --------------------------------------------------------- structured intro
+
+  // The summary's source tag: AI only for a recorded rewrite that was actually
+  // applied; the offline renderer is deterministic, so it gets its own label.
+  function summaryTagFor(result) {
+    var block = result.llm;
+    if (block && block.requested && block.applied) {
+      return '<span class="source-tag ai">AI generated · ' + escapeHtml(block.model) + "</span>";
+    }
+    if (result.status === "refused") {
+      return '<span class="source-tag refused">Refused · nothing invented</span>';
+    }
+    return '<span class="source-tag offline">Offline renderer · record-grounded</span>';
+  }
+
+  function renderIntro(result) {
+    var record = currentRecord();
+    if (!record) return;
+    els.introHint.hidden = true;
+    var webTag = '<span class="source-tag web">Web · ' + escapeHtml(state.sourceLabel) + "</span>";
+    var rows = [
+      ["Title", record.title],
+      ["Object date", record.object_date],
+      ["Medium", record.medium],
+      ["Place or culture", record.place_or_culture],
+      ["Credit line", record.credit_line]
+    ];
+    els.introList.innerHTML = rows.map(function (row) {
+      var empty = !String(row[1] == null ? "" : row[1]).trim();
+      return (
+        '<div class="intro-row">' +
+        '<span class="intro-key">' + row[0] + "</span>" +
+        '<span class="intro-value' + (empty ? " is-missing" : "") + '">' +
+        (empty ? "— not in the record —" : escapeHtml(row[1])) + "</span>" +
+        webTag + "</div>"
+      );
+    }).join("");
+    els.summaryTag.innerHTML = summaryTagFor(result);
   }
 
   // ------------------------------------------------------------------ results
-
-  function resetPanels() {
-    els.claimList.innerHTML = "";
-    els.citationStrip.innerHTML = "";
-    els.checkList.innerHTML = "";
-    els.modelNote.hidden = true;
-    els.modelNote.textContent = "";
-    els.reasonNote.hidden = true;
-    els.reasonNote.textContent = "";
-  }
 
   function renderChecks(checks) {
     if (!checks) {
@@ -821,16 +920,16 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   }
 
   function showDrafted(result, number) {
-    els.resultTitle.textContent = "Draft";
+    els.resultTitle.textContent = "Structured introduction";
     els.resultStatus.textContent = "DRAFTED · " + result.word_count + " words";
     els.resultStatus.className = "result-status drafted";
     els.resultCard.className = "result-card";
     els.labelText.textContent = result.label;
+    renderIntro(result);
     renderClaims(result);
     renderChecks(result.checks);
     renderModelNote(result.llm);
     setNote(els.reasonNote, "");
-    els.command.textContent = commandFor(number);
   }
 
   function showRefused(result, number) {
@@ -841,10 +940,10 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     els.labelText.textContent = "No label was drafted.";
     els.claimList.innerHTML = "";
     els.citationStrip.innerHTML = "";
+    renderIntro(result);
     renderChecks(null);
     setNote(els.modelNote, "");
     setNote(els.reasonNote, result.reason_text);
-    els.command.textContent = commandFor(number);
   }
 
   function render(result, number) {
@@ -853,6 +952,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
       els.resultStatus.textContent = "NO RESULT";
       els.resultStatus.className = "result-status refused";
       els.labelText.textContent = "This build has no result for that record.";
+      els.introList.innerHTML = "";
       return;
     }
     if (result.status === "refused") {
@@ -896,7 +996,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   function probeNumber() {
     var number = els.probeNumber.value.trim();
     if (!number) return;
-    var record = recordFor(number);
+    var record = recordIn(corpus(), number);
     if (!record) {
       lookupUnknown(number);
       return;
@@ -958,24 +1058,69 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     draftSelected();
   }
 
-  // ------------------------------------------------------------------ sources
+  // ---------------------------------------------------------------- name search
 
-  function renderSourceTable() {
-    var rows = ['<thead><tr><th>source</th><th>robots</th><th>licence</th><th>ai</th><th>decision</th></tr></thead><tbody>'];
-    META.sources.forEach(function (source) {
-      var status = source.decision.status;
-      rows.push(
-        '<tr class="' + (status === "refused" ? "is-refused" : "") + '">' +
-        "<td>" + escapeHtml(source.id) + "</td>" +
-        "<td>" + escapeHtml(source.robots.verdict) + "</td>" +
-        "<td>" + escapeHtml(source.license.id) + "</td>" +
-        "<td>" + (source.policy.ai_input ? "yes" : "no") + "</td>" +
-        '<td><span class="tag ' + escapeHtml(status) + '">' + escapeHtml(status.replace(/_/g, " ")) +
-        "</span></td></tr>"
-      );
+  // A pure lookup over the embedded records: no network, no API, no invention.
+  // Matching is a case-insensitive substring test over the embedded titles, so
+  // the page can only find records the pipeline actually ran on.
+  function updateGoogleLink() {
+    var name = els.nameInput.value.trim();
+    els.googleLink.href = "https://www.google.com/search?q=" +
+      encodeURIComponent(name ? '"' + name + '" museum collection' : "museum collection");
+  }
+
+  function searchCorporaByName() {
+    var name = els.nameInput.value.trim().toLowerCase();
+    if (!name) {
+      els.nameStatus.hidden = false;
+      els.nameStatus.classList.remove("is-empty");
+      els.nameStatus.textContent = "Type a collection name first — for example: Wheat Field with Cypresses.";
+      els.nameInput.focus();
+      return;
+    }
+    var matches = [];
+    CORPORA.forEach(function (entry) {
+      entry.records.forEach(function (record) {
+        if (String(record.title || "").toLowerCase().indexOf(name) !== -1) {
+          matches.push({ entry: entry, record: record });
+        }
+      });
     });
-    rows.push("</tbody>");
-    els.sourceTable.innerHTML = rows.join("");
+    els.nameStatus.hidden = true;
+    if (!matches.length) {
+      els.searchResults.hidden = true;
+      els.searchResults.innerHTML = "";
+      els.nameStatus.hidden = false;
+      els.nameStatus.classList.add("is-empty");
+      els.nameStatus.textContent =
+        "No embedded record has that name in its title. The frozen corpora are all this " +
+        "offline page can search — use the Google link below to look further afield.";
+      return;
+    }
+    els.searchResults.hidden = false;
+    els.searchResults.innerHTML = "";
+    matches.slice(0, 6).forEach(function (match) {
+      var card = document.createElement("button");
+      card.type = "button";
+      card.className = "result-candidate";
+      var meta = [
+        match.record.catalogue_number,
+        match.record.object_date,
+        String(match.record.medium || "").slice(0, 70)
+      ].filter(Boolean).join(" · ");
+      var flag = match.record.missing && match.record.missing.length ? " · incomplete" : "";
+      card.innerHTML =
+        "<b>" + escapeHtml(match.record.title) + "</b>" +
+        "<small>" + escapeHtml(meta) + flag + "</small>" +
+        '<span class="source-tag web">Web · ' + escapeHtml(sourceLabelFor(match.entry)) + "</span>";
+      card.addEventListener("click", function () {
+        selectCorpus(CORPORA.indexOf(match.entry));
+        els.select.value = match.record.catalogue_number;
+        fillRecord(match.record);
+        draftSelected();
+      });
+      els.searchResults.appendChild(card);
+    });
   }
 
   // ------------------------------------------------------------------ wiring
@@ -987,7 +1132,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   });
 
   els.select.addEventListener("change", function () {
-    var record = recordFor(els.select.value);
+    var record = recordIn(corpus(), els.select.value);
     fillRecord(record);
     draftSelected();
   });
@@ -1000,6 +1145,14 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   els.refusalButton.addEventListener("click", testRefusal);
   els.probeButton.addEventListener("click", probeNumber);
   els.askButton.addEventListener("click", askQuestion);
+  els.nameSearchButton.addEventListener("click", searchCorporaByName);
+  els.nameInput.addEventListener("input", updateGoogleLink);
+  els.nameInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      searchCorporaByName();
+    }
+  });
   els.probeNumber.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -1023,6 +1176,11 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
     state.mode = "offline";
     els.probeNumber.value = "";
     els.probeQuestion.value = "";
+    els.nameInput.value = "";
+    els.searchResults.hidden = true;
+    els.searchResults.innerHTML = "";
+    els.nameStatus.hidden = true;
+    updateGoogleLink();
     selectCorpus(DEFAULT_CORPUS);
   });
 
@@ -1037,8 +1195,7 @@ h3 { margin-bottom: 0; font-size: 18px; line-height: 1.2; }
   }).join(" · ");
   els.footerHash.textContent = "prompt sha256 " + String(META.prompt_sha256).slice(0, 12) +
     " · " + META.labeldesk_version;
-
-  renderSourceTable();
+  updateGoogleLink();
   selectCorpus(DEFAULT_CORPUS);
 })();
   </script>

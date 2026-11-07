@@ -50,6 +50,7 @@
 
 .probe {
   flex: 1;
+  min-width: 0;
   display: grid;
   gap: 7px;
   color: var(--muted);
@@ -59,7 +60,7 @@
 
 .probe input {
   width: 100%;
-  min-height: 38px;
+  min-height: 40px;
   padding: 8px 11px;
   border: 1px solid var(--line);
   border-radius: 7px;
@@ -87,60 +88,6 @@
 }
 
 .reason-note[hidden] { display: none; }
-
-.source-table-wrap {
-  overflow-x: auto;
-}
-
-.source-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 10.5px;
-}
-
-.source-table th,
-.source-table td {
-  padding: 7px 8px;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-  vertical-align: top;
-}
-
-.source-table th {
-  color: var(--muted);
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-
-.source-table td:first-child {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-weight: 700;
-  color: var(--navy);
-  white-space: nowrap;
-}
-
-.source-table tr.is-refused td {
-  background: #fff9f8;
-}
-
-.tag {
-  display: inline-block;
-  padding: 3px 6px;
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.tag.admitted { color: var(--teal); background: var(--teal-soft); }
-.tag.refused { color: var(--red); background: var(--red-soft); }
-.tag.deferred,
-.tag.reference_only,
-.tag.admitted_not_frozen { color: var(--amber); background: var(--amber-soft); }
 
 .claim-tag .claim-field {
   margin-left: 6px;

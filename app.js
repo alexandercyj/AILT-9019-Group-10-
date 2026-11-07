@@ -1,17 +1,20 @@
 /* Label Desk browser view.
  *
  * This file does no grounding, no refusal logic and no drafting of its own: it
- * posts to /api/draft and /api/fetch and draws what the Python pipeline returns.
- * The command line and this page therefore cannot disagree. Icons are inline
- * SVG so buttons and badges render the same on every platform — no font glyphs,
- * no broken-image fallbacks.
+ * posts to /api/draft, /api/fetch and /api/search and draws what the Python
+ * pipeline returns. The command line and this page therefore cannot disagree.
+ * Icons are inline SVG so buttons and badges render the same on every platform.
+ *
+ * One extra responsibility this view does carry: source attribution. Every part
+ * of the structured introduction is tagged with where it came from —
+ *   .source-tag.web     field values copied verbatim from a museum record
+ *   .source-tag.offline the deterministic renderer, no model involved
+ *   .source-tag.ai      a model rewrite, shown only when it passed the checks
  */
 
 const ICONS = {
   "arrow-right":
     '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h10"/><path d="M9 3.5 13.5 8 9 12.5"/></svg>',
-  external:
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4"/><path d="M5.5 4H12v6.5"/></svg>',
   citation:
     '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v7a3 3 0 0 0 3 3h7"/></svg>',
   check:
@@ -36,12 +39,17 @@ const els = {
   previewNumber: document.querySelector("#previewNumber"),
   sourceLink: document.querySelector("#sourceLink"),
   sourceBadge: document.querySelector("#sourceBadge"),
+  provenanceLine: document.querySelector("#provenanceLine"),
   banner: document.querySelector("#banner"),
   status: document.querySelector("#serverStatus"),
   metricRecords: document.querySelector("#metricRecords"),
+  footerMeta: document.querySelector("#footerMeta"),
   resultTitle: document.querySelector("#resultTitle"),
   resultStatus: document.querySelector("#resultStatus"),
   resultCard: document.querySelector("#resultCard"),
+  introHint: document.querySelector("#introHint"),
+  introList: document.querySelector("#introList"),
+  summaryTag: document.querySelector("#summaryTag"),
   labelText: document.querySelector("#labelText"),
   claimList: document.querySelector("#claimList"),
   citationStrip: document.querySelector("#citationStrip"),
@@ -49,11 +57,6 @@ const els = {
   scoreLabel: document.querySelector("#scoreLabel"),
   shield: document.querySelector("#shield"),
   checkList: document.querySelector("#checkList"),
-  command: document.querySelector("#commandBlock"),
-  corpusVersion: document.querySelector("#corpusVersion"),
-  corpusCount: document.querySelector("#corpusCount"),
-  corpusChecksum: document.querySelector("#corpusChecksum"),
-  corpusSource: document.querySelector("#corpusSource"),
   draftButton: document.querySelector("#draftButton"),
   refusalButton: document.querySelector("#refusalButton"),
   resetButton: document.querySelector("#resetButton"),
@@ -66,6 +69,12 @@ const els = {
   liveFetchButton: document.querySelector("#liveFetchButton"),
   liveExamples: document.querySelector("#liveExamples"),
   liveStatus: document.querySelector("#liveStatus"),
+  searchProvider: document.querySelector("#searchProvider"),
+  nameInput: document.querySelector("#nameInput"),
+  nameSearchButton: document.querySelector("#nameSearchButton"),
+  nameStatus: document.querySelector("#nameStatus"),
+  searchResults: document.querySelector("#searchResults"),
+  googleLink: document.querySelector("#googleLink"),
 };
 
 const CHECK_ORDER = [
@@ -82,6 +91,9 @@ const state = {
   selected: null,
   initial: null,
   token: 0,
+  // How the current record arrived: { kind: "corpus" | "live", label: "..." }.
+  // Drives the Web source tag on every structured-introduction row.
+  source: { kind: "corpus", label: "Frozen corpus (CC0)" },
 };
 
 function setStatus(text, ok) {
@@ -152,11 +164,11 @@ function fillRecord(record, meta = {}) {
   }
   if (meta.live) {
     setBadge(`Live · ${meta.providerName}`, true);
-    els.command.textContent = `GET ${meta.endpoint.replace("{oid}", String(record.object_id))}`;
+    state.source = { kind: "live", label: `${meta.providerName} open access API (CC0)` };
   } else {
     const license = (state.corpus && state.corpus.license) || "CC0";
     setBadge(`Frozen corpus · ${license.split(" ")[0]}`, false);
-    els.command.textContent = `python3 -m labeldesk ${record.catalogue_number}`;
+    state.source = { kind: "corpus", label: `Frozen corpus · ${license}` };
   }
   for (const input of [els.title, els.date, els.medium, els.culture, els.credit]) {
     const missing = !input.value.trim();
@@ -193,11 +205,12 @@ async function draft(meta = {}) {
       llm: els.llmToggle.checked ? "auto" : null,
     });
     if (token !== state.token) return;
-    renderResult(result);
-    // /api/draft always answers from the frozen corpus; make sure the badge
-    // agrees even when the previous view was a live fetch.
+    // /api/draft always answers from the frozen corpus; make sure the badge and
+    // the source tags agree even when the previous view was a live lookup.
     const license = (state.corpus && state.corpus.license) || "CC0";
     setBadge(`Frozen corpus · ${license.split(" ")[0]}`, false);
+    state.source = { kind: "corpus", label: `Frozen corpus · ${license}` };
+    renderResult(result);
   } catch (error) {
     if (token !== state.token) return;
     showBanner(true);
@@ -222,16 +235,18 @@ function liveErrorMessage(error) {
   return "The fetch failed. Nothing was drafted.";
 }
 
-async function fetchLive() {
-  const provider = els.liveProvider.value;
-  const objectId = els.liveObjectId.value.trim();
+// One live record by provider + object ID, then the identical pipeline. Used by
+// both the object-ID box and a candidate picked from a name search.
+async function fetchLive(options = {}) {
+  const provider = options.provider || els.liveProvider.value;
+  const objectId = options.objectId || els.liveObjectId.value.trim();
   if (!objectId) {
     els.liveStatus.hidden = false;
     els.liveStatus.textContent = "Type an object ID first — the examples below are one click away.";
     return;
   }
   const token = ++state.token;
-  setBusy(els.liveFetchButton, true, "Fetching…");
+  setBusy(options.button || els.liveFetchButton, true, "Fetching…");
   els.liveStatus.hidden = true;
   try {
     const body = await post("/api/fetch", {
@@ -254,7 +269,96 @@ async function fetchLive() {
     els.liveStatus.hidden = false;
     els.liveStatus.textContent = liveErrorMessage(error);
   } finally {
-    if (token === state.token) setBusy(els.liveFetchButton, false);
+    if (token === state.token) setBusy(options.button || els.liveFetchButton, false);
+  }
+}
+
+// ---------------------------------------------------------------- name search
+
+function updateGoogleLink() {
+  const name = els.nameInput.value.trim();
+  const provider = state.providers[els.searchProvider.value] || {};
+  const query = name ? `"${name}" ${(provider.name || "").replace(/^The /, "")} collection` : "museum collection";
+  els.googleLink.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+}
+
+function searchErrorMessage(error) {
+  const data = error.data || {};
+  if (data.error === "upstream_http") {
+    return `The museum's search API answered with HTTP ${data.status}. Nothing was fetched.`;
+  }
+  if (data.error === "upstream_unreachable") {
+    return "The museum's search API could not be reached from this machine. Nothing was fetched.";
+  }
+  if (data.error === "name_required") {
+    return "Type a collection name first.";
+  }
+  return "The search failed. Nothing was fetched.";
+}
+
+function renderSearchResults(body) {
+  els.searchResults.innerHTML = "";
+  if (!body.results.length) {
+    els.searchResults.hidden = true;
+    els.nameStatus.hidden = false;
+    els.nameStatus.classList.add("is-empty");
+    els.nameStatus.textContent =
+      `No CC0 match for that name in ${body.provider_name}'s API. ` +
+      "Try the other museum, or use the Google search below to look further afield.";
+    return;
+  }
+  els.nameStatus.hidden = true;
+  els.searchResults.hidden = false;
+  for (const record of body.results) {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "result-candidate";
+    const meta = [
+      record.catalogue_number,
+      record.object_date,
+      String(record.medium || "").slice(0, 70),
+    ].filter(Boolean).join(" · ");
+    const flag = record.missing && record.missing.length ? " · incomplete" : "";
+    card.innerHTML =
+      `<b>${escapeHtml(record.title)}</b>` +
+      `<small>${escapeHtml(meta)}${flag}</small>` +
+      `<span class="source-tag web">Web · ${escapeHtml(body.provider_name)} open access API (CC0)</span>`;
+    card.addEventListener("click", () => {
+      // Drafting a candidate is just a live fetch with known coordinates.
+      fetchLive({ provider: body.provider, objectId: String(record.object_id) });
+    });
+    els.searchResults.appendChild(card);
+  }
+}
+
+async function searchByName() {
+  const name = els.nameInput.value.trim();
+  if (!name) {
+    els.nameStatus.hidden = false;
+    els.nameStatus.classList.remove("is-empty");
+    els.nameStatus.textContent = "Type a collection name first — for example: Wheat Field with Cypresses.";
+    els.nameInput.focus();
+    return;
+  }
+  const token = ++state.token;
+  setBusy(els.nameSearchButton, true, "Searching…");
+  els.nameStatus.hidden = true;
+  els.searchResults.hidden = true;
+  try {
+    const body = await post("/api/search", {
+      provider: els.searchProvider.value,
+      name,
+    });
+    if (token !== state.token) return;
+    renderSearchResults(body);
+  } catch (error) {
+    if (token !== state.token) return;
+    els.searchResults.hidden = true;
+    els.nameStatus.hidden = false;
+    els.nameStatus.classList.remove("is-empty");
+    els.nameStatus.textContent = searchErrorMessage(error);
+  } finally {
+    if (token === state.token) setBusy(els.nameSearchButton, false);
   }
 }
 
@@ -266,6 +370,51 @@ async function ask() {
   }
   await draft({ question });
   els.askInput.select();
+}
+
+// --------------------------------------------------------- structured intro
+
+// The summary's source tag: AI only when a requested rewrite was actually
+// applied; the offline renderer is deterministic, so it gets its own label.
+function summaryTag(result) {
+  const block = result.llm;
+  if (block && block.requested && block.applied) {
+    return `<span class="source-tag ai">AI generated · ${escapeHtml(block.model)}</span>`;
+  }
+  if (result.status === "refused") {
+    return '<span class="source-tag refused">Refused · nothing invented</span>';
+  }
+  return '<span class="source-tag offline">Offline renderer · record-grounded</span>';
+}
+
+function renderIntro(result) {
+  const record = state.selected;
+  if (!record) return;
+  els.introHint.hidden = true;
+
+  const webTag = `<span class="source-tag web">Web · ${escapeHtml(state.source.label)}</span>`;
+  const rows = [
+    ["Title", record.title],
+    ["Object date", record.object_date],
+    ["Medium", record.medium],
+    ["Place or culture", record.place_or_culture],
+    ["Credit line", record.credit_line],
+  ];
+  els.introList.innerHTML = rows
+    .map(([key, value]) => {
+      const empty = !String(value || "").trim();
+      return (
+        `<div class="intro-row">` +
+        `<span class="intro-key">${key}</span>` +
+        `<span class="intro-value${empty ? " is-missing" : ""}">${empty ? "— not in the record —" : escapeHtml(value)}</span>` +
+        webTag +
+        `</div>`
+      );
+    })
+    .join("");
+
+  els.summaryTag.innerHTML = summaryTag(result);
+  els.labelText.textContent = result.status === "refused" ? result.reason_text : result.label;
 }
 
 function renderModelNote(result) {
@@ -291,8 +440,8 @@ function renderResult(result) {
   els.resultStatus.textContent = refused ? "REFUSED" : "DRAFTED";
   els.resultStatus.classList.toggle("refused", refused);
   els.resultCard.classList.toggle("refused", refused);
-  els.resultTitle.textContent = refused ? "Refusal" : "Draft";
-  els.labelText.textContent = refused ? result.reason_text : result.label;
+  els.resultTitle.textContent = refused ? "Refusal" : "Structured introduction";
+  renderIntro(result);
   renderModelNote(result);
 
   els.claimList.innerHTML = refused
@@ -360,6 +509,7 @@ function renderProviders(providers) {
   els.liveProvider.innerHTML = providers
     .map((p) => `<option value="${p.id}">${escapeHtml(p.name)}</option>`)
     .join("");
+  els.searchProvider.innerHTML = els.liveProvider.innerHTML;
   els.liveExamples.innerHTML = providers
     .map((p) =>
       p.examples
@@ -371,6 +521,7 @@ function renderProviders(providers) {
         .join(""),
     )
     .join("");
+  updateGoogleLink();
 }
 
 async function boot() {
@@ -390,15 +541,14 @@ async function boot() {
     renderProviders(data.live_providers || []);
 
     els.metricRecords.textContent = String(data.corpus.record_count);
-    els.corpusVersion.textContent = `v${data.corpus.version}`;
-    els.corpusCount.textContent = `${data.corpus.record_count}`;
-    els.corpusChecksum.textContent = data.corpus.checksum.slice(0, 12);
-    // The register's answer for this corpus, so the page says where the records
-    // came from and whether the source permits the model, not just how many there are.
     const prov = data.provenance || {};
-    els.corpusSource.textContent = prov.registered
-      ? `${prov.id} · ${prov.license} · ai ${prov.ai_input ? "yes" : "no"}`
-      : "unregistered · ai no";
+    els.provenanceLine.innerHTML =
+      `Corpus <b>${escapeHtml(data.corpus.name)}</b> · v${escapeHtml(data.corpus.version)} · ` +
+      `${escapeHtml(data.corpus.license)} · ${data.corpus.record_count} records · ` +
+      `sha256 <code>${escapeHtml(data.corpus.checksum.slice(0, 12))}</code> · ` +
+      `source register: ${prov.registered ? `${escapeHtml(prov.id)} · ai input ${prov.ai_input ? "yes" : "no"}` : "unregistered"}`;
+    els.footerMeta.textContent =
+      `${data.corpus.name} · v${data.corpus.version} · sha256 ${data.corpus.checksum.slice(0, 12)}`;
 
     showBanner(false);
     setStatus("Pipeline connected", true);
@@ -441,7 +591,7 @@ els.askInput.addEventListener("keydown", (event) => {
   }
 });
 
-els.liveFetchButton.addEventListener("click", fetchLive);
+els.liveFetchButton.addEventListener("click", () => fetchLive());
 els.liveObjectId.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
@@ -456,5 +606,15 @@ els.liveExamples.addEventListener("click", (event) => {
   els.liveObjectId.value = chip.dataset.id;
   fetchLive();
 });
+
+els.nameSearchButton.addEventListener("click", searchByName);
+els.nameInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    searchByName();
+  }
+});
+els.nameInput.addEventListener("input", updateGoogleLink);
+els.searchProvider.addEventListener("change", updateGoogleLink);
 
 boot();

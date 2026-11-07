@@ -2,17 +2,24 @@
  *
  * This file computes no labels, no claims, no citations and no checks. Every one of
  * those was produced by labeldesk at build time (tools/build_standalone.py) and is
- * embedded above as JSON. What runs here is presentation, plus two lookups that are
+ * embedded above as JSON. What runs here is presentation, plus lookups that are
  * pure functions of the embedded data:
  *
- *   1. is this catalogue number in this corpus?      -> array membership
+ *   1. is this catalogue number in this corpus?        -> array membership
  *   2. does this question contain an out-of-scope term? -> substring test over the
  *      term list the build copied out of labeldesk.pipeline
+ *   3. which embedded records match a collection name?  -> substring test over the
+ *      embedded titles, so the name search is as honest as the rest of the page
  *
- * Both are the same decisions the CLI makes, made over data the build embedded, so
+ * All are the same decisions the CLI makes, made over data the build embedded, so
  * the page cannot disagree with the pipeline about a record. It can only fail to
  * contain one, which is why the refusal text is built from the pipeline's own
  * template rather than typed out here.
+ *
+ * The page also carries the source contract: every part of the structured
+ * introduction is tagged with where it came from — web source for field values
+ * copied verbatim from the museum record, offline renderer for the deterministic
+ * draft, AI generated for a recorded model rewrite that passed the same checks.
  */
 (function () {
   "use strict";
@@ -26,8 +33,6 @@
   var ICONS = {
     "arrow-right":
       '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h10"/><path d="M9 3.5 13.5 8 9 12.5"/></svg>',
-    external:
-      '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12 12 4"/><path d="M5.5 4H12v6.5"/></svg>',
     citation:
       '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v7a3 3 0 0 0 3 3h7"/></svg>',
     check:
@@ -68,9 +73,13 @@
     previewNumber: document.getElementById("previewNumber"),
     sourceLink: document.getElementById("sourceLink"),
     sourceBadge: document.getElementById("sourceBadge"),
+    provenanceLine: document.getElementById("provenanceLine"),
     resultTitle: document.getElementById("resultTitle"),
     resultStatus: document.getElementById("resultStatus"),
     resultCard: document.getElementById("resultCard"),
+    introHint: document.getElementById("introHint"),
+    introList: document.getElementById("introList"),
+    summaryTag: document.getElementById("summaryTag"),
     labelText: document.getElementById("labelText"),
     claimList: document.getElementById("claimList"),
     citationStrip: document.getElementById("citationStrip"),
@@ -80,16 +89,15 @@
     scoreLabel: document.getElementById("scoreLabel"),
     shield: document.getElementById("shield"),
     checkList: document.getElementById("checkList"),
-    command: document.getElementById("commandBlock"),
-    corpusVersion: document.getElementById("corpusVersion"),
-    corpusCount: document.getElementById("corpusCount"),
-    corpusChecksum: document.getElementById("corpusChecksum"),
-    corpusSource: document.getElementById("corpusSource"),
     probeNumber: document.getElementById("probeNumber"),
     probeButton: document.getElementById("probeButton"),
     probeQuestion: document.getElementById("probeQuestion"),
     askButton: document.getElementById("askButton"),
-    sourceTable: document.getElementById("sourceTable"),
+    nameInput: document.getElementById("nameInput"),
+    nameSearchButton: document.getElementById("nameSearchButton"),
+    nameStatus: document.getElementById("nameStatus"),
+    searchResults: document.getElementById("searchResults"),
+    googleLink: document.getElementById("googleLink"),
     metricRecords: document.getElementById("metricRecords"),
     footerCorpora: document.getElementById("footerCorpora"),
     footerHash: document.getElementById("footerHash")
@@ -103,7 +111,13 @@
     return 0;
   })();
 
-  var state = { corpus: DEFAULT_CORPUS, number: null, mode: "offline" };
+  var state = {
+    corpus: DEFAULT_CORPUS,
+    number: null,
+    mode: "offline",
+    // How the current record is labelled in the structured introduction.
+    sourceLabel: "Frozen corpus"
+  };
 
   // ------------------------------------------------------------------ helpers
 
@@ -119,8 +133,12 @@
     return CORPORA[state.corpus];
   }
 
-  function recordFor(number) {
-    var list = corpus().records;
+  function currentRecord() {
+    return recordIn(corpus(), state.number);
+  }
+
+  function recordIn(entry, number) {
+    var list = entry.records;
     for (var i = 0; i < list.length; i += 1) {
       if (list[i].catalogue_number === number) return list[i];
     }
@@ -158,18 +176,27 @@
     }).join("");
   }
 
+  function sourceLabelFor(entry) {
+    var prov = entry.provenance || {};
+    return prov.registered
+      ? "Frozen corpus · " + prov.id + " · " + prov.license
+      : "Frozen corpus · unregistered";
+  }
+
   function renderCorpusMeta() {
     var entry = corpus();
     var prov = entry.provenance || {};
-    els.corpusVersion.textContent = "v" + entry.corpus.version;
-    els.corpusCount.textContent = String(entry.corpus.record_count);
-    els.corpusChecksum.textContent = String(entry.corpus.checksum).slice(0, 12);
-    els.corpusSource.textContent = prov.registered
-      ? prov.id + " · " + prov.license + " · ai " + (prov.ai_input ? "yes" : "no")
-      : "unregistered · ai no";
     els.sourceBadge.textContent = prov.registered
       ? "Frozen corpus · " + prov.license
       : "Frozen corpus";
+    state.sourceLabel = sourceLabelFor(entry);
+    els.provenanceLine.innerHTML =
+      "Corpus <b>" + escapeHtml(entry.corpus.name) + "</b> · v" + escapeHtml(entry.corpus.version) +
+      " · " + escapeHtml(entry.corpus.license) + " · " + entry.corpus.record_count + " records" +
+      " · sha256 <code>" + escapeHtml(String(entry.corpus.checksum).slice(0, 12)) + "</code>" +
+      " · source register: " + (prov.registered
+        ? escapeHtml(prov.id) + " · ai input " + (prov.ai_input ? "yes" : "no")
+        : "unregistered");
   }
 
   function renderSelect() {
@@ -214,25 +241,47 @@
     }
   }
 
-  function commandFor(number) {
-    var entry = corpus();
-    var parts = ["python3 -m labeldesk", '"' + number + '"'];
-    if (entry.alias !== "primary") parts.push("--corpus " + entry.alias);
-    if (state.mode === "replay") parts.push("--llm --replay");
-    return parts.join(" ");
+  // --------------------------------------------------------- structured intro
+
+  // The summary's source tag: AI only for a recorded rewrite that was actually
+  // applied; the offline renderer is deterministic, so it gets its own label.
+  function summaryTagFor(result) {
+    var block = result.llm;
+    if (block && block.requested && block.applied) {
+      return '<span class="source-tag ai">AI generated · ' + escapeHtml(block.model) + "</span>";
+    }
+    if (result.status === "refused") {
+      return '<span class="source-tag refused">Refused · nothing invented</span>';
+    }
+    return '<span class="source-tag offline">Offline renderer · record-grounded</span>';
+  }
+
+  function renderIntro(result) {
+    var record = currentRecord();
+    if (!record) return;
+    els.introHint.hidden = true;
+    var webTag = '<span class="source-tag web">Web · ' + escapeHtml(state.sourceLabel) + "</span>";
+    var rows = [
+      ["Title", record.title],
+      ["Object date", record.object_date],
+      ["Medium", record.medium],
+      ["Place or culture", record.place_or_culture],
+      ["Credit line", record.credit_line]
+    ];
+    els.introList.innerHTML = rows.map(function (row) {
+      var empty = !String(row[1] == null ? "" : row[1]).trim();
+      return (
+        '<div class="intro-row">' +
+        '<span class="intro-key">' + row[0] + "</span>" +
+        '<span class="intro-value' + (empty ? " is-missing" : "") + '">' +
+        (empty ? "— not in the record —" : escapeHtml(row[1])) + "</span>" +
+        webTag + "</div>"
+      );
+    }).join("");
+    els.summaryTag.innerHTML = summaryTagFor(result);
   }
 
   // ------------------------------------------------------------------ results
-
-  function resetPanels() {
-    els.claimList.innerHTML = "";
-    els.citationStrip.innerHTML = "";
-    els.checkList.innerHTML = "";
-    els.modelNote.hidden = true;
-    els.modelNote.textContent = "";
-    els.reasonNote.hidden = true;
-    els.reasonNote.textContent = "";
-  }
 
   function renderChecks(checks) {
     if (!checks) {
@@ -306,16 +355,16 @@
   }
 
   function showDrafted(result, number) {
-    els.resultTitle.textContent = "Draft";
+    els.resultTitle.textContent = "Structured introduction";
     els.resultStatus.textContent = "DRAFTED · " + result.word_count + " words";
     els.resultStatus.className = "result-status drafted";
     els.resultCard.className = "result-card";
     els.labelText.textContent = result.label;
+    renderIntro(result);
     renderClaims(result);
     renderChecks(result.checks);
     renderModelNote(result.llm);
     setNote(els.reasonNote, "");
-    els.command.textContent = commandFor(number);
   }
 
   function showRefused(result, number) {
@@ -326,10 +375,10 @@
     els.labelText.textContent = "No label was drafted.";
     els.claimList.innerHTML = "";
     els.citationStrip.innerHTML = "";
+    renderIntro(result);
     renderChecks(null);
     setNote(els.modelNote, "");
     setNote(els.reasonNote, result.reason_text);
-    els.command.textContent = commandFor(number);
   }
 
   function render(result, number) {
@@ -338,6 +387,7 @@
       els.resultStatus.textContent = "NO RESULT";
       els.resultStatus.className = "result-status refused";
       els.labelText.textContent = "This build has no result for that record.";
+      els.introList.innerHTML = "";
       return;
     }
     if (result.status === "refused") {
@@ -381,7 +431,7 @@
   function probeNumber() {
     var number = els.probeNumber.value.trim();
     if (!number) return;
-    var record = recordFor(number);
+    var record = recordIn(corpus(), number);
     if (!record) {
       lookupUnknown(number);
       return;
@@ -443,24 +493,69 @@
     draftSelected();
   }
 
-  // ------------------------------------------------------------------ sources
+  // ---------------------------------------------------------------- name search
 
-  function renderSourceTable() {
-    var rows = ['<thead><tr><th>source</th><th>robots</th><th>licence</th><th>ai</th><th>decision</th></tr></thead><tbody>'];
-    META.sources.forEach(function (source) {
-      var status = source.decision.status;
-      rows.push(
-        '<tr class="' + (status === "refused" ? "is-refused" : "") + '">' +
-        "<td>" + escapeHtml(source.id) + "</td>" +
-        "<td>" + escapeHtml(source.robots.verdict) + "</td>" +
-        "<td>" + escapeHtml(source.license.id) + "</td>" +
-        "<td>" + (source.policy.ai_input ? "yes" : "no") + "</td>" +
-        '<td><span class="tag ' + escapeHtml(status) + '">' + escapeHtml(status.replace(/_/g, " ")) +
-        "</span></td></tr>"
-      );
+  // A pure lookup over the embedded records: no network, no API, no invention.
+  // Matching is a case-insensitive substring test over the embedded titles, so
+  // the page can only find records the pipeline actually ran on.
+  function updateGoogleLink() {
+    var name = els.nameInput.value.trim();
+    els.googleLink.href = "https://www.google.com/search?q=" +
+      encodeURIComponent(name ? '"' + name + '" museum collection' : "museum collection");
+  }
+
+  function searchCorporaByName() {
+    var name = els.nameInput.value.trim().toLowerCase();
+    if (!name) {
+      els.nameStatus.hidden = false;
+      els.nameStatus.classList.remove("is-empty");
+      els.nameStatus.textContent = "Type a collection name first — for example: Wheat Field with Cypresses.";
+      els.nameInput.focus();
+      return;
+    }
+    var matches = [];
+    CORPORA.forEach(function (entry) {
+      entry.records.forEach(function (record) {
+        if (String(record.title || "").toLowerCase().indexOf(name) !== -1) {
+          matches.push({ entry: entry, record: record });
+        }
+      });
     });
-    rows.push("</tbody>");
-    els.sourceTable.innerHTML = rows.join("");
+    els.nameStatus.hidden = true;
+    if (!matches.length) {
+      els.searchResults.hidden = true;
+      els.searchResults.innerHTML = "";
+      els.nameStatus.hidden = false;
+      els.nameStatus.classList.add("is-empty");
+      els.nameStatus.textContent =
+        "No embedded record has that name in its title. The frozen corpora are all this " +
+        "offline page can search — use the Google link below to look further afield.";
+      return;
+    }
+    els.searchResults.hidden = false;
+    els.searchResults.innerHTML = "";
+    matches.slice(0, 6).forEach(function (match) {
+      var card = document.createElement("button");
+      card.type = "button";
+      card.className = "result-candidate";
+      var meta = [
+        match.record.catalogue_number,
+        match.record.object_date,
+        String(match.record.medium || "").slice(0, 70)
+      ].filter(Boolean).join(" · ");
+      var flag = match.record.missing && match.record.missing.length ? " · incomplete" : "";
+      card.innerHTML =
+        "<b>" + escapeHtml(match.record.title) + "</b>" +
+        "<small>" + escapeHtml(meta) + flag + "</small>" +
+        '<span class="source-tag web">Web · ' + escapeHtml(sourceLabelFor(match.entry)) + "</span>";
+      card.addEventListener("click", function () {
+        selectCorpus(CORPORA.indexOf(match.entry));
+        els.select.value = match.record.catalogue_number;
+        fillRecord(match.record);
+        draftSelected();
+      });
+      els.searchResults.appendChild(card);
+    });
   }
 
   // ------------------------------------------------------------------ wiring
@@ -472,7 +567,7 @@
   });
 
   els.select.addEventListener("change", function () {
-    var record = recordFor(els.select.value);
+    var record = recordIn(corpus(), els.select.value);
     fillRecord(record);
     draftSelected();
   });
@@ -485,6 +580,14 @@
   els.refusalButton.addEventListener("click", testRefusal);
   els.probeButton.addEventListener("click", probeNumber);
   els.askButton.addEventListener("click", askQuestion);
+  els.nameSearchButton.addEventListener("click", searchCorporaByName);
+  els.nameInput.addEventListener("input", updateGoogleLink);
+  els.nameInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      searchCorporaByName();
+    }
+  });
   els.probeNumber.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       event.preventDefault();
@@ -508,6 +611,11 @@
     state.mode = "offline";
     els.probeNumber.value = "";
     els.probeQuestion.value = "";
+    els.nameInput.value = "";
+    els.searchResults.hidden = true;
+    els.searchResults.innerHTML = "";
+    els.nameStatus.hidden = true;
+    updateGoogleLink();
     selectCorpus(DEFAULT_CORPUS);
   });
 
@@ -522,7 +630,6 @@
   }).join(" · ");
   els.footerHash.textContent = "prompt sha256 " + String(META.prompt_sha256).slice(0, 12) +
     " · " + META.labeldesk_version;
-
-  renderSourceTable();
+  updateGoogleLink();
   selectCorpus(DEFAULT_CORPUS);
 })();

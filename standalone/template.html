@@ -50,7 +50,7 @@
         Every label, claim, citation and check below was produced by the Python package at
         build time (<code>tools/build_standalone.py</code>) and is embedded here verbatim. The
         page looks results up; it computes nothing. Reproduce any of them with the command
-        shown under <em>Reproduce it</em>.
+        printed in the footer.
       </span>
     </div>
 
@@ -64,6 +64,7 @@
             </div>
             <span class="source-badge" id="sourceBadge">Frozen corpus</span>
           </div>
+          <p class="provenance-line" id="provenanceLine">Corpus…</p>
 
           <div class="corpus-tabs" id="corpusTabs" role="tablist" aria-label="Corpus"></div>
 
@@ -102,6 +103,30 @@
             </form>
           </div>
 
+          <div class="search-box">
+            <div class="search-head">
+              <h4>Find a collection by name</h4>
+              <p>
+                Type a collection name to look through the records embedded in this file.
+                This page never touches the network, so only the three frozen corpora can be
+                searched here; the served page adds the museums' live search APIs.
+              </p>
+            </div>
+            <div class="search-row">
+              <label class="probe probe-grow">
+                Collection name
+                <input id="nameInput" placeholder="e.g. Wheat Field with Cypresses" autocomplete="off" />
+              </label>
+              <button class="secondary-button" type="button" id="nameSearchButton">Search</button>
+            </div>
+            <p class="search-status" id="nameStatus" hidden></p>
+            <div class="search-results" id="searchResults" hidden></div>
+            <p class="search-note">
+              Not in the frozen corpora? <a id="googleLink" href="https://www.google.com/" target="_blank" rel="noopener">Search Google for this name</a> —
+              this page opens a link only; it still calls nothing.
+            </p>
+          </div>
+
           <div class="probe-row">
             <label class="probe">
               A catalogue number not in this corpus
@@ -121,14 +146,22 @@
         <section class="panel output-panel" aria-live="polite">
           <div class="section-heading">
             <div>
-              <p class="eyebrow">The draft</p>
-              <h3 id="resultTitle">Draft</h3>
+              <p class="eyebrow">The result</p>
+              <h3 id="resultTitle">Structured introduction</h3>
             </div>
             <span class="result-status drafted" id="resultStatus">—</span>
           </div>
           <div class="result-card" id="resultCard">
-            <p class="label-text" id="labelText">Choose a record to see its draft.</p>
-            <div class="claim-list" id="claimList"></div>
+            <p class="panel-note" id="introHint">Choose a record to see its structured introduction.</p>
+            <div id="introList"></div>
+            <div class="intro-summary">
+              <div class="intro-subhead">
+                <h4>Summary</h4>
+                <span id="summaryTag"></span>
+              </div>
+              <p class="label-text" id="labelText">Choose a record to see its draft.</p>
+              <div class="claim-list" id="claimList"></div>
+            </div>
           </div>
           <div class="citation-strip" id="citationStrip"></div>
           <p class="panel-note" id="modelNote" hidden></p>
@@ -152,53 +185,41 @@
           <div class="check-list" id="checkList"></div>
         </section>
 
-        <section class="panel ports-panel">
+        <section class="panel legend-panel">
           <div class="section-heading compact">
             <div>
-              <p class="eyebrow">Reproduce it</p>
-              <h3>Same result from the command line</h3>
-            </div>
-            <span class="link-icon" data-icon="external"></span>
-          </div>
-          <p class="panel-note">The logic lives in the Python package; this page only shows what it returned.</p>
-          <div class="code-block" id="commandBlock">python3 -m labeldesk 14.40.377</div>
-          <div class="port-list">
-            <div class="port-row"><span class="file-chip">corpus</span><span class="port-line"></span><span class="port-value" id="corpusVersion">—</span></div>
-            <div class="port-row"><span class="file-chip">records</span><span class="port-line"></span><span class="port-value" id="corpusCount">—</span></div>
-            <div class="port-row"><span class="file-chip">sha256</span><span class="port-line"></span><span class="port-value" id="corpusChecksum">—</span></div>
-            <div class="port-row"><span class="file-chip">source</span><span class="port-line"></span><span class="port-value" id="corpusSource">—</span></div>
-          </div>
-        </section>
-
-        <section class="panel notes-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">When it says no</p>
-              <h3>Refusals are deliberate</h3>
+              <p class="eyebrow">The labels</p>
+              <h3>Where each part comes from</h3>
             </div>
           </div>
-          <ul class="notes-list">
-            <li><b>A blank field.</b> A record missing a title, date, medium, place or credit line is not drafted. The gap is reported, not filled in from elsewhere.</li>
-            <li><b>An unknown number.</b> A catalogue number outside the corpus is refused, not approximated with a look-alike object.</li>
-            <li><b>A question out of scope.</b> Value, authenticity, insurance and rights questions are declined; the tool holds no data to answer them.</li>
-            <li><b>A source that opts out.</b> A corpus whose register entry forbids model input never reaches the model, whatever is asked.</li>
+          <ul class="legend-list">
+            <li class="legend-row">
+              <span class="source-tag web">Web source</span>
+              <div>
+                <b>Web source</b>
+                <small>Field values are copied verbatim from the museum's open access record, frozen into the corpus at fetch time.</small>
+              </div>
+            </li>
+            <li class="legend-row">
+              <span class="source-tag offline">Offline renderer</span>
+              <div>
+                <b>Offline renderer</b>
+                <small>Summary and label text are drafted deterministically from the record. No model is involved.</small>
+              </div>
+            </li>
+            <li class="legend-row">
+              <span class="source-tag ai">AI generated</span>
+              <div>
+                <b>AI generated</b>
+                <small>Shown only for a recorded model rewrite — and only because it passed the same four checks as the offline draft.</small>
+              </div>
+            </li>
           </ul>
-        </section>
-
-        <section class="panel sources-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">Sources</p>
-              <h3>What was admitted, what was refused</h3>
-            </div>
-          </div>
-          <p class="panel-note">
-            Seven sources were read by reading their robots files. Two museums were refused,
-            and the refusals are recorded here rather than routed around.
+          <p class="legend-note">
+            <b>When it says no.</b> A record with a blank field, a catalogue number outside
+            the corpora, or an out-of-scope question (value, authenticity, rights) is
+            refused — the gap is reported, never filled in from elsewhere.
           </p>
-          <div class="source-table-wrap">
-            <table class="source-table" id="sourceTable"></table>
-          </div>
         </section>
       </aside>
     </section>
@@ -206,7 +227,7 @@
 
   <footer class="footer">
     <span>Label Desk · AILT9019 Group 10 · built from <span id="footerCorpora">—</span></span>
-    <span>A draft is a starting point, not a label. · <span id="footerHash">—</span></span>
+    <span>Reproduce any draft with <code>python3 -m labeldesk "&lt;catalogue number&gt;"</code> · <span id="footerHash">—</span></span>
   </footer>
 
   <script type="application/json" id="labeldesk-data">

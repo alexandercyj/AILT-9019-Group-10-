@@ -104,6 +104,20 @@ def httpd():
     server.PROVIDERS["met"] = {**original["met"], "fetch": fake_met}
     server.PROVIDERS["cleveland"] = {**original["cleveland"], "fetch": fake_cleveland}
 
+    # Name search is monkeypatched the same way: the searchers return raw
+    # candidate records and the endpoint normalises them through the live maps.
+    def fake_search_met(query: str, limit: int):
+        return [MET_RAW, MET_INCOMPLETE_RAW, {"objectID": 2, "title": ""}]
+
+    def fake_search_cleveland(query: str, limit: int):
+        return [CLEVELAND_RAW]
+
+    original_searchers = dict(server.SEARCHERS)
+    server.SEARCHERS["met"] = fake_search_met
+    server.SEARCHERS["cleveland"] = fake_search_cleveland
+    # The Met searcher sleeps between object GETs; a fake must not.
+    server.PROVIDERS["met"] = {**server.PROVIDERS["met"], "pause": 0}
+
     instance = server.ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
     thread = threading.Thread(target=instance.serve_forever, daemon=True)
     thread.start()
@@ -112,6 +126,8 @@ def httpd():
     thread.join(timeout=5)
     server.PROVIDERS.clear()
     server.PROVIDERS.update(original)
+    server.SEARCHERS.clear()
+    server.SEARCHERS.update(original_searchers)
 
 
 # --------------------------------------------------------------------------- #
@@ -229,3 +245,57 @@ def test_fetch_upstream_error_is_reported(httpd):
     assert status == 502
     assert body["error"] == "upstream_http"
     assert body["status"] == 404
+
+
+# --------------------------------------------------------------------------- #
+# name search: candidates without drafting
+# --------------------------------------------------------------------------- #
+
+
+def test_search_returns_normalised_candidates(httpd):
+    status, body = _request(f"{httpd}/api/search", {"provider": "met", "name": "straw hat"})
+    assert status == 200
+    assert body["provider"] == "met"
+    assert body["query"] == "straw hat"
+    assert len(body["results"]) == 2, "the title-less candidate is dropped as noise"
+
+    record = body["results"][0]
+    assert record["catalogue_number"] == "64.165"
+    # culture is blank on this record; the live map must fall back to country.
+    assert record["place_or_culture"] == "Netherlands"
+    assert record["source_url"].startswith("https://www.metmuseum.org/")
+
+    incomplete = body["results"][1]
+    assert incomplete["missing"] == ["object_date"], "incompleteness is reported, never filled"
+
+
+def test_search_cleveland_candidates(httpd):
+    status, body = _request(f"{httpd}/api/search", {"provider": "cleveland", "name": "parliament"})
+    assert status == 200
+    assert body["provider_name"] == "The Cleveland Museum of Art"
+    assert body["results"][0]["title"] == "The Burning of the Houses of Parliament"
+
+
+def test_search_validates_input(httpd):
+    status, body = _request(f"{httpd}/api/search", {"provider": "louvre", "name": "x"})
+    assert status == 400
+    assert body["error"] == "bad_provider"
+
+    status, body = _request(f"{httpd}/api/search", {"provider": "met", "name": "   "})
+    assert status == 400
+    assert body["error"] == "name_required"
+
+
+def test_search_upstream_error_is_reported(httpd):
+    """A search API that 503s must surface as upstream_http, not as no results."""
+    def failing_search(query: str, limit: int):
+        raise urllib.error.URLError("search api down")
+
+    original = server.SEARCHERS["met"]
+    server.SEARCHERS["met"] = failing_search
+    try:
+        status, body = _request(f"{httpd}/api/search", {"provider": "met", "name": "straw hat"})
+    finally:
+        server.SEARCHERS["met"] = original
+    assert status == 502
+    assert body["error"] == "upstream_unreachable"

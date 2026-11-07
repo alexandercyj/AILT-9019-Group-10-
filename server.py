@@ -17,6 +17,12 @@ any corpus; it is fetched, drafted, and forgotten. The same guardrails apply —
 a record missing a required field is refused, and the model layer is used only
 when the page asks and the source register permits it.
 
+A second endpoint, POST /api/search, takes a collection name instead of an ID:
+it asks the museum's own search API for candidate object IDs, reads each one
+through the same normaliser the frozen corpora were built with, and returns the
+candidates without drafting anything. Drafting happens only when the page picks
+a candidate, which goes through /api/fetch like any other live record.
+
     python3 server.py                        # http://127.0.0.1:8000
     python3 server.py --port 8080
     python3 server.py --corpus cleveland     # a registered alias, or a path
@@ -26,15 +32,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import time
+import urllib.request
 from datetime import date
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import unquote, urlparse
+from urllib.parse import quote, unquote, urlparse
 
 from labeldesk import __version__, draft, load_corpus
 from labeldesk.corpus import REQUIRED_FIELDS, Corpus
 from labeldesk.llm import config_from_env, prompt_hash, resolve_mode
+from labeldesk.net import ssl_context
 from labeldesk.sources import aliases, provenance, resolve_corpus
 from labeldesk.validate import missing_fields
 
@@ -113,6 +122,75 @@ def live_provider_payload() -> list[dict]:
         }
         for provider_id, spec in sorted(LIVE_PROVIDERS.items())
     ]
+
+
+# Name search: each museum exposes its own search API, so each provider gets a
+# searcher that returns raw candidate records. The Met search endpoint answers
+# with object IDs only (the Solr-backed v1 endpoint was retired on 2026-10-01;
+# v1.1 keeps the same response shape), so each candidate needs its own object
+# GET. Cleveland returns full records in one request. Searchers are module
+# level so tests can monkeypatch them the way they monkeypatch PROVIDERS.
+def search_met(query: str, limit: int) -> list[dict]:
+    """Candidate Met records for a name: one search call, then one GET per ID."""
+    url = (
+        "https://collectionapi.metmuseum.org/public/collection/v1.1/search"
+        "?hasImages=true&q=" + _quote(query)
+    )
+    payload = _get_json(url)
+    records = []
+    for object_id in (payload.get("objectIDs") or [])[:limit]:
+        time.sleep(PROVIDERS["met"]["pause"])
+        records.append(PROVIDERS["met"]["fetch"](object_id))
+    return records
+
+
+def search_cleveland(query: str, limit: int) -> list[dict]:
+    """Candidate Cleveland records for a name: one request returns them all."""
+    url = (
+        "https://openaccess-api.clevelandart.org/api/artworks/"
+        f"?cc0=1&has_image=1&limit={limit}&q={_quote(query)}"
+    )
+    return _get_json(url).get("data") or []
+
+
+def _get_json(url: str) -> dict:
+    """One GET that expects JSON, with the same timeout and TLS care as fetch."""
+    request = urllib.request.Request(url, headers={"User-Agent": "LabelDesk-AILT9019/1.1"})
+    with urllib.request.urlopen(request, timeout=30, context=ssl_context()) as response:
+        return json.load(response)
+
+
+def _quote(text: str) -> str:
+    return quote(text, safe="")
+
+
+SEARCHERS = {
+    "met": search_met,
+    "cleveland": search_cleveland,
+}
+
+
+def search_and_normalise(provider: str, query: str, limit: int) -> dict:
+    """Run one museum search, normalise the candidates, and hand them to the page.
+
+    Nothing here drafts a label and nothing is stored: the candidates exist only
+    in this response. Records the museum returns without a title are dropped as
+    noise — a draft of a title-less record is refused anyway, so showing it as a
+    candidate would only offer a dead end.
+    """
+    spec = LIVE_PROVIDERS[provider]
+    results = []
+    for raw in SEARCHERS[provider](query, limit)[:limit]:
+        record = normalise(raw, None, spec["field_map"], provider)
+        if not str(record.get("title") or "").strip():
+            continue
+        results.append({**record, "missing": missing_fields(record)})
+    return {
+        "provider": provider,
+        "provider_name": spec["name"],
+        "query": query,
+        "results": results,
+    }
 
 
 def fetch_and_draft(provider: str, object_id: int, llm) -> dict:
@@ -217,7 +295,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlparse(self.path).path
-        if path not in ("/api/draft", "/api/fetch"):
+        if path not in ("/api/draft", "/api/fetch", "/api/search"):
             return self._json(404, {"error": "not_found", "path": path})
 
         length = int(self.headers.get("Content-Length") or 0)
@@ -233,6 +311,9 @@ class Handler(BaseHTTPRequestHandler):
 
         if path == "/api/fetch":
             return self._fetch(payload, llm)
+
+        if path == "/api/search":
+            return self._search(payload)
 
         number = str(payload.get("catalogue_number", "")).strip()
         if not number:
@@ -258,6 +339,34 @@ class Handler(BaseHTTPRequestHandler):
 
         try:
             body = fetch_and_draft(provider, object_id, llm)
+        except HTTPError as error:
+            return self._json(502, {"error": "upstream_http", "status": error.code})
+        except (URLError, TimeoutError, OSError) as error:
+            return self._json(502, {"error": "upstream_unreachable", "detail": str(error)[:200]})
+        return self._json(200, body)
+
+    def _search(self, payload: dict) -> None:
+        """Candidates for a collection name, from a museum's own search API.
+
+        No drafting happens here and the model layer is never called: the page
+        drafts a candidate only after picking one, through /api/fetch.
+        """
+        provider = str(payload.get("provider", "")).strip().casefold()
+        if provider not in LIVE_PROVIDERS:
+            return self._json(
+                400,
+                {"error": "bad_provider", "got": provider, "expected": sorted(LIVE_PROVIDERS)},
+            )
+        query = str(payload.get("name", "")).strip()
+        if not query:
+            return self._json(400, {"error": "name_required"})
+        try:
+            limit = min(max(int(payload.get("limit", 4)), 1), 6)
+        except (TypeError, ValueError):
+            limit = 4
+
+        try:
+            body = search_and_normalise(provider, query, limit)
         except HTTPError as error:
             return self._json(502, {"error": "upstream_http", "status": error.code})
         except (URLError, TimeoutError, OSError) as error:
