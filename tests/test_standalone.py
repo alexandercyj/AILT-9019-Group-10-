@@ -65,8 +65,13 @@ def test_the_file_exists_and_is_a_single_document(html):
     assert html.count("</html>") == 1
 
 
-def test_nothing_is_loaded_from_outside(markup):
-    """No stylesheet link, no script src, no fetch: opening it must be enough."""
+def test_the_reader_interface_is_english(markup):
+    assert '<html lang="en">' in markup
+    assert not re.search(r"[\u3400-\u9fff]", markup)
+
+
+def test_no_code_is_loaded_from_outside(markup):
+    """No external code assets; disclosed museum images may still use HTTPS."""
     assert not re.search(r'<link[^>]+rel="stylesheet"', markup)
     assert not re.search(r"<script[^>]+\bsrc=", markup)
     assert "fetch(" not in markup
@@ -75,7 +80,7 @@ def test_nothing_is_loaded_from_outside(markup):
 
 
 def test_the_styles_are_inlined(html):
-    assert "--teal" in html, "styles.css was not inlined"
+    assert "--green" in html, "styles.css was not inlined"
     assert ".corpus-tab" in html, "standalone.css was not inlined"
 
 

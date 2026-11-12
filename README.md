@@ -35,7 +35,7 @@ cost prose quality; it cannot cost a fact or a citation.
 | --- | --- |
 | Corpora | 20 records (Met, 4 departments) · 10 (Met, Egyptian Art) · 10 (Cleveland Museum of Art) |
 | Sources checked | 7, of which 2 admitted, 2 refused, 1 deferred, 1 reference-only, 1 not frozen |
-| Tests | 201 |
+| Tests | 224 |
 | Golden set | 17/17 cases, both model-off and model-on |
 | Cross-corpus run | 40 records, 0 check failures, 35/37 rewrites accepted |
 | Claim precision · citation resolution | 100% · 100%, every run |
@@ -43,21 +43,18 @@ cost prose quality; it cannot cost a fact or a citation.
 
 ---
 
-## Open it without installing anything
+## Open the offline collection without installing anything
 
-`labeldesk.html` is the whole thing in one file. Double-click it, or drag it into a
-browser. No Python, no server, no network, no key.
+`labeldesk.html` is a self-contained, English-language collection reader. Double-click
+it, or drag it into a browser. No Python, server or key is needed. It contains all 40
+records from all three corpora and their real pipeline output. The page looks results
+up; it does not recompute or invent them. Museum images load from their open-access
+URLs, so image display needs a network connection; all catalogue text remains available
+offline.
 
-It contains all 40 records from all three corpora, and for each one both the offline
-draft and the recorded model rewrite, computed by the real pipeline at build time. The
-page looks results up; it does not recompute them. So a label on that page is a label
-`python3 -m labeldesk` prints, byte for byte — and `tests/test_standalone.py` fails if
-that ever stops being true.
-
-What you can do in it: switch corpus, pick a record, toggle the model rewrite, type any
-catalogue number (it gets the real refusal), and ask a question (out-of-scope questions
-are declined with the CLI's own wording). It also prints the source register, so the
-two refusals are visible rather than described.
+The standalone reader deliberately does not pretend to offer live web research. Use
+`server.py` for the full encyclopaedia experience, including whole-collection search,
+web search, page extraction and paragraph-level citations.
 
 ```bash
 python3 tools/build_standalone.py          # rebuild labeldesk.html
@@ -195,34 +192,39 @@ parts, stopped at a semicolon, and cited what it kept. Every word it printed was
 citation resolved, and the label had lost the ware. The `drops_field_content` rule is what
 catches that.
 
-### Browser view (optional)
+### Browser encyclopaedia (optional)
 
 ```bash
 python3 server.py            # http://127.0.0.1:8000
 ```
 
-The page posts the selected catalogue number to the same Python pipeline and draws the
-result. It contains no second implementation of the renderer or the check, so the two
-paths cannot disagree. Add `#refuse` to the URL (`http://127.0.0.1:8000/#refuse`) to open
-on the refusal path. A "model rewrite" checkbox posts `{"llm": "auto"}`; unchecked, the
-page never asks for a model call.
+The English-language page searches the complete Met and Cleveland open collections in
+parallel, returns real CC0/public-domain images, and opens a wiki-style object entry.
+Museum fields remain visibly separate from external research. There are no Google
+redirects, object-ID forms, checksum panels, model switches or debugging controls in the
+reader interface.
 
-The page can also leave the frozen corpus. The "Try a record that is not in the corpus"
-box posts to `/api/fetch`, which reads that one record from the Met or Cleveland open
-API at request time and drafts it through the identical pipeline — same refusals, same
-four checks, same model guardrail, nothing written to disk. A record the API returns
-without a required field is refused, not filled in: the Met's European Paintings
-department leaves `culture` blank, which is why a famous painting can be a refusal and a
-vase is not. Live fetch needs network access and a root certificate store (see Setup);
-the page says so honestly when either is missing.
+After an object is selected, `labeldesk/research.py` calls the provider's OpenAI-compatible
+Responses API with the built-in `web_search` and `web_extractor` tools. The separate
+`LABELDESK_RESEARCH_MODEL` defaults to `deepseek-v4.1-flash-1017`, because the older
+rewrite model is not documented as supporting page extraction. Research output is English
+JSON with a lead, sections and an evidence-to-conclusion note. Every paragraph must cite
+a URL actually returned by `web_extractor` (search-result links alone are insufficient); otherwise the
+whole research answer is withheld and only the museum record remains. The page presents
+actual searches, pages read and a concise evidence explanation, not a raw hidden
+chain-of-thought.
 
-An "ask something" box demonstrates the out-of-scope refusal with the CLI's own wording.
+When no museum record matches, the same research path can produce a web-only entry.
+It does not use arbitrary hotlinked images: without a confirmed open image, the entry
+honestly shows no image. Research requires `LABELDESK_API_KEY`, network access and a root
+certificate store. Failures never become unsourced prose. Successful responses are cached
+in memory for 30 minutes to avoid repeated model and search charges; nothing is written
+to disk.
 
-HTTPS verification note: the only outbound calls this project makes are the museum open
-APIs and the optional model endpoint, and both verify TLS through `labeldesk/net.py`,
-which prefers `certifi` when it is installed. The python.org macOS installer ships
-without any root store, so on that build `certifi` is not optional in practice — it is
-listed in `requirements.txt`.
+HTTPS verification note: direct outbound calls use the museum open APIs and the model
+endpoint through `labeldesk/net.py`, which prefers `certifi`. Web pages used by the
+research layer are retrieved by the model provider's built-in tools. The python.org macOS
+installer ships without a root store, so `certifi` is listed in `requirements.txt`.
 
 ---
 
@@ -241,7 +243,7 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `201 passed`. The suite is not a smoke test — it breaks the output on purpose
+Expected: `224 passed`. The suite is not a smoke test — it breaks the output on purpose
 and requires the check to catch it:
 
 | Test file | What it proves |
@@ -257,8 +259,9 @@ and requires the check to catch it:
 | `tests/test_third_corpus.py` | The second museum does too, on dates the team did not phrase. |
 | `tests/test_sources.py` | Every shipped corpus is registered, and the pipeline refuses the model for one that is not. |
 | `tests/test_import.py` | A CSV with an unquoted comma is refused rather than silently misaligned. |
-| `tests/test_server.py` | The HTTP surface over a real socket: frozen drafts and refusals, and live fetch drafting outside records — grounded, policy-gated, offline-mocked. |
-| `tests/test_standalone.py` | Every label in `labeldesk.html` equals a fresh pipeline run, and the file has no external reference. |
+| `tests/test_server.py` | Real-socket drafts, combined museum search, image policy, research cache and refusal paths, all offline-mocked. |
+| `tests/test_research.py` | Retrieved-URL citations, readable research steps, source-policy filtering and safe failure without a key. |
+| `tests/test_standalone.py` | Every label in `labeldesk.html` equals a fresh pipeline run; no external code assets are loaded. |
 | `tests/test_skill.py` | The skill file describes the program that actually runs. |
 
 ### 3. The golden set, run twice
@@ -571,14 +574,16 @@ labeldesk/            core pipeline, standard library only
   factsheet.py        fact sheet with a pointer per value
   render.py           deterministic renderer and claim emission
   grounding.py        the four checks
-  llm.py              optional model layer, behind the same checks
+  llm.py              optional label rewrite, behind the same checks
+  research.py         built-in web search/extraction and citation validation
   sources.py          the source register: what may be done with a corpus
   pipeline.py         draft / refuse orchestration, including the licence gate
   cli.py              command-line entry point
-prompts/rewrite.txt   the guardrail prompt, hashed into every transcript
-server.py             local server for the browser view
-index.html            browser view (one page)
-app.js                browser view logic: calls /api/draft, no logic of its own
+prompts/rewrite.txt   the label guardrail prompt, hashed into every transcript
+prompts/research.txt  the web-research and structured-citation prompt
+server.py             local server for collection search and encyclopaedia research
+index.html            English wiki-style browser view
+app.js                browser presentation; no drafting or grounding logic
 styles.css            styling
 skills/labeldesk/     single-file skill contract for other agent environments
 data/
@@ -595,7 +600,7 @@ eval/
   evaluate.py         golden-set scorer, --llm and --compare, writes eval/reports/
   cross_corpus.py     every record in every corpus, both modes, no per-record expectations
   probes.json         12 hand-labelled sentences for the grounding rule
-tests/                pytest suite (191 tests)
+tests/                pytest suite (224 tests)
 tools/
   fetch_corpus.py     rebuild any corpus from its museum API (--preset, --check)
   check_sources.py    re-fetch every robots.txt and report drift against the register
@@ -614,9 +619,11 @@ docs/
 - Sources: The Metropolitan Museum of Art Open Access and The Cleveland Museum of Art Open
   Access, both CC0 1.0. Field values in the corpus files are copied verbatim from the object
   records; blanks are the museum's own blanks, not missing data introduced by the team.
-- Primary corpus checksum: `962e03aba0b6ff94b53a7822f0c59f2e1c2b6157a58586664df4dfa3a1e97158`
-- Egyptian corpus checksum: `f070a5bc801c1bdc922d7820e6b6de3c1c3374d51ee4783a6d404a69af5d94e8`
-- Cleveland corpus checksum: `bad1b2fe313b884babe013b9b439390456f33b5d314d9b55b431316dfebb34e5`
+- Primary corpus checksum: `bdb51f3a20aeefc83d592d958e9dfa53435001e08b676ba649664a0d3d851f07`
+- Egyptian corpus checksum: `878195ccdf83ae09c94d44f6ee626ca1c15a6fecfa5d21c960236421160edf8a`
+- Cleveland corpus checksum: `144d59a46965693254eb7ec70bf0c977e7144c16a904c39c9c4e163859c8cab9`
+- Records now also carry `image_url` and `image_thumbnail`. These are populated only for
+  public-domain/CC0 objects; closed-licence records have blank image fields.
 - Frozen 2026-10-23 (primary) and 2026-11-01 (Egyptian, Cleveland). Six of the primary
   records are boundary cases, kept on purpose so the refusal path can be demonstrated
   without inventing a broken record.
@@ -655,8 +662,13 @@ label ends with the same notice: *draft for curator review, not an official reco
   which is a selection effect: a museum that refuses automated access also tends not to
   publish the kind of record this tool needs. The pipeline is museum-agnostic; the evidence
   is two museums wide.
-- **The corpus is 30 records, not a collection.** It is frozen so a run needs no network and
-  so a reader can tell exactly which records an output came from.
+- **The frozen corpus is 40 records, not a collection.** It remains the deterministic CLI
+  and regression baseline. The browser is not limited to it: live search covers both museums,
+  and web-only research covers themes without a museum match.
+- **Citation resolution is not a factual proof.** The research layer verifies that every
+  paragraph cites a page actually returned by the tools, but readers and curators must still
+  judge whether the source adequately supports the wording. The UI therefore labels this
+  material as AI-organised and keeps the original links visible.
 
 ## Troubleshooting
 
@@ -664,7 +676,7 @@ label ends with the same notice: *draft for curator review, not an official reco
 | --- | --- |
 | `ModuleNotFoundError: labeldesk` | Run from the repository root, or use `python3 -m labeldesk`. |
 | `pytest: command not found` | `python3 -m pytest -q` after `python3 -m pip install -r requirements.txt`. |
-| Browser view says "Pipeline not reachable" | `python3 server.py` in another terminal, then reload. |
+| Browser search or research is unavailable | Check network access and `LABELDESK_API_KEY`; the museum record remains readable without research. |
 | Port 8000 already in use | `python3 server.py --port 8080`. |
 | `--llm` says `rewrite discarded: no_key` | No key in `.env` and no live call attempted. Drop `--llm`, or add a key, or use `--llm --replay`. |
 | `--llm` says `transcript_stale` | `prompts/rewrite.txt` changed after the transcript was recorded. Re-record with `python3 tools/record_transcripts.py --force`. |

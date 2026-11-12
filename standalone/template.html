@@ -3,233 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Label Desk: a standalone, self-contained view of the grounded exhibition label pipeline" />
-  <title>Label Desk · standalone</title>
+  <meta name="description" content="A museum collection reader you can open directly, with authentic images, catalogue fields, and evidence-based summaries." />
+  <title>Label Desk · Offline Collection Reader</title>
   <style>
 /*INLINE:CSS*/
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand-wrap">
-      <div class="brand-mark">LD</div>
-      <div>
-        <p class="eyebrow">AILT9019 · Group 10</p>
-        <h1>Label Desk</h1>
-      </div>
-    </div>
-    <div class="top-actions">
-      <span class="status-pill" id="serverStatus"><span class="status-dot"></span>Standalone file</span>
-      <button class="ghost-button" id="resetButton" type="button">Start over</button>
-    </div>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Label Desk home"><span class="brand-seal">LD</span><span><b>Label Desk</b><small>Offline Collection Reader</small></span></a>
+    <nav aria-label="Page navigation"><a href="#explore">Browse objects</a><a href="#offlineNote">About this version</a></nav>
   </header>
-
-  <main class="app-shell">
-    <section class="hero panel">
-      <div>
-        <p class="eyebrow accent">Exhibition labels, drafted one record at a time</p>
-        <h2>A label draft you can check sentence by sentence.</h2>
-        <p class="hero-copy">
-          Every label below was drafted by the real pipeline and embedded in this file at
-          build time. Each sentence restates one field of the catalogue record it cites, and
-          the checks on the right read the sentences back against that record. When a record
-          cannot support a sentence, the tool refuses instead of guessing. No server, no
-          network: open the file and it works.
-        </p>
-      </div>
-      <div class="hero-metrics">
-        <div><strong id="metricRecords">—</strong><span>records, three corpora</span></div>
-        <div><strong>4</strong><span>checks before a draft shows</span></div>
-        <div><strong>0</strong><span>network calls, ever</span></div>
-      </div>
+  <main>
+    <section class="discovery" id="explore">
+      <p class="kicker">A SMALL WINDOW INTO OPEN COLLECTIONS</p>
+      <h1>See the object.<br />Understand its story.</h1>
+      <p class="discovery-copy">Choose an object from museum open records and explore its authentic image, date, medium, and cultural context. This file opens directly in a browser; images require an internet connection.</p>
+      <form class="discovery-search standalone-search" id="standaloneSearchForm">
+        <label class="search-input-wrap"><span class="sr-only">Search the selection</span><input id="standaloneSearchInput" autocomplete="off" placeholder="Search object titles in this collection" /></label>
+        <button class="search-button" type="submit"><span>Search collection</span><span aria-hidden="true">→</span></button>
+      </form>
+      <div class="corpus-tabs" id="corpusTabs" role="tablist" aria-label="Collection scope"></div>
     </section>
 
-    <div class="banner snapshot-banner">
-      <b>A snapshot of one implementation, not a second one.</b>
-      <span>
-        Every label, claim, citation and check below was produced by the Python package at
-        build time (<code>tools/build_standalone.py</code>) and is embedded here verbatim. The
-        page looks results up; it computes nothing. Reproduce any of them with the command
-        printed in the footer.
-      </span>
-    </div>
+    <section class="search-section" id="standaloneSearchSection" hidden>
+      <div class="section-title-row"><div><p class="kicker">BROWSE THE SELECTION</p><h2>Objects in this selection</h2></div></div>
+      <div class="search-message" id="standaloneSearchMessage" hidden></div>
+      <div class="object-grid" id="standaloneSearchResults"></div>
+    </section>
 
-    <section class="workspace-grid">
-      <div class="main-column">
-        <section class="panel record-panel">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">The record</p>
-              <h3>Catalogue record</h3>
-            </div>
-            <span class="source-badge" id="sourceBadge">Frozen corpus</span>
-          </div>
-          <p class="provenance-line" id="provenanceLine">Corpus…</p>
-
-          <div class="corpus-tabs" id="corpusTabs" role="tablist" aria-label="Corpus"></div>
-
-          <div class="record-layout">
-            <div class="object-preview">
-              <div class="object-plate">
-                <span class="plate-initials" id="plateInitials">·</span>
-                <span class="plate-rule"></span>
-                <span class="plate-number" id="previewNumber">—</span>
-              </div>
-              <span class="object-caption">
-                <a id="sourceLink" href="#" target="_blank" rel="noopener">Museum record</a>
-              </span>
-            </div>
-            <form id="recordForm" class="record-form">
-              <label class="wide">Catalogue number<select id="catalogueSelect"></select></label>
-              <label>Title<input id="fieldTitle" readonly /></label>
-              <label>Object date<input id="fieldDate" readonly /></label>
-              <label class="wide">Medium<input id="fieldMedium" readonly /></label>
-              <label class="wide">Place or culture<input id="fieldCulture" readonly /></label>
-              <label class="wide">Credit line<input id="fieldCredit" readonly /></label>
-              <div class="form-actions">
-                <button class="primary-button" type="submit" id="draftButton">
-                  <span class="button-label">Draft label</span>
-                  <span class="button-icon" data-icon="arrow-right"></span>
-                </button>
-                <button class="secondary-button" type="button" id="refusalButton">Show a refusal</button>
-              </div>
-              <label class="toggle wide">
-                <input type="checkbox" id="llmToggle" />
-                <span>
-                  Show the recorded model rewrite. It is used only when it passed the same
-                  four checks; otherwise you see the offline draft and the reason.
-                </span>
-              </label>
-            </form>
-          </div>
-
-          <div class="search-box">
-            <div class="search-head">
-              <h4>Find a collection by name</h4>
-              <p>
-                Type a collection name to look through the records embedded in this file.
-                This page never touches the network, so only the three frozen corpora can be
-                searched here; the served page adds the museums' live search APIs.
-              </p>
-            </div>
-            <div class="search-row">
-              <label class="probe probe-grow">
-                Collection name
-                <input id="nameInput" placeholder="e.g. Wheat Field with Cypresses" autocomplete="off" />
-              </label>
-              <button class="secondary-button" type="button" id="nameSearchButton">Search</button>
-            </div>
-            <p class="search-status" id="nameStatus" hidden></p>
-            <div class="search-results" id="searchResults" hidden></div>
-            <p class="search-note">
-              Not in the frozen corpora? <a id="googleLink" href="https://www.google.com/" target="_blank" rel="noopener">Search Google for this name</a> —
-              this page opens a link only; it still calls nothing.
-            </p>
-          </div>
-
-          <div class="probe-row">
-            <label class="probe">
-              A catalogue number not in this corpus
-              <input id="probeNumber" placeholder="e.g. 99.99.99" autocomplete="off" />
-            </label>
-            <button class="ghost-button" type="button" id="probeButton">Look it up</button>
-          </div>
-          <div class="probe-row">
-            <label class="probe">
-              Ask something about this record
-              <input id="probeQuestion" placeholder='for example: "what is it worth?"' autocomplete="off" />
-            </label>
-            <button class="ghost-button" type="button" id="askButton">Ask</button>
-          </div>
-        </section>
-
-        <section class="panel output-panel" aria-live="polite">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">The result</p>
-              <h3 id="resultTitle">Structured introduction</h3>
-            </div>
-            <span class="result-status drafted" id="resultStatus">—</span>
-          </div>
-          <div class="result-card" id="resultCard">
-            <p class="panel-note" id="introHint">Choose a record to see its structured introduction.</p>
-            <div id="introList"></div>
-            <div class="intro-summary">
-              <div class="intro-subhead">
-                <h4>Summary</h4>
-                <span id="summaryTag"></span>
-              </div>
-              <p class="label-text" id="labelText">Choose a record to see its draft.</p>
-              <div class="claim-list" id="claimList"></div>
-            </div>
-          </div>
-          <div class="citation-strip" id="citationStrip"></div>
-          <p class="panel-note" id="modelNote" hidden></p>
-          <p class="panel-note reason-note" id="reasonNote" hidden></p>
-        </section>
+    <section class="article-shell" id="standaloneArticle">
+      <div class="article-breadcrumb" id="standaloneBreadcrumb">Open collections / Collection selection</div>
+      <div class="standalone-picker"><label>Browse the selection<select id="standaloneRecordSelect"></select></label></div>
+      <div class="article-hero">
+        <figure class="object-figure">
+          <img id="standaloneImage" alt="" hidden />
+          <div class="image-empty" id="standaloneImageEmpty"><span>LD</span><p>No object image available</p></div>
+          <figcaption id="standaloneImageCaption">Images require an internet connection</figcaption>
+        </figure>
+        <div class="article-heading">
+          <p class="kicker">MUSEUM OBJECT · CATALOGUE ENTRY</p>
+          <h2 id="standaloneTitle">Choose an object</h2>
+          <p class="article-subtitle" id="standaloneSubtitle"></p>
+          <div class="article-tags" id="standaloneTags"></div>
+          <a class="museum-link" id="standaloneSource" target="_blank" rel="noopener">View the original museum record <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
-
-      <aside class="side-column">
-        <section class="panel check-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">The check</p>
-              <h3>Four checks, read the claims</h3>
-            </div>
-            <span class="shield" id="shield">·</span>
-          </div>
-          <div class="check-score">
-            <strong id="scoreValue">—</strong>
-            <span id="scoreLabel">waiting for a draft</span>
-          </div>
-          <div class="check-list" id="checkList"></div>
-        </section>
-
-        <section class="panel legend-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">The labels</p>
-              <h3>Where each part comes from</h3>
-            </div>
-          </div>
-          <ul class="legend-list">
-            <li class="legend-row">
-              <span class="source-tag web">Web source</span>
-              <div>
-                <b>Web source</b>
-                <small>Field values are copied verbatim from the museum's open access record, frozen into the corpus at fetch time.</small>
-              </div>
-            </li>
-            <li class="legend-row">
-              <span class="source-tag offline">Offline renderer</span>
-              <div>
-                <b>Offline renderer</b>
-                <small>Summary and label text are drafted deterministically from the record. No model is involved.</small>
-              </div>
-            </li>
-            <li class="legend-row">
-              <span class="source-tag ai">AI generated</span>
-              <div>
-                <b>AI generated</b>
-                <small>Shown only for a recorded model rewrite — and only because it passed the same four checks as the offline draft.</small>
-              </div>
-            </li>
-          </ul>
-          <p class="legend-note">
-            <b>When it says no.</b> A record with a blank field, a catalogue number outside
-            the corpora, or an out-of-scope question (value, authenticity, rights) is
-            refused — the gap is reported, never filled in from elsewhere.
-          </p>
-        </section>
-      </aside>
+      <div class="article-layout">
+        <article class="article-body">
+          <section class="article-section">
+            <p class="kicker">CATALOGUE SUMMARY</p>
+            <h3>Collection summary</h3>
+            <p id="standaloneLabel">Choose an object above to begin reading.</p>
+            <div class="research-notice unavailable" id="offlineNote">This offline collection reader shows museum records and summaries derived only from those records. It does not include live web research. Use the full encyclopedia version for additional context.</div>
+          </section>
+        </article>
+        <aside class="article-aside">
+          <section class="fact-card"><p class="kicker">CATALOGUE RECORD</p><h3>Museum record</h3><dl id="standaloneFacts"></dl><p class="fact-note">Missing fields remain missing. Other sources are never presented as museum records.</p></section>
+          <section class="process-card"><p class="kicker">HOW TO READ</p><h3>How to read this entry</h3><ol class="process-list"><li><b>Start with the museum record</b><p>The title, date, medium, and cultural information come directly from the museum.</p></li><li><b>Read the collection summary</b><p>The English summary restates only these fields and adds no external facts.</p></li><li><b>Return to the original record</b><p>Use the museum link to check the source and its latest information.</p></li></ol></section>
+        </aside>
+      </div>
     </section>
   </main>
-
-  <footer class="footer">
-    <span>Label Desk · AILT9019 Group 10 · built from <span id="footerCorpora">—</span></span>
-    <span>Reproduce any draft with <code>python3 -m labeldesk "&lt;catalogue number&gt;"</code> · <span id="footerHash">—</span></span>
-  </footer>
-
+  <footer class="site-footer"><span>Label Desk · AILT9019 Group 10</span><span>Opens directly · Object images require an internet connection</span></footer>
   <script type="application/json" id="labeldesk-data">
 /*INLINE:DATA*/
   </script>

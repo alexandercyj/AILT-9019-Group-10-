@@ -40,3 +40,12 @@ def test_every_record_carries_the_five_fields():
 
 def test_unknown_catalogue_number_returns_none():
     assert load_corpus().get("99.99.99") is None
+
+
+def test_records_carry_open_image_fields_without_changing_required_fields():
+    for record in load_corpus().records:
+        assert "image_url" in record
+        assert "image_thumbnail" in record
+        if not record["is_public_domain"]:
+            assert record["image_url"] == ""
+            assert record["image_thumbnail"] == ""

@@ -1,27 +1,10 @@
 #!/usr/bin/env python3
-"""Local server for the browser view.
+"""Local server for the encyclopaedia and the original drafting pipeline.
 
-The browser view is a convenience layer over the same Python pipeline the CLI
-uses: it serves the static page, lists the frozen corpus, and runs
-`labeldesk.draft` for the record the user picks. There is no second
-implementation of the logic in JavaScript.
-
-The model layer is reachable from the page through the same call, and only when
-the page asks for it: `{"llm": "auto"}` means "use the model if a key is set,
-otherwise replay the transcript". A page that never asks never calls out.
-
-One endpoint reaches outside the frozen corpus: POST /api/fetch takes a museum
-and an object ID, reads that one record from the museum's open API at request
-time, and drafts it through the identical pipeline. The record is not added to
-any corpus; it is fetched, drafted, and forgotten. The same guardrails apply —
-a record missing a required field is refused, and the model layer is used only
-when the page asks and the source register permits it.
-
-A second endpoint, POST /api/search, takes a collection name instead of an ID:
-it asks the museum's own search API for candidate object IDs, reads each one
-through the same normaliser the frozen corpora were built with, and returns the
-candidates without drafting anything. Drafting happens only when the page picks
-a candidate, which goes through /api/fetch like any other live record.
+The reader searches both museums' complete open collections, displays normalised
+records and open images, and can request cited web research through the model
+provider's built-in search and extraction tools. The original /api/draft and
+/api/fetch contracts remain available for regression and CLI/browser parity.
 
     python3 server.py                        # http://127.0.0.1:8000
     python3 server.py --port 8080
@@ -44,6 +27,8 @@ from labeldesk import __version__, draft, load_corpus
 from labeldesk.corpus import REQUIRED_FIELDS, Corpus
 from labeldesk.llm import config_from_env, prompt_hash, resolve_mode
 from labeldesk.net import ssl_context
+from labeldesk.pipeline import is_out_of_scope
+from labeldesk.research import research
 from labeldesk.sources import aliases, provenance, resolve_corpus
 from labeldesk.validate import missing_fields
 
@@ -62,6 +47,8 @@ STATIC_FILES = {
 CORPUS = load_corpus()
 
 DATA_DIR = ROOT / "data"
+RESEARCH_CACHE = {}
+RESEARCH_CACHE_TTL = 1800
 
 # Live fetch: one record from a museum's open API, drafted through the same
 # pipeline as the frozen corpus. The field maps deliberately mirror the frozen
@@ -74,9 +61,10 @@ DATA_DIR = ROOT / "data"
 LIVE_PROVIDERS = {
     "met": {
         "name": "The Metropolitan Museum of Art",
+        "short_name": "The Metropolitan Museum of Art",
         "corpus_name": "labeldesk-frozen-corpus",
         "registered_file": DATA_DIR / "frozen_corpus.json",
-        "examples": [37251, 59842],
+        "examples": [436535, 42229],
         "field_map": {
             "catalogue_number": "accessionNumber",
             "object_id": "objectID",
@@ -88,10 +76,13 @@ LIVE_PROVIDERS = {
             "department": "department",
             "is_public_domain": "isPublicDomain",
             "source_url": "objectURL",
+            "image_url": "primaryImage",
+            "image_thumbnail": "primaryImageSmall",
         },
     },
     "cleveland": {
         "name": "The Cleveland Museum of Art",
+        "short_name": "The Cleveland Museum of Art",
         "corpus_name": "labeldesk-cleveland-corpus",
         "registered_file": DATA_DIR / "frozen_corpus_cleveland.json",
         "examples": [130607, 149681],
@@ -106,6 +97,8 @@ LIVE_PROVIDERS = {
             "department": "department",
             "is_public_domain": "share_license_status",
             "source_url": "url",
+            "image_url": "images",
+            "image_thumbnail": "images",
         },
     },
 }
@@ -171,25 +164,50 @@ SEARCHERS = {
 
 
 def search_and_normalise(provider: str, query: str, limit: int) -> dict:
-    """Run one museum search, normalise the candidates, and hand them to the page.
-
-    Nothing here drafts a label and nothing is stored: the candidates exist only
-    in this response. Records the museum returns without a title are dropped as
-    noise — a draft of a title-less record is refused anyway, so showing it as a
-    candidate would only offer a dead end.
-    """
     spec = LIVE_PROVIDERS[provider]
     results = []
     for raw in SEARCHERS[provider](query, limit)[:limit]:
         record = normalise(raw, None, spec["field_map"], provider)
         if not str(record.get("title") or "").strip():
             continue
-        results.append({**record, "missing": missing_fields(record)})
+        results.append({
+            **record,
+            "provider": provider,
+            "provider_name": spec["name"],
+            "provider_short_name": spec["short_name"],
+            "missing": missing_fields(record),
+        })
     return {
         "provider": provider,
         "provider_name": spec["name"],
         "query": query,
         "results": results,
+    }
+
+
+def search_all(query: str, limit: int) -> dict:
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    results = []
+    errors = []
+    with ThreadPoolExecutor(max_workers=len(SEARCHERS)) as pool:
+        pending = {
+            pool.submit(search_and_normalise, provider, query, limit): provider
+            for provider in sorted(SEARCHERS)
+        }
+        for future in as_completed(pending):
+            provider = pending[future]
+            try:
+                results.extend(future.result()["results"])
+            except (HTTPError, URLError, TimeoutError, OSError) as error:
+                errors.append({"provider": provider, "detail": str(error)[:160]})
+    results.sort(key=lambda record: (str(record["title"]).casefold(), record["provider"]))
+    return {
+        "provider": "all",
+        "provider_name": "Both open collections",
+        "query": query,
+        "results": results[: limit * len(SEARCHERS)],
+        "errors": errors,
     }
 
 
@@ -230,6 +248,44 @@ def fetch_and_draft(provider: str, object_id: int, llm) -> dict:
         "record": record,
         "result": result,
     }
+
+
+def research_live(provider: str, object_id: int, query: str) -> dict:
+    spec = LIVE_PROVIDERS[provider]
+    raw = PROVIDERS[provider]["fetch"](object_id)
+    record = normalise(raw, None, spec["field_map"], provider)
+    query = query.strip()[:200] or str(record.get("title") or "")
+    key = (provider, object_id, query.casefold())
+    cached = RESEARCH_CACHE.get(key)
+    if cached and time.monotonic() - cached[0] < RESEARCH_CACHE_TTL:
+        outcome = cached[1]
+    else:
+        outcome = research(query, record, provider_name=spec["name"])
+        if outcome["status"] == "ready":
+            if len(RESEARCH_CACHE) >= 64:
+                oldest = min(RESEARCH_CACHE, key=lambda item: RESEARCH_CACHE[item][0])
+                RESEARCH_CACHE.pop(oldest, None)
+            RESEARCH_CACHE[key] = (time.monotonic(), outcome)
+    return {
+        "provider": provider,
+        "provider_name": spec["name"],
+        "provider_short_name": spec["short_name"],
+        "record": record,
+        "research": outcome,
+    }
+
+
+def research_web(query: str) -> dict:
+    query = query.strip()[:200]
+    key = ("web", query.casefold())
+    cached = RESEARCH_CACHE.get(key)
+    if cached and time.monotonic() - cached[0] < RESEARCH_CACHE_TTL:
+        outcome = cached[1]
+    else:
+        outcome = research(query)
+        if outcome["status"] == "ready":
+            RESEARCH_CACHE[key] = (time.monotonic(), outcome)
+    return {"record": None, "research": outcome}
 
 
 def corpus_payload() -> dict:
@@ -295,7 +351,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlparse(self.path).path
-        if path not in ("/api/draft", "/api/fetch", "/api/search"):
+        if path not in ("/api/draft", "/api/fetch", "/api/search", "/api/research"):
             return self._json(404, {"error": "not_found", "path": path})
 
         length = int(self.headers.get("Content-Length") or 0)
@@ -303,6 +359,9 @@ class Handler(BaseHTTPRequestHandler):
             payload = json.loads(self.rfile.read(length) or b"{}")
         except json.JSONDecodeError:
             return self._json(400, {"error": "bad_json"})
+
+        if path == "/api/research":
+            return self._research(payload)
 
         # Only an explicit request reaches the model; the default stays offline.
         llm = payload.get("llm")
@@ -321,6 +380,35 @@ class Handler(BaseHTTPRequestHandler):
 
         result = draft(CORPUS, number, question=payload.get("question"), llm=llm)
         return self._json(200, result)
+
+    def _research(self, payload: dict) -> None:
+        query = str(payload.get("query") or payload.get("name") or "").strip()
+        if not query or len(query) > 200:
+            return self._json(400, {"error": "name_required"})
+        if is_out_of_scope(query):
+            return self._json(200, {"record": None, "research": {
+                "status": "refused",
+                "message": "This tool does not provide valuations, authenticate objects, or assess insurance or legal title. You can ask about an object's history, craftsmanship, and cultural context.",
+                "steps": [],
+            }})
+        provider = str(payload.get("provider") or "").strip().casefold()
+        try:
+            if provider:
+                if provider not in LIVE_PROVIDERS:
+                    return self._json(400, {"error": "bad_provider"})
+                object_id = int(str(payload.get("object_id", "")).strip())
+                if not 1 <= object_id <= 999_999_999:
+                    raise ValueError
+                body = research_live(provider, object_id, query)
+            else:
+                body = research_web(query)
+        except (ValueError, TypeError):
+            return self._json(400, {"error": "bad_object_id"})
+        except HTTPError as error:
+            return self._json(502, {"error": "upstream_http", "status": error.code})
+        except (URLError, TimeoutError, OSError):
+            return self._json(502, {"error": "upstream_unreachable"})
+        return self._json(200, body)
 
     def _fetch(self, payload: dict, llm) -> None:
         """One live record from a museum's open API, drafted by the same pipeline."""
@@ -351,14 +439,14 @@ class Handler(BaseHTTPRequestHandler):
         No drafting happens here and the model layer is never called: the page
         drafts a candidate only after picking one, through /api/fetch.
         """
-        provider = str(payload.get("provider", "")).strip().casefold()
-        if provider not in LIVE_PROVIDERS:
+        provider = str(payload.get("provider", "all")).strip().casefold() or "all"
+        if provider != "all" and provider not in LIVE_PROVIDERS:
             return self._json(
                 400,
-                {"error": "bad_provider", "got": provider, "expected": sorted(LIVE_PROVIDERS)},
+                {"error": "bad_provider", "got": provider, "expected": ["all", *sorted(LIVE_PROVIDERS)]},
             )
         query = str(payload.get("name", "")).strip()
-        if not query:
+        if not query or len(query) > 200:
             return self._json(400, {"error": "name_required"})
         try:
             limit = min(max(int(payload.get("limit", 4)), 1), 6)
@@ -366,11 +454,13 @@ class Handler(BaseHTTPRequestHandler):
             limit = 4
 
         try:
-            body = search_and_normalise(provider, query, limit)
+            body = search_all(query, limit) if provider == "all" else search_and_normalise(provider, query, limit)
         except HTTPError as error:
             return self._json(502, {"error": "upstream_http", "status": error.code})
         except (URLError, TimeoutError, OSError) as error:
             return self._json(502, {"error": "upstream_unreachable", "detail": str(error)[:200]})
+        if provider == "all" and not body["results"] and body["errors"]:
+            return self._json(502, {"error": "upstream_unreachable"})
         return self._json(200, body)
 
     def _json(self, status: int, payload: dict) -> None:

@@ -24,7 +24,9 @@
       "credit_line": "creditline",
       "department": "department",
       "is_public_domain": "share_license_status",
-      "source_url": "url"
+      "source_url": "url",
+      "image_url": "images",
+      "image_thumbnail": "images"
     },
     "notes": "A second museum, a second API, the same five required fields. Records are filtered to share_license_status == 'CC0' at fetch time, so nothing outside the open-access set can reach the corpus. `culture` arrives as a list and is joined with '; '; the values themselves are untouched. Date wording is kept as the museum writes it ('c. 1050', '1100s', '1800s, before 1896'), which exercises the hedge and range rules on data the team did not choose the phrasing of."
   },
@@ -40,6 +42,8 @@
       "department": "Medieval Art",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1970.36",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1970.36/1970.36_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1970.36/1970.36_web.jpg",
       "boundary": "hedged date: c. 1050"
     },
     {
@@ -53,6 +57,8 @@
       "department": "Medieval Art",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1964.88",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1964.88/1964.88_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1964.88/1964.88_web.jpg",
       "boundary": "hedged date with a qualifier: c. 1575"
     },
     {
@@ -66,6 +72,8 @@
       "department": "Korean Art",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1979.71",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1979.71/1979.71_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1979.71/1979.71_web.jpg",
       "boundary": null
     },
     {
@@ -79,6 +87,8 @@
       "department": "Art of the Americas",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1939.509",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1939.509/1939.509_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1939.509/1939.509_web.jpg",
       "boundary": "bare range date: 400–700"
     },
     {
@@ -92,6 +102,8 @@
       "department": "African Art",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1968.284",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1968.284/1968.284_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1968.284/1968.284_web.jpg",
       "boundary": "hedged date: c. 1820"
     },
     {
@@ -105,6 +117,8 @@
       "department": "Japanese Art",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1973.85",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1973.85/1973.85_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1973.85/1973.85_web.jpg",
       "boundary": "century-style date: 1100s"
     },
     {
@@ -118,6 +132,8 @@
       "department": "Medieval Art",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1919.1.1",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1919.1.1/1919.1.1_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1919.1.1/1919.1.1_web.jpg",
       "boundary": "hedged date: c. 1480"
     },
     {
@@ -131,6 +147,8 @@
       "department": "Medieval Art",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1926.428",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1926.428/1926.428_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1926.428/1926.428_web.jpg",
       "boundary": "hedged range: c. 1160–1170"
     },
     {
@@ -144,6 +162,8 @@
       "department": "African Art",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1935.310",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1935.310/1935.310_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1935.310/1935.310_web.jpg",
       "boundary": "date with a qualifier: 1800s, before 1896"
     },
     {
@@ -157,6 +177,8 @@
       "department": "European Painting and Sculpture",
       "is_public_domain": true,
       "source_url": "https://clevelandart.org/art/1965.15",
+      "image_url": "https://openaccess-cdn.clevelandart.org/1965.15/1965.15_full.tif",
+      "image_thumbnail": "https://openaccess-cdn.clevelandart.org/1965.15/1965.15_web.jpg",
       "boundary": "hedged range: c. 1631–32"
     }
   ]

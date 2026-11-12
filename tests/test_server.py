@@ -31,6 +31,8 @@ MET_RAW = {
     "department": "European Paintings",
     "isPublicDomain": True,
     "objectURL": "https://www.metmuseum.org/art/collection/search/436535",
+    "primaryImage": "https://images.metmuseum.org/full.jpg",
+    "primaryImageSmall": "https://images.metmuseum.org/small.jpg",
 }
 
 CLEVELAND_RAW = {
@@ -44,6 +46,10 @@ CLEVELAND_RAW = {
     "department": "European Painting and Sculpture",
     "share_license_status": "CC0",
     "url": "https://www.clevelandart.org/art/1944.479",
+    "images": {
+        "web": {"url": "https://media.clevelandart.org/web.jpg"},
+        "full": {"url": "https://media.clevelandart.org/full.jpg"},
+    },
 }
 
 MET_INCOMPLETE_RAW = {
@@ -299,3 +305,88 @@ def test_search_upstream_error_is_reported(httpd):
         server.SEARCHERS["met"] = original
     assert status == 502
     assert body["error"] == "upstream_unreachable"
+
+
+# --------------------------------------------------------------------------- #
+# encyclopaedia search and cited web research
+# --------------------------------------------------------------------------- #
+
+
+def test_search_all_combines_museums_and_images(httpd):
+    status, body = _request(f"{httpd}/api/search", {"provider": "all", "name": "portrait"})
+    assert status == 200
+    assert {record["provider"] for record in body["results"]} == {"met", "cleveland"}
+    met = next(record for record in body["results"] if record.get("catalogue_number") == "64.165")
+    assert met["image_thumbnail"] == "https://images.metmuseum.org/small.jpg"
+    cleveland = next(record for record in body["results"] if record["provider"] == "cleveland")
+    assert cleveland["image_thumbnail"] == "https://media.clevelandart.org/web.jpg"
+
+
+def test_fetch_returns_open_images(httpd):
+    status, body = _request(f"{httpd}/api/fetch", {"provider": "met", "object_id": 436535})
+    assert status == 200
+    assert body["record"]["image_url"] == "https://images.metmuseum.org/full.jpg"
+
+
+def test_research_selected_record_uses_cache(httpd, monkeypatch):
+    calls = []
+    outcome = {
+        "status": "ready", "title": "Self-Portrait", "lead": {"text": "Introduction", "citation_ids": [1]},
+        "sections": [], "conclusion": {"text": "Explanation", "citation_ids": [1]},
+        "sources": [{"id": 1, "title": "Museum", "url": "https://example.org/object", "domain": "example.org"}],
+        "steps": [{"kind": "search", "title": "Web search", "detail": "self portrait"}],
+    }
+    def fake_research(query, record=None, *, provider_name=""):
+        calls.append((query, record, provider_name))
+        return outcome
+    monkeypatch.setattr(server, "research", fake_research)
+    server.RESEARCH_CACHE.clear()
+    payload = {"provider": "met", "object_id": 436535, "query": "Self-Portrait with a Straw Hat"}
+    first = _request(f"{httpd}/api/research", payload)
+    second = _request(f"{httpd}/api/research", payload)
+    assert first[0] == second[0] == 200
+    assert first[1]["research"]["status"] == "ready"
+    assert len(calls) == 1
+    assert calls[0][1]["image_url"] == "https://images.metmuseum.org/full.jpg"
+    server.RESEARCH_CACHE.clear()
+
+
+def test_research_without_a_museum_match(httpd, monkeypatch):
+    monkeypatch.setattr(server, "research", lambda *args, **kwargs: {
+        "status": "unavailable", "reason": "no_sources", "message": "No verifiable sources found", "steps": [],
+    })
+    status, body = _request(f"{httpd}/api/research", {"query": "an otherwise unknown object"})
+    assert status == 200
+    assert body["record"] is None
+    assert body["research"]["reason"] == "no_sources"
+
+
+def test_research_refuses_valuation_before_calling_model(httpd, monkeypatch):
+    called = False
+    def fake_research(*args, **kwargs):
+        nonlocal called
+        called = True
+    monkeypatch.setattr(server, "research", fake_research)
+    status, body = _request(f"{httpd}/api/research", {"query": "what is it worth?"})
+    assert status == 200
+    assert body["research"]["status"] == "refused"
+    assert called is False
+
+
+def test_reader_page_has_no_debug_or_search_redirect_controls(httpd):
+    for path in ("/", "/app.js"):
+        status, raw = _request(f"{httpd}{path}")
+        page = raw.decode("utf-8").casefold()
+        assert status == 200
+        if path == "/":
+            assert "object encyclopedia" in page
+        assert not any("\u3400" <= character <= "\u9fff" for character in page)
+        for text in ("google", "sha256", "python3", "object id", "model rewrite", "four checks"):
+            assert text not in page
+
+
+def test_non_public_domain_records_do_not_expose_images():
+    raw = {**MET_RAW, "isPublicDomain": False}
+    record = server.normalise(raw, None, server.LIVE_PROVIDERS["met"]["field_map"], "met")
+    assert record["image_url"] == ""
+    assert record["image_thumbnail"] == ""

@@ -73,6 +73,8 @@ PRESETS: dict[str, dict] = {
             "department": "department",
             "is_public_domain": "isPublicDomain",
             "source_url": "objectURL",
+            "image_url": "primaryImage",
+            "image_thumbnail": "primaryImageSmall",
         },
         "notes": (
             "Field values are copied verbatim from the Met object records. "
@@ -126,6 +128,8 @@ PRESETS: dict[str, dict] = {
             "department": "department",
             "is_public_domain": "isPublicDomain",
             "source_url": "objectURL",
+            "image_url": "primaryImage",
+            "image_thumbnail": "primaryImageSmall",
         },
         "notes": (
             "Second department, same five required fields, different field map: "
@@ -167,6 +171,8 @@ PRESETS: dict[str, dict] = {
             "department": "department",
             "is_public_domain": "share_license_status",
             "source_url": "url",
+            "image_url": "images",
+            "image_thumbnail": "images",
         },
         "notes": (
             "A second museum, a second API, the same five required fields. Records "
@@ -237,6 +243,21 @@ def _pick(raw: dict, source: str | list[str]) -> str:
     return ""
 
 
+def _image(raw: dict, provider: str, thumbnail: bool) -> str:
+    if provider == "met":
+        keys = ("primaryImageSmall", "primaryImage") if thumbnail else ("primaryImage", "primaryImageSmall")
+        return _pick(raw, list(keys))
+    images = raw.get("images") or {}
+    if not isinstance(images, dict):
+        return ""
+    keys = ("web", "full", "print") if thumbnail else ("full", "web", "print")
+    for key in keys:
+        variant = images.get(key) or {}
+        if isinstance(variant, dict) and str(variant.get("url") or "").startswith("https://"):
+            return str(variant["url"])
+    return ""
+
+
 def normalise(raw: dict, boundary: str | None, field_map: dict, provider: str = "met") -> dict:
     record = {}
     for key, source in field_map.items():
@@ -249,8 +270,13 @@ def normalise(raw: dict, boundary: str | None, field_map: dict, provider: str = 
             # Kept as the API returns it (an integer), so a rebuild of the shipped
             # file is byte-identical.
             record[key] = raw.get(source) or ""
+        elif key in ("image_url", "image_thumbnail"):
+            record[key] = _image(raw, provider, key == "image_thumbnail")
         else:
             record[key] = _pick(raw, source)
+    if not record.get("is_public_domain"):
+        record["image_url"] = ""
+        record["image_thumbnail"] = ""
     record["boundary"] = boundary
     return record
 

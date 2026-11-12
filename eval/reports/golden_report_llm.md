@@ -1,6 +1,6 @@
 # Golden-set evaluation
 
-Generated 2026-11-01 12:00 UTC · Label Desk 1.1.0 · corpus sha256 `962e03aba0b6` · **model on**
+Generated 2026-11-12 08:55 UTC · Label Desk 1.1.0 · corpus sha256 `bdb51f3a20ae` · **model on**
 
 Model `deepseek-v4.1-flash` · mode `replay` · temperature 0.0 · thinking off · prompt sha256 `3491919c682e` · key set
 

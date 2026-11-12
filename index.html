@@ -3,240 +3,122 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Label Desk: a grounded exhibition-label desk. Find a collection by name or ID, read a structured introduction, and see which parts came from the web and which from a model." />
-  <title>Label Desk</title>
+  <meta name="description" content="Explore an object's image, catalogue record, history, and cultural context through museum open collections and verifiable web sources." />
+  <title>Label Desk · Object Encyclopedia</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand-wrap">
-      <div class="brand-mark">LD</div>
-      <div>
-        <p class="eyebrow">AILT9019 · Group 10</p>
-        <h1>Label Desk</h1>
-      </div>
-    </div>
-    <div class="top-actions">
-      <span class="status-pill" id="serverStatus"><span class="status-dot"></span>Connecting</span>
-      <button class="ghost-button" id="resetButton" type="button">Back to the first record</button>
-    </div>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="Label Desk home">
+      <span class="brand-seal">LD</span>
+      <span><b>Label Desk</b><small>Object Encyclopedia</small></span>
+    </a>
+    <nav aria-label="Page navigation">
+      <a href="#explore">Explore objects</a>
+      <a href="#methodOverview">Our research method</a>
+    </nav>
   </header>
 
-  <main class="app-shell">
-    <section class="hero panel">
-      <div>
-        <p class="eyebrow accent">Exhibition labels, grounded one record at a time</p>
-        <h2>Find a collection, read a structured introduction, check every part.</h2>
-        <p class="hero-copy">
-          Pick a catalogue record, fetch one by object ID, or search a museum's open
-          API by collection name. Label Desk drafts a structured introduction whose
-          every field carries a source tag — web data or model output, never mixed.
-          The panel on the right reads the draft back against the record; when the
-          record cannot support a sentence, the tool says so instead of guessing.
-        </p>
-      </div>
-      <div class="hero-metrics">
-        <div><strong id="metricRecords">—</strong><span>records in this corpus</span></div>
-        <div><strong id="metricMuseums">2</strong><span>museum APIs for live lookup</span></div>
-        <div><strong>4</strong><span>checks before a draft shows</span></div>
+  <main>
+    <section class="discovery" id="explore">
+      <p class="kicker">OBJECTS · STORIES · EVIDENCE</p>
+      <h1>One object.<br />A world of context.</h1>
+      <p class="discovery-copy">Search complete museum open collections. Beyond authentic images and catalogue records, AI reads public web pages and turns history, craftsmanship, and cultural context into a sourced encyclopedia entry.</p>
+      <form class="discovery-search" id="searchForm">
+        <label class="search-input-wrap">
+          <span class="sr-only">Object name or keywords</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4 4"></path></svg>
+          <input id="searchInput" autocomplete="off" placeholder="Search objects, artists, or cultures: Van Gogh, Chinese porcelain, Egyptian bracelet" />
+        </label>
+        <label class="museum-filter">
+          <span class="sr-only">Collection scope</span>
+          <select id="providerSelect">
+            <option value="all">All open collections</option>
+            <option value="met">The Metropolitan Museum of Art</option>
+            <option value="cleveland">The Cleveland Museum of Art</option>
+          </select>
+        </label>
+        <button class="search-button" type="submit" id="searchButton"><span>Explore objects</span><span aria-hidden="true">→</span></button>
+      </form>
+      <div class="example-searches" aria-label="Example searches">
+        <span>Try:</span>
+        <button type="button" data-query="Van Gogh self portrait">Van Gogh self-portrait</button>
+        <button type="button" data-query="peach bloom vase">Peach-bloom porcelain vase</button>
+        <button type="button" data-query="Egyptian bracelet">Egyptian bracelet</button>
       </div>
     </section>
 
-    <div class="banner" id="banner" hidden>
-      <b>The pipeline is not reachable.</b>
-      <span>Start the local server with <code>python3 server.py</code>, then reload this page. The page only displays what the pipeline returns; it computes nothing itself.</span>
-    </div>
+    <section class="search-section" id="searchSection" hidden aria-live="polite">
+      <div class="section-title-row">
+        <div><p class="kicker">EXPLORE THE COLLECTIONS</p><h2 id="searchHeading">Collection search results</h2></div>
+        <span id="resultCount"></span>
+      </div>
+      <div class="search-message" id="searchMessage" hidden></div>
+      <div class="object-grid" id="searchResults"></div>
+    </section>
 
-    <section class="workspace-grid">
-      <div class="main-column">
-        <section class="panel record-panel">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">The record</p>
-              <h3>Catalogue record</h3>
-            </div>
-            <span class="source-badge" id="sourceBadge">Frozen corpus · CC0</span>
-          </div>
-          <p class="provenance-line" id="provenanceLine">Corpus…</p>
-          <div class="record-layout">
-            <div class="object-preview">
-              <div class="object-plate">
-                <span class="plate-initials" id="plateInitials">·</span>
-                <span class="plate-rule"></span>
-                <span class="plate-number" id="previewNumber">—</span>
-              </div>
-              <span class="object-caption">
-                <a id="sourceLink" href="#" target="_blank" rel="noopener">Museum record</a>
-              </span>
-            </div>
-            <form id="recordForm" class="record-form">
-              <label class="wide">Catalogue number<select id="catalogueSelect"></select></label>
-              <label>Title<input id="fieldTitle" readonly /></label>
-              <label>Object date<input id="fieldDate" readonly /></label>
-              <label class="wide">Medium<input id="fieldMedium" readonly /></label>
-              <label class="wide">Place or culture<input id="fieldCulture" readonly /></label>
-              <label class="wide">Credit line<input id="fieldCredit" readonly /></label>
-              <div class="form-actions">
-                <button class="primary-button" type="submit" id="draftButton">
-                  <span class="button-label">Draft label</span>
-                  <span class="button-icon" data-icon="arrow-right"></span>
-                </button>
-                <button class="secondary-button" type="button" id="refusalButton">Show a refusal</button>
-              </div>
-              <label class="toggle wide">
-                <input type="checkbox" id="llmToggle" />
-                <span>Let the model reword the draft. A rewrite is used only if it passes the same
-                four checks; otherwise you see the offline draft, with the reason the rewrite was
-                set aside.</span>
-              </label>
-            </form>
-          </div>
-
-          <div class="search-box">
-            <div class="search-head">
-              <h4>Find a collection by name</h4>
-              <p>
-                Type a collection name and the server asks the museum's open search API for
-                candidates. Pick one and it is drafted through the same pipeline as any other
-                record. Nothing is stored.
-              </p>
-            </div>
-            <div class="search-row">
-              <label class="probe">
-                Museum
-                <select id="searchProvider"></select>
-              </label>
-              <label class="probe probe-grow">
-                Collection name
-                <input id="nameInput" placeholder="e.g. Wheat Field with Cypresses" autocomplete="off" />
-              </label>
-              <button class="secondary-button" type="button" id="nameSearchButton">Search</button>
-            </div>
-            <p class="search-status" id="nameStatus" hidden></p>
-            <div class="search-results" id="searchResults" hidden></div>
-            <p class="search-note">
-              Not found, or want the wider web? <a id="googleLink" href="https://www.google.com/" target="_blank" rel="noopener">Search Google for this name</a> —
-              the museum APIs above stay the only source the pipeline will draft from.
-            </p>
-          </div>
-
-          <div class="fetch-box">
-            <div class="fetch-head">
-              <h4>Or fetch a record by object ID</h4>
-              <p>
-                Fetch one object straight from the museum's open API and run it through the same
-                checks. Nothing is stored; the record is drafted once and forgotten.
-              </p>
-            </div>
-            <div class="fetch-row">
-              <label class="probe">
-                Museum
-                <select id="liveProvider"></select>
-              </label>
-              <label class="probe probe-grow">
-                Object ID
-                <input id="liveObjectId" inputmode="numeric" placeholder="e.g. 436535" autocomplete="off" />
-              </label>
-              <button class="secondary-button" type="button" id="liveFetchButton">Fetch and draft</button>
-            </div>
-            <div class="fetch-examples" id="liveExamples"></div>
-            <p class="fetch-status" id="liveStatus" hidden></p>
-          </div>
-
-          <div class="ask-row">
-            <label class="probe">
-              Ask something about this record
-              <input id="askInput" placeholder='for example: "what is it worth?"' autocomplete="off" />
-            </label>
-            <button class="ghost-button" type="button" id="askButton">Ask</button>
-          </div>
-        </section>
-
-        <section class="panel output-panel" aria-live="polite">
-          <div class="section-heading">
-            <div>
-              <p class="eyebrow">The result</p>
-              <h3 id="resultTitle">Structured introduction</h3>
-            </div>
-            <span class="result-status drafted" id="resultStatus">—</span>
-          </div>
-          <div class="result-card" id="resultCard">
-            <p class="panel-note" id="introHint">Pick a record above, search one by name, or fetch one live to see a structured introduction.</p>
-            <div id="introList"></div>
-            <div class="intro-summary" id="introSummary">
-              <div class="intro-subhead">
-                <h4>Summary</h4>
-                <span id="summaryTag"></span>
-              </div>
-              <p class="label-text" id="labelText"></p>
-              <div class="claim-list" id="claimList"></div>
-            </div>
-          </div>
-          <div class="citation-strip" id="citationStrip"></div>
-          <p class="panel-note" id="modelNote" hidden></p>
-        </section>
+    <section class="article-shell" id="articleShell" hidden aria-live="polite">
+      <div class="article-breadcrumb" id="articleBreadcrumb"></div>
+      <div class="article-hero">
+        <figure class="object-figure">
+          <img id="objectImage" alt="" hidden />
+          <div class="image-empty" id="imageEmpty"><span>LD</span><p>Finding the object image</p></div>
+          <figcaption id="imageCaption"></figcaption>
+        </figure>
+        <div class="article-heading">
+          <p class="kicker" id="articleKind">MUSEUM OBJECT</p>
+          <h2 id="articleTitle"></h2>
+          <p class="article-subtitle" id="articleSubtitle"></p>
+          <div class="article-tags" id="articleTags"></div>
+          <a class="museum-link" id="museumLink" target="_blank" rel="noopener" hidden>View the original museum record <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
 
-      <aside class="side-column">
-        <section class="panel check-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">The check</p>
-              <h3>Four checks, read the claims</h3>
-            </div>
-            <span class="shield" id="shield">·</span>
+      <div class="article-layout">
+        <article class="article-body">
+          <div class="research-notice" id="researchNotice">
+            <span class="loading-mark" aria-hidden="true"></span>
+            <div><b>Reading relevant sources</b><p>AI will search and read web pages. Only information traceable to an actual source will appear in the article.</p></div>
           </div>
-          <div class="check-score">
-            <strong id="scoreValue">—</strong>
-            <span id="scoreLabel">waiting for a draft</span>
-          </div>
-          <div class="check-list" id="checkList"></div>
-        </section>
+          <p class="article-lead" id="articleLead"></p>
+          <div id="articleSections"></div>
+          <section class="conclusion-card" id="conclusionCard" hidden>
+            <p class="kicker">FROM RECORD TO CONTEXT</p>
+            <h3>How the record became this article</h3>
+            <p id="conclusionText"></p>
+          </section>
+          <section class="references" id="referencesSection" hidden>
+            <h3>References</h3>
+            <p>Numbers correspond to citations in the article. AI summaries are not a substitute for reading the original sources.</p>
+            <ol id="referenceList"></ol>
+          </section>
+        </article>
 
-        <section class="panel legend-panel">
-          <div class="section-heading compact">
-            <div>
-              <p class="eyebrow">The labels</p>
-              <h3>Where each part comes from</h3>
-            </div>
-          </div>
-          <ul class="legend-list">
-            <li class="legend-row">
-              <span class="source-tag web">Web source</span>
-              <div>
-                <b>Web source</b>
-                <small>Field values are copied verbatim from the museum's open access record — the frozen corpus, or the museum's API for a live lookup.</small>
-              </div>
-            </li>
-            <li class="legend-row">
-              <span class="source-tag offline">Offline renderer</span>
-              <div>
-                <b>Offline renderer</b>
-                <small>Summary and label text are drafted deterministically from the record. No model is called unless you ask for one.</small>
-              </div>
-            </li>
-            <li class="legend-row">
-              <span class="source-tag ai">AI generated</span>
-              <div>
-                <b>AI generated</b>
-                <small>Shown only when a model rewrite was requested — and only after it passed the same four checks as the offline draft.</small>
-              </div>
-            </li>
-          </ul>
-          <p class="legend-note">
-            <b>When it says no.</b> A record with a blank field, a catalogue number outside
-            the corpus, or an out-of-scope question (value, authenticity, rights) is refused —
-            the gap is reported, never filled in from elsewhere.
-          </p>
-        </section>
-      </aside>
+        <aside class="article-aside">
+          <section class="fact-card" id="factCard">
+            <p class="kicker">CATALOGUE RECORD</p>
+            <h3>Museum record</h3>
+            <dl id="factList"></dl>
+            <p class="fact-note">Only museum-recorded information appears here. External sources never overwrite these fields.</p>
+          </section>
+          <section class="process-card" id="method">
+            <p class="kicker">RESEARCH NOTES</p>
+            <h3>How AI assembled this article</h3>
+            <p class="process-intro">These are the actual research steps and evidence choices, not the model's internal chain of thought.</p>
+            <ol class="process-list" id="processList"></ol>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <section class="method-strip" id="methodOverview">
+      <div><span>01</span><h3>Start with a real object</h3><p>Search two museums' complete open collections rather than a small set of sample records.</p></div>
+      <div><span>02</span><h3>Read external sources</h3><p>AI uses web search and page extraction to add context, with a source attached to every paragraph.</p></div>
+      <div><span>03</span><h3>Separate facts from synthesis</h3><p>Catalogue fields, external evidence, and AI synthesis remain distinct. Insufficient evidence means no forced conclusion.</p></div>
     </section>
   </main>
 
-  <footer class="footer">
-    <span>Label Desk · AILT9019 Group 10 · <span id="footerMeta">—</span></span>
-    <span>A draft is a starting point, not a label.</span>
-  </footer>
+  <footer class="site-footer"><span>Label Desk · AILT9019 Group 10</span><span>Every piece of context should lead back to a source.</span></footer>
   <script src="app.js"></script>
 </body>
 </html>

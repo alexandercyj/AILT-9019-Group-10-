@@ -27,7 +27,9 @@
       "credit_line": "creditLine",
       "department": "department",
       "is_public_domain": "isPublicDomain",
-      "source_url": "objectURL"
+      "source_url": "objectURL",
+      "image_url": "primaryImage",
+      "image_thumbnail": "primaryImageSmall"
     },
     "notes": "Second department, same five required fields, different field map: place is taken from `country` because this department leaves `culture` blank. Kept as evidence that the pipeline is data-agnostic and that the mapping lives in the corpus file rather than in code. One record carries a '(?)' doubt marker and a disjunctive title, so the hedge rule is exercised on this data too."
   },
@@ -43,6 +45,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/544449",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/DP-44486-001.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/DP-44486-001.jpg",
       "boundary": null
     },
     {
@@ -56,6 +60,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/547650",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/26.8.155.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/26.8.155.jpg",
       "boundary": null
     },
     {
@@ -69,6 +75,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/551844",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/15.2.16_EGDP010266.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/15.2.16_EGDP010266.jpg",
       "boundary": null
     },
     {
@@ -82,6 +90,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/559015",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/11.215.285.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/11.215.285.jpg",
       "boundary": null
     },
     {
@@ -95,6 +105,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/548765",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/25.3.64ab_view.2.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/25.3.64ab_view.2.jpg",
       "boundary": null
     },
     {
@@ -108,6 +120,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/556712",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/31.3.88-Elnaggar.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/31.3.88-Elnaggar.jpg",
       "boundary": null
     },
     {
@@ -121,6 +135,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/558515",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/LC-04_18_27_EGDP036229.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/LC-04_18_27_EGDP036229.jpg",
       "boundary": null
     },
     {
@@ -134,6 +150,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/544493",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/15.2.11.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/15.2.11.jpg",
       "boundary": null
     },
     {
@@ -147,6 +165,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/562777",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/20-3-378.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/20-3-378.jpg",
       "boundary": null
     },
     {
@@ -160,6 +180,8 @@
       "department": "Egyptian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/551867",
+      "image_url": "https://images.metmuseum.org/CRDImages/eg/original/26.7.1460_EGDP010535.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/eg/web-large/26.7.1460_EGDP010535.jpg",
       "boundary": "doubt marker and disjunction in the title: Part (?) of a bracelet or armlet"
     }
   ]

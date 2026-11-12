@@ -24,7 +24,9 @@
       "credit_line": "creditLine",
       "department": "department",
       "is_public_domain": "isPublicDomain",
-      "source_url": "objectURL"
+      "source_url": "objectURL",
+      "image_url": "primaryImage",
+      "image_thumbnail": "primaryImageSmall"
     },
     "notes": "Field values are copied verbatim from the Met object records. Blank strings are the museum's own blanks, not missing data introduced by the team. The 6 boundary records are kept in the corpus on purpose so the refusal path can be demonstrated."
   },
@@ -40,6 +42,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/42229",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP246426.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/DP246426.jpg",
       "boundary": null
     },
     {
@@ -53,6 +57,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/42465",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP342538.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/DP342538.jpg",
       "boundary": null
     },
     {
@@ -66,6 +72,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/47175",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/29998.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/29998.jpg",
       "boundary": null
     },
     {
@@ -79,6 +87,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/49864",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/65_1_2.JPG",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/65_1_2.JPG",
       "boundary": null
     },
     {
@@ -92,6 +102,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/53902",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/1999_247_1_B.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/1999_247_1_B.jpg",
       "boundary": null
     },
     {
@@ -105,6 +117,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/64085",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/1970_103a-e_F_sf.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/1970_103a-e_F_sf.jpg",
       "boundary": null
     },
     {
@@ -118,6 +132,8 @@
       "department": "Asian Art",
       "is_public_domain": false,
       "source_url": "https://www.metmuseum.org/art/collection/search/64113",
+      "image_url": "",
+      "image_thumbnail": "",
       "boundary": null
     },
     {
@@ -131,6 +147,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/853890",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP-27291-001.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/DP-27291-001.jpg",
       "boundary": null
     },
     {
@@ -144,6 +162,8 @@
       "department": "Greek and Roman Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/240111",
+      "image_url": "https://images.metmuseum.org/CRDImages/gr/original/LC-74_51_524.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/gr/web-large/LC-74_51_524.jpg",
       "boundary": null
     },
     {
@@ -157,6 +177,8 @@
       "department": "Greek and Roman Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/255624",
+      "image_url": "https://images.metmuseum.org/CRDImages/gr/original/DP2001.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/gr/web-large/DP2001.jpg",
       "boundary": null
     },
     {
@@ -170,6 +192,8 @@
       "department": "Ancient West Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/325538",
+      "image_url": "https://images.metmuseum.org/CRDImages/an/original/DP222632.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/an/web-large/DP222632.jpg",
       "boundary": null
     },
     {
@@ -183,6 +207,8 @@
       "department": "Ancient West Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/325841",
+      "image_url": "https://images.metmuseum.org/CRDImages/an/original/DP-1110-001.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/an/web-large/DP-1110-001.jpg",
       "boundary": null
     },
     {
@@ -196,6 +222,8 @@
       "department": "Asian Art",
       "is_public_domain": false,
       "source_url": "https://www.metmuseum.org/art/collection/search/126755",
+      "image_url": "",
+      "image_thumbnail": "",
       "boundary": null
     },
     {
@@ -209,6 +237,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/37408",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/h1_1987.424.9.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/h1_1987.424.9.jpg",
       "boundary": null
     },
     {
@@ -222,6 +252,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/63318",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP260158.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/DP260158.jpg",
       "boundary": "date hedge: ca. 1740"
     },
     {
@@ -235,6 +267,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/78762",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/2013_872_03_crd.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/2013_872_03_crd.jpg",
       "boundary": "date uncertainty marker: late 18th century (?)"
     },
     {
@@ -248,6 +282,8 @@
       "department": "Ancient West Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/325240",
+      "image_url": "https://images.metmuseum.org/CRDImages/an/original/DP-13441-011.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/an/web-large/DP-13441-011.jpg",
       "boundary": "disjunctive culture: Old Assyrian Trading Colony or Hittite"
     },
     {
@@ -261,6 +297,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/64084",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/62_98_1_R.JPG",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/62_98_1_R.JPG",
       "boundary": "missing object_date"
     },
     {
@@ -274,6 +312,8 @@
       "department": "Asian Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/52049",
+      "image_url": "https://images.metmuseum.org/CRDImages/as/original/DP307773.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/as/web-large/DP307773.jpg",
       "boundary": "missing object_date"
     },
     {
@@ -287,6 +327,8 @@
       "department": "Islamic Art",
       "is_public_domain": true,
       "source_url": "https://www.metmuseum.org/art/collection/search/445631",
+      "image_url": "https://images.metmuseum.org/CRDImages/is/original/DP222470.jpg",
+      "image_thumbnail": "https://images.metmuseum.org/CRDImages/is/web-large/DP222470.jpg",
       "boundary": "missing place_or_culture"
     }
   ]

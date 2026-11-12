@@ -65,6 +65,8 @@ RECORD_FIELDS = (
     "credit_line",
     "department",
     "source_url",
+    "image_url",
+    "image_thumbnail",
 )
 
 

@@ -6,7 +6,7 @@ The first version of this file described a planned split across four local ports
 in-process, and the browser view is a thin client over it. This file records what is
 actually there.
 
-## One implementation, four entry points
+## One fact pipeline, a separate web-research layer
 
 ```text
                       labeldesk/                     (standard library only)
@@ -17,22 +17,25 @@ actually there.
                                 │      (licence gate)              ▲
                                 └─► llm.py (optional) ──► same grounding
 
-  labeldesk.html  ──►  a build-time snapshot of the four entry points above
+  Browser search ──► Met + Cleveland live collections ──► record + open image
+  Browser research ──► research.py ──► Responses web_search + web_extractor
+                                      └─► retrieved-URL citation validation
+
+  labeldesk.html  ──►  a build-time snapshot of the fact pipeline above
 ```
 
 - `python3 -m labeldesk <catalogue number>` prints the result for a human.
-- `server.py` serves `index.html` and exposes `POST /api/draft`, which calls the same
-  `labeldesk.draft()` function and returns the same JSON. `POST /api/fetch` reads one
-  record from a museum's open API at request time, wraps it in an ephemeral corpus that
-  borrows the registered corpus name so provenance and the licence gate resolve
-  unchanged, and drafts it through that same function. Nothing is written to disk.
-- `skills/labeldesk/SKILL.md` documents that same command for another agent environment.
-  It adds no code: the contract is the CLI's JSON.
-- `labeldesk.html` is one file that opens in a browser with nothing installed.
+- `server.py` serves the Chinese encyclopaedia and preserves the original drafting API.
+  Live collection search and object fetch are not limited to the frozen examples.
+- `POST /api/research` uses a separate research model and the provider's built-in web
+  tools. It never accepts an arbitrary URL from the browser. The result contains reader
+  facing research steps and cited paragraphs, not model configuration or raw reasoning.
+- `skills/labeldesk/SKILL.md` documents the unchanged CLI contract.
+- `labeldesk.html` is one file that opens with nothing installed. Text works offline;
+  museum images require a network connection. It does not claim to perform live research.
 
-`app.js` contains no renderer, no grounding rule and no refusal rule. If the browser view
-and the CLI ever disagreed, that would be a bug in one call, not a divergence between two
-implementations.
+`app.js` contains no renderer, grounding rule or refusal rule. The encyclopaedia only
+renders the server's museum record and validated research response.
 
 ## Why the standalone file is a snapshot, not a port
 
@@ -44,23 +47,15 @@ So `tools/build_standalone.py` runs the real pipeline over every record in every
 both modes, and writes the results into the page as data. The page looks them up.
 
 The consequence is worth stating plainly: **the standalone file cannot answer for a record
-it was not built with.** Everything else it does answer correctly, because the input space
-is finite. The two decisions the page does make for itself are membership tests over data
-embedded in it:
-
-| Decision | How the page makes it | Why that is safe |
-| --- | --- | --- |
-| is this catalogue number in this corpus? | array membership | the array *is* the corpus |
-| does this question contain an out-of-scope term? | substring test over `meta.out_of_scope_terms` | the list is copied out of `labeldesk.pipeline`, not retyped |
-
-The refusal wording comes from `REASON_TEXT` for the same reason: a page that invents its
-own phrasing for a refusal would be a different tool with a familiar face.
+it was not built with.** It is presented as an offline collection selection, not as the
+full encyclopaedia. Its only search is a case-insensitive title match over embedded data;
+its images are ordinary remote museum images with an explicit no-image fallback.
 
 `tests/test_standalone.py` closes the loop. It rebuilds the file and compares every embedded
-result against a fresh `draft()` call, so a change to the renderer, the grounding rules or
-the prompt fails the suite until the file is rebuilt. It also asserts the file has no
-`<script src>`, no stylesheet link and no `fetch(`, which is what "open it and it works"
-means mechanically.
+result against a fresh `draft()` call, so a change to the renderer, grounding rules or
+prompt fails the suite until the file is rebuilt. It also asserts the file has no external
+script, stylesheet, `fetch(` or `XMLHttpRequest`; remote `<img>` elements are the disclosed
+exception to offline display.
 
 The build is byte-reproducible — no timestamp, only corpus checksums and the prompt hash —
 so `--check` is a real staleness test rather than a same-day coincidence.
@@ -75,6 +70,8 @@ so `--check` is a real staleness test rather than a same-day coincidence.
 | GET | `/api/llm` | Model endpoint, whether a key is set, default mode, prompt hash. |
 | POST | `/api/draft` | `{"catalogue_number": "...", "question": "...", "llm": "auto"}` → the full result object. |
 | POST | `/api/fetch` | `{"provider": "met" \| "cleveland", "object_id": N, "llm": "auto"}` → one live record plus the full result object for it. 400 on a bad provider or ID, 502 with the upstream status when the museum's API cannot be reached. |
+| POST | `/api/search` | `{"provider": "all" \| "met" \| "cleveland", "name": "..."}` → parallel normalised candidates with image fields. Partial museum failures are reported separately. |
+| POST | `/api/research` | `{"query": "...", "provider"?, "object_id"?}` → cited Chinese research, reader-facing steps and sources. With provider coordinates the server re-fetches and normalises the record; without them it creates a web-only entry. |
 
 No CORS headers: the page and the API are the same origin. The server binds to
 `127.0.0.1` by default and has no write endpoints. `llm` is validated against the four
@@ -141,6 +138,25 @@ refusal costs a draft nothing.
 model answered badly; a policy block means nothing was sent and nothing was attempted
 (`attempts: 0`). The CLI prints different words for each, because "discarded" would
 misdescribe an empty room.
+
+## Web research and citation validation
+
+`research.py` is not a second implementation of `draft()` and does not alter its label. It
+uses `LABELDESK_RESEARCH_MODEL` (default `deepseek-v4.1-flash-1017`) through the Responses
+endpoint with `web_search`, `web_extractor` and thinking enabled. The old label model and
+transcript hashes stay independent.
+
+The provider response is reduced to public output text, actual search/read steps and URLs
+returned by `web_extractor`; search-result links alone are not evidence. The model must return structured JSON whose every
+paragraph cites one or more of those HTTPS URLs. Unknown, non-HTTPS and known refused-museum
+URLs invalidate the answer. Citation IDs are assigned by the backend in retrieved-source
+order. This proves citation resolution, not the adequacy of a source; the UI tells readers
+to check the originals and never describes the summary as a museum fact.
+
+No-key, transport, no-source and validation failures produce a short Chinese fallback without
+internal hostnames or stack traces. Successful responses are held in a 30-minute, 64-entry
+process-local cache. Web-only entries have no museum record and do not hotlink arbitrary
+images. Known refused museum domains are excluded rather than used to bypass source policy.
 
 ## Two museums, three corpora, one pipeline
 
