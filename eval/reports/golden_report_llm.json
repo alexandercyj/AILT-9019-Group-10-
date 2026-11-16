@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-16 08:30 UTC",
+  "generated_at": "2026-11-16 09:02 UTC",
   "labeldesk_version": "1.1.0",
   "corpus_version": "1.0.0",
   "corpus_checksum": "bdb51f3a20aeefc83d592d958e9dfa53435001e08b676ba649664a0d3d851f07",
@@ -14,8 +14,8 @@
     "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e"
   },
   "summary": {
-    "cases_total": 17,
-    "cases_passed": 17,
+    "cases_total": 18,
+    "cases_passed": 18,
     "outcome_accuracy": 1.0,
     "claim_precision": 1.0,
     "citation_resolution_rate": 1.0,
@@ -402,6 +402,17 @@
       "problems": [],
       "passed": true,
       "notes": "Unknown catalogue number must be refused, not answered from a similar object."
+    },
+    {
+      "id": "r03",
+      "catalogue_number": "14.40.377",
+      "question": "Who made this?",
+      "expected_status": "refused",
+      "actual_status": "refused",
+      "reason": "unknown_maker",
+      "problems": [],
+      "passed": true,
+      "notes": "The cited fields do not name a maker. The refusal must not invent one. This expectation is the question and the banned phrases, not a copy of the reason sentence."
     }
   ],
   "probes": {

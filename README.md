@@ -48,8 +48,8 @@ cost prose quality; it cannot cost a fact or a citation.
 | --- | --- |
 | Corpora | 20 records (Met, 4 departments) · 10 (Met, Egyptian Art) · 10 (Cleveland Museum of Art) |
 | Sources checked | 7, of which 2 admitted, 2 refused, 1 deferred, 1 reference-only, 1 not frozen |
-| Tests | 224 |
-| Golden set | 17/17 cases, both model-off and model-on |
+| Tests | 248 on Python 3.12.6 |
+| Golden set | 18/18 cases, both model-off and model-on replay |
 | Cross-corpus run | 40 records, 0 check failures, 35/37 rewrites accepted |
 | Claim precision · citation resolution | 100% · 100%, every run |
 | Network at run time | none, unless `--llm` or a live fetch is asked for |
@@ -256,7 +256,7 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `245 passed` on 16 Nov 2026, Python 3.12.6, pytest 9.1.1. The suite is not a smoke test — it breaks the output on purpose
+Expected: `248 passed` on 16 Nov 2026, Python 3.12.6, pytest 9.1.1. The suite is not a smoke test — it breaks the output on purpose
 and requires the check to catch it:
 
 | Test file | What it proves |
@@ -290,7 +290,7 @@ python3 eval/evaluate.py --compare       # the two side by side
 Expected, both runs:
 
 ```text
-Golden set · 17/17 cases passed
+Golden set · 18/18 cases passed
   claim precision        100%  citation resolution   100%  readability 100%
   restatements           72/72  probe agreement 100%  (false accepts 0, spurious rejections 0)
 ```
@@ -302,7 +302,7 @@ The model-on run adds one line:
         - drops_field_content x 2
 ```
 
-`data/golden_set.json` holds 15 record cases (10 well formed, 5 boundary) and 2 request
+`data/golden_set.json` holds 15 record cases (10 well formed, 5 boundary) and 3 request
 cases, each with the record values a correct label must restate and the outcome it must
 produce. `eval/probes.json` holds 12 single sentences labelled pass or fail, which test the
 grounding rule rather than the templates.
@@ -610,13 +610,13 @@ data/
   frozen_corpus_cleveland.json  10 Cleveland Museum of Art records, second museum
   frozen_corpus_cleveland.sha256
   sources.json                  every source examined: robots, licence, policy, decision
-  golden_set.json               15 record cases + 2 request cases, hand-written expectations
+  golden_set.json               15 record cases + 3 request cases, hand-written expectations
   llm_transcripts.json          37 recorded model responses, keyed by corpus
 eval/
   evaluate.py         golden-set scorer, --llm and --compare, writes eval/reports/
   cross_corpus.py     every record in every corpus, both modes, no per-record expectations
   probes.json         12 hand-labelled sentences for the grounding rule
-tests/                pytest suite (245 tests on 16 Nov 2026, Python 3.12.6)
+tests/                pytest suite (248 tests on 16 Nov 2026, Python 3.12.6)
 tools/
   fetch_corpus.py     rebuild any corpus from its museum API (--preset, --check)
   check_sources.py    re-fetch every robots.txt and report drift against the register

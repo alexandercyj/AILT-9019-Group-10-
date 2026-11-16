@@ -20,7 +20,7 @@ def test_golden_set_passes_every_gate(tmp_path):
         cwd=ROOT,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
-    assert "17/17 cases passed" in completed.stdout
+    assert "18/18 cases passed" in completed.stdout
 
 
 def test_report_files_are_written(tmp_path):

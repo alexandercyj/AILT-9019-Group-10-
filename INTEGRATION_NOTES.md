@@ -27,7 +27,8 @@ actually there.
 - `python3 -m labeldesk <catalogue number>` prints the result for a human.
 - `server.py` serves the English encyclopaedia and preserves the original drafting API.
   Live collection search and object fetch are not limited to the frozen examples.
-- `POST /api/research` uses a separate research model and the provider's built-in web
+- `POST /api/research` is refused with `disabled` unless the server is started with
+  `--allow-research`. Ordinary search does not call it. It uses a separate research model and the provider's built-in web
   tools. It never accepts an arbitrary URL from the browser. The result contains reader
   facing research steps and cited paragraphs, not model configuration or raw reasoning.
 - `skills/labeldesk/SKILL.md` documents the unchanged CLI contract.

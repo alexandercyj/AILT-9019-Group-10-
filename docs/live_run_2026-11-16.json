@@ -1,0 +1,67 @@
+{
+  "requests": 2,
+  "model": "deepseek-v4.1-flash-1017",
+  "temperature": 0,
+  "max_tokens": 800,
+  "retries": 0,
+  "thinking": false,
+  "base_kind": "openai-compatible",
+  "rows": [
+    {
+      "catalogue_number": "14.40.377",
+      "status": "drafted",
+      "reason": null,
+      "label_source": "llm_rewrite",
+      "word_count": 66,
+      "checks_passed": true,
+      "claim_precision": 1.0,
+      "citation_resolution_rate": 1.0,
+      "llm_mode": "live",
+      "llm_applied": true,
+      "llm_reason": null,
+      "llm_error": null,
+      "model": "deepseek-v4.1-flash-1017",
+      "latency_ms": 6410,
+      "attempts": 1,
+      "usage": {
+        "completion_tokens": 201,
+        "prompt_tokens": 2346,
+        "total_tokens": 2547
+      },
+      "notice_present": true,
+      "live_requests_so_far": 1
+    },
+    {
+      "catalogue_number": "36.120.655",
+      "status": "drafted",
+      "reason": null,
+      "label_source": "llm_rewrite",
+      "word_count": 69,
+      "checks_passed": true,
+      "claim_precision": 1.0,
+      "citation_resolution_rate": 1.0,
+      "llm_mode": "live",
+      "llm_applied": true,
+      "llm_reason": null,
+      "llm_error": null,
+      "model": "deepseek-v4.1-flash-1017",
+      "latency_ms": 2621,
+      "attempts": 1,
+      "usage": {
+        "completion_tokens": 237,
+        "prompt_tokens": 2399,
+        "total_tokens": 2636
+      },
+      "notice_present": true,
+      "live_requests_so_far": 2
+    },
+    {
+      "catalogue_number": "14.40.377",
+      "question": "Who made this?",
+      "status": "refused",
+      "reason": "unknown_maker",
+      "label": null,
+      "network_calls": 0
+    }
+  ]
+}

@@ -46,6 +46,10 @@ STATIC_FILES = {
 # Set in main(); the handler reads it. One corpus per process, chosen at start-up,
 # so the page cannot ask for records the process was not started with.
 CORPUS = load_corpus()
+# Spending stays off until the process is started with the matching flag.
+# A key in the environment is not enough: search and ordinary drafts must not call out.
+ALLOW_LIVE = False
+ALLOW_RESEARCH = False
 
 DATA_DIR = ROOT / "data"
 RESEARCH_CACHE = {}
@@ -338,6 +342,8 @@ class Handler(BaseHTTPRequestHandler):
                     "has_key": config.has_key,
                     "default_mode": resolve_mode("auto", config),
                     "prompt_sha256": prompt_hash(),
+                    "live_enabled": ALLOW_LIVE,
+                    "research_enabled": ALLOW_RESEARCH,
                 },
             )
 
@@ -366,6 +372,8 @@ class Handler(BaseHTTPRequestHandler):
         llm = payload.get("llm")
         if llm not in (None, False, "auto", "live", "replay"):
             return self._json(400, {"error": "bad_llm_mode", "got": llm})
+        if llm == "live" and not ALLOW_LIVE:
+            return self._json(403, {"error": "live_disabled"})
 
         if path == "/api/fetch":
             return self._fetch(payload, llm)
@@ -381,6 +389,13 @@ class Handler(BaseHTTPRequestHandler):
         return self._json(200, result)
 
     def _research(self, payload: dict) -> None:
+        if not ALLOW_RESEARCH:
+            return self._json(200, {"record": None, "research": {
+                "status": "unavailable",
+                "reason": "disabled",
+                "message": "Web research is off. Start the server with --allow-research to spend the sponsored quota.",
+                "steps": [],
+            }})
         query = str(payload.get("query") or payload.get("name") or "").strip()
         if not query or len(query) > 200:
             return self._json(400, {"error": "name_required"})
@@ -514,7 +529,21 @@ def main() -> int:
     parser.add_argument(
         "--corpus", metavar="ALIAS_OR_PATH", help="a registered alias (primary, egyptian, cleveland) or a path"
     )
+    parser.add_argument(
+        "--allow-live",
+        action="store_true",
+        help="accept llm=live on /api/draft and /api/fetch; off by default so a key cannot be spent by a page",
+    )
+    parser.add_argument(
+        "--allow-research",
+        action="store_true",
+        help="accept /api/research; off by default so search cannot start a paid call",
+    )
     args = parser.parse_args()
+
+    global ALLOW_LIVE, ALLOW_RESEARCH
+    ALLOW_LIVE = args.allow_live
+    ALLOW_RESEARCH = args.allow_research
 
     global CORPUS
     CORPUS = load_corpus(resolve_corpus(args.corpus))

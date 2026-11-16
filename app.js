@@ -90,8 +90,7 @@ async function searchObjects(event) {
     if (token !== state.token) return;
     renderSearchResults(body);
     if (!body.results.length) {
-      setSearchMessage("No direct collection match. Looking for reliable sources through web research…", "loading");
-      await researchWeb(query, token);
+      setSearchMessage("No matching object in the museum search. Web research stays off unless this server was started with --allow-research.", "");
     }
   } catch (error) {
     if (token !== state.token) return;
@@ -141,16 +140,16 @@ function renderSearchResults(body) {
   }
 }
 
-async function selectRecord(record) {
-  const token = ++state.token;
+function selectRecord(record) {
   state.selection = { provider: record.provider, objectId: record.object_id };
   state.record = record;
   els.searchSection.hidden = true;
   renderRecord(record, record.provider_short_name || record.provider_name);
-  renderResearchPending();
+  els.researchNotice.hidden = false;
+  els.researchNotice.className = "research-notice unavailable";
+  els.researchNotice.textContent = "Web research is off. This page shows the museum record and does not spend the sponsored quota.";
   els.articleShell.hidden = false;
   els.articleShell.scrollIntoView({ behavior: "smooth", block: "start" });
-  await runResearch(token);
 }
 
 function renderRecord(record, providerName) {

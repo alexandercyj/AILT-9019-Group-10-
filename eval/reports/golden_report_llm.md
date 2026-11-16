@@ -1,6 +1,6 @@
 # Golden-set evaluation
 
-Generated 2026-11-16 08:30 UTC · Label Desk 1.1.0 · corpus sha256 `bdb51f3a20ae` · **model on**
+Generated 2026-11-16 09:02 UTC · Label Desk 1.1.0 · corpus sha256 `bdb51f3a20ae` · **model on**
 
 Model `deepseek-v4.1-flash` · mode `replay` · temperature 0.0 · thinking off · prompt sha256 `3491919c682e` · key not set
 
@@ -14,7 +14,7 @@ Model `deepseek-v4.1-flash` · mode `replay` · temperature 0.0 · thinking off 
 | readability_pass_rate | 100% | 100% | PASS |
 | restatement_coverage | 100% | 100% | PASS |
 
-- cases passed: **17/17**
+- cases passed: **18/18**
 - restatements matched: 72/72
 - probe agreement: 100% (false accepts 0, spurious rejections 0)
 
@@ -56,6 +56,7 @@ Model `deepseek-v4.1-flash` · mode `replay` · temperature 0.0 · thinking off 
 | --- | --- | --- | --- | --- |
 | r01 | How much is this vase worth, and is it authentic? | refused | refused (out_of_scope) | PASS |
 | r02 | 99.99.99 | refused | refused (out_of_corpus) | PASS |
+| r03 | Who made this? | refused | refused (unknown_maker) | PASS |
 
 ## Boundary probes
 

@@ -8,7 +8,7 @@ These are suggested edits for a person on the team. They are not filled-in contr
 
 - Team ID G10, repository `https://github.com/alexandercyj/AILT-9019-Group-10-`.
 - Public webpage and both YouTube links are still `[add URL before submission]`. That matches `links.txt`: nothing is hosted and no video has been uploaded.
-- Golden gates in the report (17/17, claim precision 100%, citation resolution 100%, 72/72, probes 100% with 0 false accepts, 11/13 rewrites) match `eval/evaluate.py` and `eval/evaluate.py --llm --replay` on 16 Nov 2026. Replay was recorded output.
+- Golden gates in the report (17/17, claim precision 100%, citation resolution 100%, 72/72, probes 100% with 0 false accepts, 11/13 rewrites) matched the set before request case `r03`. After `r03`, model-off and replay are 18/18 with the same 100% gates and the same 11/13 recorded rewrites. The PDF still says 17/17.
 - Record `62.98.1` refusal text matches the CLI and the offline page.
 - Cleveland is named as admitted. The Art Institute of Chicago is named as deferred. That matches `data/sources.json`.
 - The report says replayed transcripts are not live execution. Keep that sentence.
@@ -17,7 +17,8 @@ These are suggested edits for a person on the team. They are not filled-in contr
 
 | Report text | What the current tree shows | Suggested edit |
 | --- | --- | --- |
-| “224 passed” and “224-test suite”, including the verification field | Python 3.12.6, pytest 9.1.1: 245 passed on 16 Nov 2026 | Replace 224 with 245 and name Python 3.12.6. The proposal asks for 3.12+. |
+| “224 passed” and “224-test suite”, including the verification field | Python 3.12.6, pytest 9.1.1: 248 passed on 16 Nov 2026 | Replace 224 with 248 and name Python 3.12.6. The proposal asks for 3.12+. |
+| 17/17 golden cases | 18/18 after adding `r03` (`unknown_maker`, and the refusal must not say “attributed to”, “painted by”, or “the artist is”) | Say 18/18. Replay was not a live call. Live evidence is `docs/live_run_2026-11-16.json`: 2 requests, model `deepseek-v4.1-flash-1017`, both rewrites kept by the checks. |
 | Refusal reasons: missing field, out of corpus, out of scope | A fourth reason, `unknown_maker`, refuses “who made this?” on `14.40.377` and does not invent an artist | Add that case. It is not in the 17-case golden set. |
 | “The must-have scope is unchanged” | The five fields are unchanged. The named fallback, the Art Institute of Chicago, is deferred; Cleveland was used | Say that in the same sentence so “unchanged” is not read as “no dataset change”. |
 | No Python version | Verified on 3.12.6 | State it in the reproducibility section. |

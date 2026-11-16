@@ -26,6 +26,7 @@ SENTINEL = "sk-test-sentinel-not-a-credential"
 def test_offline_and_replay_do_not_record_an_ambient_key(monkeypatch):
     monkeypatch.setenv("LABELDESK_API_KEY", SENTINEL)
     monkeypatch.setenv("OPENAI_API_KEY", SENTINEL)
+    monkeypatch.setenv("BAILIAN_API_KEY", SENTINEL)
     monkeypatch.setenv("LABELDESK_BASE_URL", "https://secret.example.invalid/v1")
     monkeypatch.setenv("LABELDESK_MODEL", "secret-model")
     corpus = load_corpus()
@@ -44,6 +45,7 @@ def test_standalone_build_is_stable_when_a_key_is_configured(monkeypatch):
     before = builder.build()
     monkeypatch.setenv("LABELDESK_API_KEY", SENTINEL)
     monkeypatch.setenv("OPENAI_API_KEY", SENTINEL)
+    monkeypatch.setenv("BAILIAN_API_KEY", SENTINEL)
     monkeypatch.setenv("LABELDESK_BASE_URL", "https://secret.example.invalid/v1")
     monkeypatch.setenv("LABELDESK_MODEL", "secret-model")
     after = builder.build()
