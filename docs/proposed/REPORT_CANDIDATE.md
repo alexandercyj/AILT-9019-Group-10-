@@ -40,7 +40,7 @@ Cross-corpus, the same day, offline and replay, no live call: 40 records, 37 dra
 
 Separate from that replay, two live requests on 16 Nov 2026 used `deepseek-v4.1-flash-1017`, temperature 0, max output 800, retries 0, thinking off. Both were kept by the same checks: `14.40.377` (66 words; prompt 2346, completion 201, total 2547) and `36.120.655` (69 words; prompt 2399, completion 237, total 2636). A third draft, “Who made this?” on `14.40.377`, refused `unknown_maker` and made no request. Evidence: `docs/live_run_2026-11-16.json`. The live acceptance of `36.120.655` is not the replay discard of the older transcript for that record.
 
-Pytest the same day: 248 passed, 0 failed, Python 3.12.6, pytest 9.1.1.
+Pytest the same day: 252 passed, 0 failed, Python 3.12.6, pytest 9.1.1. The 248 figure was the suite before the cross-corpus and package tests.
 
 ## 4. Reproducibility and limitations
 
@@ -62,7 +62,7 @@ Representative prompt: the instruction to finish the local project against the p
 
 Material outputs retained: the local commits on `cursor/ailt9019-local-product-69c3`, `docs/live_run_2026-11-16.json`, `eval/reports/cross_corpus.md`, and this candidate. Those commits are not a member’s contribution.
 
-Verification: pytest 248 passed on Python 3.12.6; golden 18/18 off and replay; cross-corpus 37 drafted and 3 expected refusals; two live rewrites kept. A team member still has to review the diff. This agent is not a member of Group 10. The sentence “reviewed by Chen Yongjun” in the earlier draft was not observed here and is not repeated as fact.
+Verification: pytest 252 passed on Python 3.12.6; golden 18/18 off and replay; cross-corpus 37 drafted and 3 expected refusals; two live rewrites kept. A team member still has to review the diff. This agent is not a member of Group 10. The sentence “reviewed by Chen Yongjun” in the earlier draft was not observed here and is not repeated as fact.
 
 Known limitations: Week 2 unread; page unhosted; videos unrecorded; contributions unapproved.
 

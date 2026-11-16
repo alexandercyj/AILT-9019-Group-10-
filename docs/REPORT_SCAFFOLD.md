@@ -29,7 +29,7 @@ Method: `python3 eval/evaluate.py` and `python3 eval/evaluate.py --llm --replay`
 
 Corpus checksum on both reports: `bdb51f3a20ae`. Restatements 72/72. Replay accepted 11 of 13 rewrites and discarded 2 for `drops_field_content`; those two cases kept the offline draft. Reports: `eval/reports/golden_report.md`, `eval/reports/golden_report_llm.md`, `eval/reports/model_comparison.md`.
 
-Pytest the same day: 248 passed, 0 failed, on Python 3.12.6 (pytest 9.1.1). The proposal names Python 3.12+. Replay above is recorded transcripts. A separate live run the same evening made 2 requests, not replay: see `docs/live_run_2026-11-16.json`.
+Pytest the same day: 252 passed, 0 failed, on Python 3.12.6 (pytest 9.1.1). That count includes the cross-corpus and draft-package tests. An earlier run the same evening, before those tests, was 248. The proposal names Python 3.12+. Replay above is recorded transcripts. A separate live run the same evening made 2 requests, not replay: see `docs/live_run_2026-11-16.json`.
 
 CLI the same day, primary corpus:
 
@@ -72,7 +72,7 @@ Representative prompts / interactions: the session instruction to implement agai
 
 Material outputs retained: the files in the local commits on `cursor/ailt9019-local-product-69c3`. Those commits are not a team member’s authorship.
 
-Verification performed: pytest 248 passed on Python 3.12.6; model-off and replay evaluations exited 0 at 18/18. Two live rewrites on `deepseek-v4.1-flash-1017` were accepted by the same checks (`docs/live_run_2026-11-16.json`). Replay rows are recorded output, not those live calls. A team member still has to review the diff before any submission. This agent is not a member of Group 10.
+Verification performed: pytest 252 passed on Python 3.12.6; model-off and replay evaluations exited 0 at 18/18. Two live rewrites on `deepseek-v4.1-flash-1017` were accepted by the same checks (`docs/live_run_2026-11-16.json`). Replay rows are recorded output, not those live calls. A team member still has to review the diff before any submission. This agent is not a member of Group 10.
 
 Known limitations: Week 2 brief unread; public page not hosted; videos not recorded; member contributions not observed. The draft ZIP is not final-ready.
 

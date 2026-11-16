@@ -17,7 +17,7 @@ These are suggested edits for a person on the team. They are not filled-in contr
 
 | Report text | What the current tree shows | Suggested edit |
 | --- | --- | --- |
-| “224 passed” and “224-test suite”, including the verification field | Python 3.12.6, pytest 9.1.1: 248 passed on 16 Nov 2026 | Replace 224 with 248 and name Python 3.12.6. The proposal asks for 3.12+. |
+| “224 passed” and “224-test suite”, including the verification field | Python 3.12.6, pytest 9.1.1: 252 passed on 16 Nov 2026 | Replace 224 with 252 and name Python 3.12.6. The proposal asks for 3.12+. |
 | 17/17 golden cases | 18/18 after adding `r03` (`unknown_maker`, and the refusal must not say “attributed to”, “painted by”, or “the artist is”) | Say 18/18. Replay was not a live call. Live evidence is `docs/live_run_2026-11-16.json`: 2 requests, model `deepseek-v4.1-flash-1017`, both rewrites kept by the checks. |
 | Refusal reasons: missing field, out of corpus, out of scope | A fourth reason, `unknown_maker`, refuses “who made this?” on `14.40.377` and does not invent an artist | Add that case. It is not in the 17-case golden set. |
 | “The must-have scope is unchanged” | The five fields are unchanged. The named fallback, the Art Institute of Chicago, is deferred; Cleveland was used | Say that in the same sentence so “unchanged” is not read as “no dataset change”. |
