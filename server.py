@@ -35,6 +35,7 @@ from labeldesk.validate import missing_fields
 from tools.fetch_corpus import PROVIDERS, normalise
 
 ROOT = Path(__file__).resolve().parent
+MAX_BODY = 64 * 1024
 STATIC_FILES = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
@@ -354,11 +355,9 @@ class Handler(BaseHTTPRequestHandler):
         if path not in ("/api/draft", "/api/fetch", "/api/search", "/api/research"):
             return self._json(404, {"error": "not_found", "path": path})
 
-        length = int(self.headers.get("Content-Length") or 0)
-        try:
-            payload = json.loads(self.rfile.read(length) or b"{}")
-        except json.JSONDecodeError:
-            return self._json(400, {"error": "bad_json"})
+        payload = self._read_json()
+        if payload is None:
+            return None
 
         if path == "/api/research":
             return self._research(payload)
@@ -462,6 +461,35 @@ class Handler(BaseHTTPRequestHandler):
         if provider == "all" and not body["results"] and body["errors"]:
             return self._json(502, {"error": "upstream_unreachable"})
         return self._json(200, body)
+
+    def _read_json(self) -> dict | None:
+        """Read one JSON object, or send 400 and return None.
+
+        The cap is deliberate: this process is a local viewer, and a declared
+        Content-Length is not allowed to allocate an unbounded buffer.
+        """
+        raw_length = self.headers.get("Content-Length")
+        if raw_length is None or raw_length == "":
+            length = 0
+        else:
+            try:
+                length = int(raw_length)
+            except ValueError:
+                self._json(400, {"error": "bad_length"})
+                return None
+        if length < 0 or length > MAX_BODY:
+            self.close_connection = True
+            self._json(413, {"error": "body_too_large", "limit": MAX_BODY})
+            return None
+        try:
+            payload = json.loads(self.rfile.read(length) or b"{}")
+        except json.JSONDecodeError:
+            self._json(400, {"error": "bad_json"})
+            return None
+        if not isinstance(payload, dict):
+            self._json(400, {"error": "bad_json"})
+            return None
+        return payload
 
     def _json(self, status: int, payload: dict) -> None:
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")

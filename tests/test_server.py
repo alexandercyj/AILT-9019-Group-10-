@@ -385,6 +385,58 @@ def test_reader_page_has_no_debug_or_search_redirect_controls(httpd):
             assert text not in page
 
 
+def test_post_body_is_capped(httpd):
+    import http.client
+    from urllib.parse import urlparse
+
+    parsed = urlparse(httpd)
+    connection = http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=5)
+    connection.request(
+        "POST",
+        "/api/draft",
+        body=b"{}",
+        headers={
+            "Content-Type": "application/json",
+            "Content-Length": str(server.MAX_BODY + 1),
+        },
+    )
+    response = connection.getresponse()
+    raw = response.read()
+    connection.close()
+    assert response.status == 413
+    assert json.loads(raw)["error"] == "body_too_large"
+
+
+def test_llm_status_and_draft_do_not_expose_a_key(httpd, monkeypatch):
+    monkeypatch.delenv("LABELDESK_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    status, body = _request(f"{httpd}/api/llm")
+    assert status == 200
+    assert set(body) == {"model", "base_url", "has_key", "default_mode", "prompt_sha256"}
+    assert body["has_key"] is False
+    status, drafted = _request(f"{httpd}/api/draft", {"catalogue_number": "14.40.377"})
+    assert status == 200
+    encoded = json.dumps(drafted)
+    assert "api_key" not in encoded
+    assert drafted["llm"]["has_key"] is False
+
+
+def test_static_allowlist_rejects_escape(httpd):
+    status, _ = _request(f"{httpd}/%2e%2e/server.py")
+    assert status == 404
+    status, _ = _request(f"{httpd}/export_pdf.applescript")
+    assert status == 404
+
+
+def test_research_without_a_key_stays_offline(httpd, monkeypatch):
+    monkeypatch.delenv("LABELDESK_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    status, body = _request(f"{httpd}/api/research", {"query": "porcelain vase"})
+    assert status == 200
+    assert body["research"]["status"] == "unavailable"
+    assert body["research"]["reason"] == "no_key"
+
+
 def test_non_public_domain_records_do_not_expose_images():
     raw = {**MET_RAW, "isPublicDomain": False}
     record = server.normalise(raw, None, server.LIVE_PROVIDERS["met"]["field_map"], "met")

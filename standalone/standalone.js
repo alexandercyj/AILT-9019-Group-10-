@@ -86,7 +86,9 @@
     renderFacts(record);
     var bundle = currentCorpus().results[record.catalogue_number];
     var result = bundle && bundle.offline;
-    els.standaloneLabel.textContent = result && result.label ? result.label : "This record lacks the fields required for a complete summary. The missing information remains visible in the museum record.";
+    els.standaloneLabel.textContent = (result && result.label)
+      ? result.label
+      : ((result && result.reason_text) || "This record lacks the fields required for a complete summary. The missing information remains visible in the museum record.");
   }
 
   function renderImage(record) {

@@ -81,7 +81,7 @@ checksums and the prompt hash.
 
 ## Setup
 
-Requires Python 3.10 or newer. The core path needs no third-party package.
+Requires Python 3.12 or newer, as the proposal specifies. Verified on 16 Nov 2026 with Python 3.12.6 (and earlier the same day with 3.15.2). The core path needs no third-party package.
 
 ```bash
 git clone https://github.com/alexandercyj/AILT-9019-Group-10-.git
@@ -256,7 +256,7 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `241 passed` on 16 Nov 2026, Python 3.15.2, pytest 9.1.1. The suite is not a smoke test — it breaks the output on purpose
+Expected: `245 passed` on 16 Nov 2026, Python 3.12.6, pytest 9.1.1. The suite is not a smoke test — it breaks the output on purpose
 and requires the check to catch it:
 
 | Test file | What it proves |
@@ -616,7 +616,7 @@ eval/
   evaluate.py         golden-set scorer, --llm and --compare, writes eval/reports/
   cross_corpus.py     every record in every corpus, both modes, no per-record expectations
   probes.json         12 hand-labelled sentences for the grounding rule
-tests/                pytest suite (241 tests on 16 Nov 2026)
+tests/                pytest suite (245 tests on 16 Nov 2026, Python 3.12.6)
 tools/
   fetch_corpus.py     rebuild any corpus from its museum API (--preset, --check)
   check_sources.py    re-fetch every robots.txt and report drift against the register

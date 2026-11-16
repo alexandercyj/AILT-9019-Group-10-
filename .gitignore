@@ -12,3 +12,4 @@ data/.rebuilt.json
 # local editor noise
 .Rhistory
 .DS_Store
+.impeccable/hook.cache.json
