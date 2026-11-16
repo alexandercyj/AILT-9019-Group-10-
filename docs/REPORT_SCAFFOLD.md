@@ -29,7 +29,7 @@ Method: `python3 eval/evaluate.py` and `python3 eval/evaluate.py --llm --replay`
 
 Corpus checksum on both reports: `bdb51f3a20ae`. Restatements 72/72. Replay accepted 11 of 13 rewrites and discarded 2 for `drops_field_content`; those two cases kept the offline draft. Reports: `eval/reports/golden_report.md`, `eval/reports/golden_report_llm.md`, `eval/reports/model_comparison.md`.
 
-Pytest the same day: 241 passed, 0 failed, Python 3.15.2, pytest 9.1.1. The proposal names Python 3.12+. This machine ran 3.15.2. A 3.12 run was not done.
+Pytest the same day: 245 passed, 0 failed, on Python 3.12.6 (pytest 9.1.1) in an isolated virtual environment. An earlier run the same day on Python 3.15.2 passed 241 before the later hardening tests. The proposal names Python 3.12+.
 
 CLI the same day, primary corpus:
 
@@ -70,7 +70,7 @@ Representative prompts / interactions: the session instruction to implement agai
 
 Material outputs retained: the files in the local commits on `cursor/ailt9019-local-product-69c3`. Those commits are not a team member’s authorship.
 
-Verification performed: pytest 241 passed; both evaluations exited 0; four CLI commands above. A team member still has to review the diff before any submission. This agent is not a member of Group 10.
+Verification performed: pytest 245 passed on Python 3.12.6; model-off and replay evaluations exited 0; CLI drafts and refusals above. Replay is recorded output, not live inference. A team member still has to review the diff before any submission. This agent is not a member of Group 10.
 
 Known limitations: Week 2 brief unread; live API unverified; member contributions not observed.
 
