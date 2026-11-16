@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-12 08:55 UTC",
+  "generated_at": "2026-11-16 08:30 UTC",
   "labeldesk_version": "1.1.0",
   "corpus_version": "1.0.0",
   "corpus_checksum": "bdb51f3a20aeefc83d592d958e9dfa53435001e08b676ba649664a0d3d851f07",
@@ -8,8 +8,8 @@
     "model": "deepseek-v4.1-flash",
     "temperature": 0.0,
     "thinking": false,
-    "has_key": true,
-    "key_fingerprint": "…qD3E (6d2f636e)",
+    "has_key": false,
+    "key_fingerprint": null,
     "mode": "replay",
     "prompt_sha256": "3491919c682e09d66fd4ca3102e042e3a61ff5fd9ab2e95d3b717736cf2a137e"
   },

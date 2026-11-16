@@ -1,6 +1,6 @@
 # Golden-set evaluation
 
-Generated 2026-11-12 11:59 UTC · Label Desk 1.1.0 · corpus sha256 `bdb51f3a20ae` · **model off**
+Generated 2026-11-16 08:30 UTC · Label Desk 1.1.0 · corpus sha256 `bdb51f3a20ae` · **model off**
 
 ## Gates
 
