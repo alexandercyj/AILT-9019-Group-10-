@@ -1,0 +1,41 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-16T08:28:33.224Z",
+        "reason": "Agent: incumbent styles.css already sets Inter; this pass only corrects contrast and focus."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-16T08:29:39.352Z",
+        "reason": "Agent: the heading scale lives in styles.css (h1 clamp 42–72px against 15px body); the HTML file does not set those sizes."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "standalone/template.html"
+        ],
+        "createdAt": "2026-11-16T08:29:39.374Z",
+        "reason": "Agent: the heading scale lives in styles.css (h1 clamp 42–72px against 15px body); the template does not set those sizes."
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "site/index.html"
+        ],
+        "createdAt": "2026-11-16T08:31:53.558Z",
+        "reason": "Agent: the page uses the existing Label Desk paper colour from styles.css; this is the product surface, not a new palette."
+      }
+    ]
+  }
+}

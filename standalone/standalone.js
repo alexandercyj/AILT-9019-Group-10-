@@ -12,6 +12,14 @@
     "standaloneTitle", "standaloneSubtitle", "standaloneTags", "standaloneSource", "standaloneLabel",
     "standaloneFacts"
   ].forEach(function (id) { els[id] = document.getElementById(id); });
+  if (!els.standaloneImage && els.standaloneImageEmpty) {
+    var image = document.createElement("img");
+    image.id = "standaloneImage";
+    image.alt = "";
+    image.hidden = true;
+    els.standaloneImageEmpty.before(image);
+    els.standaloneImage = image;
+  }
 
   function node(tag, className, text) {
     var element = document.createElement(tag);

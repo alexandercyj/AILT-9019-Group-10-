@@ -137,3 +137,25 @@ def test_readability_rejects_long_sentences():
 def test_template_carriers_do_not_fail_containment(text, field, span):
     record = {**RECORD, field: span}
     assert check(text, field, span, record)["passed"] is True
+
+
+@pytest.mark.parametrize(
+    ("text", "field", "span", "expect"),
+    [
+        ("made around 1750", "object_date", "ca. 1750", True),
+        ("made in the mid-18th century", "object_date", "ca. 1750", False),
+        ("made in the 18th century", "object_date", "18th century", True),
+        ("made in 1750", "object_date", "18th century", False),
+        ("probably made in Iran", "place_or_culture", "probably Iran", True),
+        ("made in Iran", "place_or_culture", "probably Iran", False),
+        ("made in Egypt", "place_or_culture", "Iran", False),
+        ("made in Iran", "place_or_culture", "Iran", True),
+    ],
+)
+def test_revised_proposal_boundary_table(text, field, span, expect):
+    """The revised proposal's worked boundary table, enforced as a regression."""
+    record = {**RECORD, field: span, "place_or_culture": span if field == "place_or_culture" else "Iran"}
+    if field == "place_or_culture" and span == "Iran":
+        record["place_found"] = "Egypt"
+    result = check(text, field, span, record)
+    assert result["passed"] is expect

@@ -4,11 +4,13 @@
                                                                                     |
                                                                           drafted | refused
 
-Refusal is a designed outcome, not an error. The three refusal reasons are:
+Refusal is a designed outcome, not an error. The refusal reasons are:
 
     out_of_corpus         the catalogue number is not in the frozen corpus
     out_of_scope          the request asks for value, authenticity or rights
     missing_required_field the record itself cannot supply a required field
+    unknown_maker         the request asks who made the object, and the cited
+                          fields do not name a maker
 
 The model step is optional and cannot loosen the guardrail: a rewrite is only
 substituted for the offline draft after it has passed the same four checks. When
@@ -23,6 +25,8 @@ nothing — it costs the *request* its rewrite, which is the honest outcome.
 """
 
 from __future__ import annotations
+
+import re
 
 from .corpus import Corpus
 from .grounding import run_checks
@@ -49,6 +53,13 @@ OUT_OF_SCOPE_TERMS = (
     "how much",
 )
 
+# The proposal's unknown-maker case: a request to name an artist is refused.
+# The five cited fields have no maker, so the label must not invent one.
+ATTRIBUTION_RE = re.compile(
+    r"\b(?:who made|who painted|who created|name the artist|the artist|the maker|attribution)\b",
+    re.IGNORECASE,
+)
+
 REASON_TEXT = {
     "out_of_corpus": (
         "Catalogue number {catalogue_number} is not in the frozen corpus. "
@@ -65,7 +76,19 @@ REASON_TEXT = {
         "field is not filled from outside the record. Supply the missing catalogue "
         "information and run again."
     ),
+    "unknown_maker": (
+        "Record {catalogue_number} does not name a maker in the cited catalogue "
+        "fields. No artist was named: an unknown maker is not filled from outside "
+        "the record."
+    ),
 }
+
+
+def asks_for_attribution(question: str | None) -> bool:
+    """True when the request asks the tool to name a maker or artist."""
+    if not question:
+        return False
+    return ATTRIBUTION_RE.search(question) is not None
 
 
 def is_out_of_scope(question: str | None) -> str | None:
@@ -143,6 +166,18 @@ def draft(
             REASON_TEXT["out_of_corpus"].format(
                 catalogue_number=catalogue_number, count=len(corpus)
             ),
+            provenance=prov,
+        )
+
+    if asks_for_attribution(question):
+        return _refusal(
+            catalogue_number,
+            "unknown_maker",
+            REASON_TEXT["unknown_maker"].format(
+                catalogue_number=record["catalogue_number"]
+            ),
+            question=question,
+            record=record,
             provenance=prov,
         )
 

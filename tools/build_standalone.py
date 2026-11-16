@@ -42,7 +42,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from labeldesk import __version__, load_corpus  # noqa: E402
-from labeldesk.llm import prompt_hash, config_from_env  # noqa: E402
+from labeldesk.llm import DEFAULT_MODEL, LLMConfig, prompt_hash  # noqa: E402
 from labeldesk.pipeline import OUT_OF_SCOPE_TERMS, REASON_TEXT, draft  # noqa: E402
 from labeldesk.sources import aliases, provenance, sources  # noqa: E402
 from labeldesk.validate import missing_fields  # noqa: E402
@@ -79,12 +79,15 @@ def collect() -> dict:
     corpora = []
     for alias, path in sorted(aliases().items()):
         corpus = load_corpus(path)
+        # A fixed config, not the process environment. A key or a custom
+        # base URL on the build machine must not change the shipped file.
+        stable = LLMConfig()
         results = {}
         for record in corpus.records:
             number = record["catalogue_number"]
             results[number] = {
-                "offline": trim_result(draft(corpus, number)),
-                "replay": trim_result(draft(corpus, number, llm="replay")),
+                "offline": trim_result(draft(corpus, number, config=stable)),
+                "replay": trim_result(draft(corpus, number, llm="replay", config=stable)),
             }
         corpora.append(
             {
@@ -112,7 +115,7 @@ def collect() -> dict:
         "meta": {
             "labeldesk_version": __version__,
             "prompt_sha256": prompt_hash(),
-            "model": config_from_env().model,
+            "model": DEFAULT_MODEL,
             "out_of_scope_terms": list(OUT_OF_SCOPE_TERMS),
             "reason_text": dict(REASON_TEXT),
             "sources": sources(),

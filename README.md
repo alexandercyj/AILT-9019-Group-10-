@@ -8,6 +8,19 @@ AILT9019 Group 10. Midterm check, October 2026 · post-midterm work, November 20
 
 ---
 
+## Six steps to one label
+
+No API key and no environment variable. The core path uses the Python standard library.
+
+1. Check the interpreter: `python3 --version` (3.10 or newer).
+2. Clone the shared repository, not a personal copy: `git clone https://github.com/alexandercyj/AILT-9019-Group-10-.git`
+3. Enter it: `cd AILT-9019-Group-10-`
+4. Stay offline. Do not create a `.env` for this check.
+5. Paste one command: `python3 -m labeldesk 14.40.377`
+6. The process exits 0. The status line says `DRAFTED`. The corpus line shows `sha256 bdb51f3a20ae`. The label is 65 words and ends with `Draft for curator review, not an official record.`
+
+Two further catalogue numbers show the other designed outcomes: `36.120.655` keeps the hedge `ca. 1740`, and `62.98.1` refuses because the object date is blank (exit 3).
+
 ## What works today
 
 One command takes a catalogue number from a frozen corpus of Met Open Access (CC0)
@@ -105,7 +118,7 @@ Expected output (this is the whole result, not an extract):
 
 ```text
 Label Desk 1.1.0 · offline draft
-Corpus  labeldesk-frozen-corpus v1.0.0 · 20 records · sha256 962e03aba0b6
+Corpus  labeldesk-frozen-corpus v1.0.0 · 20 records · sha256 bdb51f3a20ae
 Source  met · CC0-1.0 · robots no_restriction_published · ai_input yes
 Record  14.40.377 · Vase · object 42229 · Asian Art
 
@@ -243,7 +256,7 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `224 passed`. The suite is not a smoke test — it breaks the output on purpose
+Expected: `241 passed` on 16 Nov 2026, Python 3.15.2, pytest 9.1.1. The suite is not a smoke test — it breaks the output on purpose
 and requires the check to catch it:
 
 | Test file | What it proves |
@@ -263,6 +276,8 @@ and requires the check to catch it:
 | `tests/test_research.py` | Retrieved-URL citations, readable research steps, source-policy filtering and safe failure without a key. |
 | `tests/test_standalone.py` | Every label in `labeldesk.html` equals a fresh pipeline run; no external code assets are loaded. |
 | `tests/test_skill.py` | The skill file describes the program that actually runs. |
+| `tests/test_repro.py` | Offline and replay results do not change when a key is present, and the key text is absent. |
+| `tests/test_contrast.py` | The muted and empty-state colours meet the WCAG AA 4.5:1 threshold on their backgrounds. |
 
 ### 3. The golden set, run twice
 
@@ -436,6 +451,7 @@ The full argument for keeping the layer, with the numbers and the conditions, is
 | `09.13.5` | `missing_required_field` | Same, for place or culture. |
 | `99.99.99` | `out_of_corpus` | "… is not in the frozen corpus … the system does not describe a similar object from memory." |
 | `--ask "what is it worth?"` | `out_of_scope` | Valuation, authentication, insurance and rights are declined. |
+| `--ask "who made this?"` | `unknown_maker` | No artist is named. The cited fields do not identify a maker. |
 
 A refusal never reaches the model: the look-up and validation steps run first, so there is
 nothing for a model to be asked about.
@@ -600,7 +616,7 @@ eval/
   evaluate.py         golden-set scorer, --llm and --compare, writes eval/reports/
   cross_corpus.py     every record in every corpus, both modes, no per-record expectations
   probes.json         12 hand-labelled sentences for the grounding rule
-tests/                pytest suite (224 tests)
+tests/                pytest suite (241 tests on 16 Nov 2026)
 tools/
   fetch_corpus.py     rebuild any corpus from its museum API (--preset, --check)
   check_sources.py    re-fetch every robots.txt and report drift against the register

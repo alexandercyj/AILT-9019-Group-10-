@@ -58,13 +58,14 @@ stopping.
 }
 ```
 
-A refusal carries `"status": "refused"`, `"label": null`, and one of three reasons:
+A refusal carries `"status": "refused"`, `"label": null`, and one of these reasons:
 
 | `reason` | Meaning | What you must do |
 | --- | --- | --- |
 | `out_of_corpus` | the catalogue number is not in the frozen corpus | tell the user the record is not in the corpus. Do not describe a similar object. |
 | `missing_required_field` | the record itself is blank in a required field | name the missing field. Do not fill it from memory or from another source. |
 | `out_of_scope` | the request asks for value, authenticity, insurance or rights | decline and say why. The tool has no data for any of these. |
+| `unknown_maker` | the request asks who made the object | do not name an artist. The cited fields do not identify a maker. |
 
 A refusal still carries `provenance`, so you can say which corpus was consulted.
 

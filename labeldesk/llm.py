@@ -522,6 +522,10 @@ def transcript_for(
 
 
 def _empty_block(mode: str, config: LLMConfig, requested: bool = False) -> dict:
+    # Offline and replay never send the record. Copying config.has_key into
+    # those results made labeldesk.html differ between a machine that had a
+    # key and a clean checkout. has_key is true only when this run is live.
+    live = mode == "live"
     return {
         "requested": requested,
         "mode": mode,
@@ -529,9 +533,9 @@ def _empty_block(mode: str, config: LLMConfig, requested: bool = False) -> dict:
         "label_source": "offline_template",
         "reason": None,
         "detail": {},
-        "model": config.model,
-        "base_url": config.base_url,
-        "has_key": config.has_key,
+        "model": config.model if live else DEFAULT_MODEL,
+        "base_url": config.base_url if live else DEFAULT_BASE_URL,
+        "has_key": bool(config.has_key) if live else False,
         "prompt_sha256": None,
         "attempts": 0,
         "latency_ms": None,

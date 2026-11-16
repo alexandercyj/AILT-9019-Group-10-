@@ -25,7 +25,7 @@ actually there.
 ```
 
 - `python3 -m labeldesk <catalogue number>` prints the result for a human.
-- `server.py` serves the Chinese encyclopaedia and preserves the original drafting API.
+- `server.py` serves the English encyclopaedia and preserves the original drafting API.
   Live collection search and object fetch are not limited to the frozen examples.
 - `POST /api/research` uses a separate research model and the provider's built-in web
   tools. It never accepts an arbitrary URL from the browser. The result contains reader
@@ -71,7 +71,7 @@ so `--check` is a real staleness test rather than a same-day coincidence.
 | POST | `/api/draft` | `{"catalogue_number": "...", "question": "...", "llm": "auto"}` → the full result object. |
 | POST | `/api/fetch` | `{"provider": "met" \| "cleveland", "object_id": N, "llm": "auto"}` → one live record plus the full result object for it. 400 on a bad provider or ID, 502 with the upstream status when the museum's API cannot be reached. |
 | POST | `/api/search` | `{"provider": "all" \| "met" \| "cleveland", "name": "..."}` → parallel normalised candidates with image fields. Partial museum failures are reported separately. |
-| POST | `/api/research` | `{"query": "...", "provider"?, "object_id"?}` → cited Chinese research, reader-facing steps and sources. With provider coordinates the server re-fetches and normalises the record; without them it creates a web-only entry. |
+| POST | `/api/research` | `{"query": "...", "provider"?, "object_id"?}` → cited English research, reader-facing steps and sources. With provider coordinates the server re-fetches and normalises the record; without them it creates a web-only entry. |
 
 No CORS headers: the page and the API are the same origin. The server binds to
 `127.0.0.1` by default and has no write endpoints. `llm` is validated against the four
@@ -153,7 +153,7 @@ URLs invalidate the answer. Citation IDs are assigned by the backend in retrieve
 order. This proves citation resolution, not the adequacy of a source; the UI tells readers
 to check the originals and never describes the summary as a museum fact.
 
-No-key, transport, no-source and validation failures produce a short Chinese fallback without
+No-key, transport, no-source and validation failures produce a short English fallback without
 internal hostnames or stack traces. Successful responses are held in a 30-minute, 64-entry
 process-local cache. Web-only entries have no museum record and do not hotlink arbitrary
 images. Known refused museum domains are excluded rather than used to bypass source policy.

@@ -7,6 +7,15 @@ const els = Object.fromEntries([
   "referencesSection", "referenceList", "factCard", "factList", "processList",
 ].map((id) => [id, document.getElementById(id)]));
 
+if (!els.objectImage && els.imageEmpty) {
+  const image = document.createElement("img");
+  image.id = "objectImage";
+  image.alt = "";
+  image.hidden = true;
+  els.imageEmpty.before(image);
+  els.objectImage = image;
+}
+
 const state = { token: 0, record: null, selection: null, query: "" };
 
 function node(tag, className, text) {
