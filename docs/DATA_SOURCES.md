@@ -28,7 +28,7 @@ Only then: is it worth freezing ten records?
 | cleveland | allowed (only Amazonbot disallowed) | CC0-1.0 | **admitted** |
 | british-museum | restricted: `ai-train=no`, training crawlers disallowed | none published | **refused** |
 | palace-museum | not published (404, meta refresh) | none published | **refused** |
-| artic | unreachable (Cloudflare challenge, 403) | CC0-1.0 | **deferred** |
+| artic | reachable on 16 Nov 2026 (200; was a 403 challenge on 1 Nov) | CC0-1.0 | **deferred, not frozen** |
 | wikidata | allowed on the Action API; `/sparql` disallowed | CC0-1.0 | **reference only** |
 | nga | not applicable (CC0 bulk dump on GitHub) | CC0-1.0 | **admitted, not frozen** |
 
@@ -98,14 +98,14 @@ which to harvest records, so none were. The same import route applies.
 ## The Art Institute of Chicago — deferred
 
 The proposal names this museum as the fallback dataset, and it stays named as the fallback.
-The licence and the API are right (CC0, documented, no key); the network path is not. Every
-request from this network returns a Cloudflare managed challenge, with a browser user-agent
-and without one, so no verdict on `robots.txt` can be reached at all.
+No Art Institute record is in the frozen corpora.
 
-Nothing was attempted past the challenge. `tools/check_sources.py` will report it as
-reachable-and-drifting if the situation ever changes; the register records the status rather
-than a body hash, because a challenge page is generated per request and hashing it would
-report drift on every run without anything having changed.
+On 1 Nov 2026, requests from this network received a Cloudflare challenge (HTTP 403), so
+the register stored no body hash. On 16 Nov 2026, `https://api.artic.edu/robots.txt` returned
+200, prefix `e5c4b84484ee4216`, with no blanket disallow for this client. One GET of
+`/api/v1/artworks?limit=1&fields=id` returned HTTP 200 and JSON. Nothing from that response
+was written into a corpus file, and `policy.ai_input` remains false. Admission is still a
+team decision. The three shipped checksums were not changed.
 
 ## Wikidata — reference only
 

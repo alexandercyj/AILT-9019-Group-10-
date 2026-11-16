@@ -36,6 +36,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from labeldesk.net import ssl_context  # noqa: E402
 from labeldesk.sources import REGISTER_PATH, sources  # noqa: E402
 
 # Must match tools/fetch_corpus.py: the register's verdict is about *this* client.
@@ -47,7 +48,7 @@ def fetch(url: str) -> tuple[int, bytes]:
     """Return (status, body). A 4xx is a result, not an exception."""
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
-        with urllib.request.urlopen(request, timeout=20) as response:
+        with urllib.request.urlopen(request, timeout=20, context=ssl_context()) as response:
             return response.status, response.read()
     except urllib.error.HTTPError as error:
         return error.code, error.read() or b""

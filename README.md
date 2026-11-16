@@ -481,7 +481,7 @@ not a rule, so this corpus is the check on it.
 
 ```bash
 python3 -m labeldesk 1970.36 --corpus cleveland            # c. 1050 survives
-python3 -m labeldesk 1926.428 --corpus cleveland --llm     # c. 1160–1170 survives a rewrite
+python3 -m labeldesk 1926.428 --corpus cleveland --llm --replay  # recorded rewrite, not a live call
 python3 -m labeldesk --corpus cleveland --list
 ```
 
@@ -494,6 +494,13 @@ replay. `eval/cross_corpus.py` runs every record in every corpus and writes
 | cleveland | 10 | 10 | 0 | 10/10 | 10 |
 | egyptian | 10 | 10 | 0 | 10/10 | 10 |
 | primary | 20 | 17 | 3 | 17/17 | 15 (2 discarded) |
+
+Re-run on 16 Nov 2026 with offline drafting and replay, no live call. Same counts.
+The three refusals are the frozen records with a blank required field (`62.98.1` and
+`14.40.372` have no object date; `09.13.5` has no place or culture). Replay discarded
+`1970.103a–e` and `36.120.655` for `drops_field_content` and kept the offline draft.
+That replay discard is not the separate live rewrite of `36.120.655` recorded in
+`docs/live_run_2026-11-16.json`.
 
 ---
 
@@ -516,7 +523,7 @@ met             no_restriction_published  CC0-1.0                    yes  admitt
 cleveland       allowed                   CC0-1.0                    yes  admitted
 british-museum  restricted                no-open-licence-published  no   refused
 palace-museum   not_published             no-open-licence-published  no   refused
-artic           unreachable               CC0-1.0                    no   deferred
+artic           reachable                 CC0-1.0                    no   deferred
 wikidata        allowed                   CC0-1.0                    yes  reference_only
 nga             not_applicable            CC0-1.0                    yes  admitted_not_frozen
 ```

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-12T08:55:43.971912+00:00",
+  "generated": "2026-11-16T09:09:30.587737+00:00",
   "runs": [
     {
       "alias": "cleveland",
@@ -12,7 +12,121 @@
         "reasons": {},
         "mean_words": 64.7,
         "mean_sentence": 7.37,
-        "failures": []
+        "check_failures": [],
+        "expectation_failures": [],
+        "failures": [],
+        "outcomes": [
+          {
+            "catalogue_number": "1970.36",
+            "boundary": "hedged date: c. 1050",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1964.88",
+            "boundary": "hedged date with a qualifier: c. 1575",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1979.71",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1939.509",
+            "boundary": "bare range date: 400–700",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1968.284",
+            "boundary": "hedged date: c. 1820",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1973.85",
+            "boundary": "century-style date: 1100s",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1919.1.1",
+            "boundary": "hedged date: c. 1480",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1926.428",
+            "boundary": "hedged range: c. 1160–1170",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1935.310",
+            "boundary": "date with a qualifier: 1800s, before 1896",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1965.15",
+            "boundary": "hedged range: c. 1631–32",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          }
+        ]
       },
       "llm": {
         "records": 10,
@@ -24,7 +138,121 @@
         "reasons": {},
         "mean_words": 65.1,
         "mean_sentence": 7.7,
-        "failures": []
+        "check_failures": [],
+        "expectation_failures": [],
+        "failures": [],
+        "outcomes": [
+          {
+            "catalogue_number": "1970.36",
+            "boundary": "hedged date: c. 1050",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1964.88",
+            "boundary": "hedged date with a qualifier: c. 1575",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1979.71",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1939.509",
+            "boundary": "bare range date: 400–700",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1968.284",
+            "boundary": "hedged date: c. 1820",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1973.85",
+            "boundary": "century-style date: 1100s",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1919.1.1",
+            "boundary": "hedged date: c. 1480",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1926.428",
+            "boundary": "hedged range: c. 1160–1170",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1935.310",
+            "boundary": "date with a qualifier: 1800s, before 1896",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1965.15",
+            "boundary": "hedged range: c. 1631–32",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          }
+        ]
       },
       "provenance": {
         "id": "cleveland",
@@ -48,7 +276,121 @@
         "reasons": {},
         "mean_words": 62.6,
         "mean_sentence": 6.86,
-        "failures": []
+        "check_failures": [],
+        "expectation_failures": [],
+        "failures": [],
+        "outcomes": [
+          {
+            "catalogue_number": "29.3.1",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "26.8.155",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "15.2.16",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "11.215.285",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "25.3.64a, b",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "31.3.88",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "04.18.29",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "15.2.11",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "20.3.378",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "26.7.1460",
+            "boundary": "doubt marker and disjunction in the title: Part (?) of a bracelet or armlet",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          }
+        ]
       },
       "llm": {
         "records": 10,
@@ -60,7 +402,121 @@
         "reasons": {},
         "mean_words": 63.7,
         "mean_sentence": 7.32,
-        "failures": []
+        "check_failures": [],
+        "expectation_failures": [],
+        "failures": [],
+        "outcomes": [
+          {
+            "catalogue_number": "29.3.1",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "26.8.155",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "15.2.16",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "11.215.285",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "25.3.64a, b",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "31.3.88",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "04.18.29",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "15.2.11",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "20.3.378",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "26.7.1460",
+            "boundary": "doubt marker and disjunction in the title: Part (?) of a bracelet or armlet",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          }
+        ]
       },
       "provenance": {
         "id": "met",
@@ -87,7 +543,237 @@
         },
         "mean_words": 63.9,
         "mean_sentence": 7.99,
-        "failures": []
+        "check_failures": [],
+        "expectation_failures": [],
+        "failures": [],
+        "outcomes": [
+          {
+            "catalogue_number": "14.40.377",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "20.45",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "93.3.115",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "65.1.2",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1999.247.1",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1970.103a–e",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "2001.732",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "2024.89.1",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "74.51.524",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1978.11.10",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "62.173.7",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "66.235",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1980.43.2",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1987.424.9",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "36.120.655",
+            "boundary": "date hedge: ca. 1740",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "2013.872",
+            "boundary": "date uncertainty marker: late 18th century (?)",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "67.182.1",
+            "boundary": "disjunctive culture: Old Assyrian Trading Colony or Hittite",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "62.98.1",
+            "boundary": "missing object_date",
+            "missing_fields": [
+              "object_date"
+            ],
+            "status": "refused",
+            "reason": "missing_required_field",
+            "checks_passed": null,
+            "llm_applied": null,
+            "llm_reason": null,
+            "expectation": "expected_refusal"
+          },
+          {
+            "catalogue_number": "14.40.372",
+            "boundary": "missing object_date",
+            "missing_fields": [
+              "object_date"
+            ],
+            "status": "refused",
+            "reason": "missing_required_field",
+            "checks_passed": null,
+            "llm_applied": null,
+            "llm_reason": null,
+            "expectation": "expected_refusal"
+          },
+          {
+            "catalogue_number": "09.13.5",
+            "boundary": "missing place_or_culture",
+            "missing_fields": [
+              "place_or_culture"
+            ],
+            "status": "refused",
+            "reason": "missing_required_field",
+            "checks_passed": null,
+            "llm_applied": null,
+            "llm_reason": null,
+            "expectation": "expected_refusal"
+          }
+        ]
       },
       "llm": {
         "records": 20,
@@ -104,7 +790,237 @@
         },
         "mean_words": 64.1,
         "mean_sentence": 8.43,
-        "failures": []
+        "check_failures": [],
+        "expectation_failures": [],
+        "failures": [],
+        "outcomes": [
+          {
+            "catalogue_number": "14.40.377",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "20.45",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "93.3.115",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "65.1.2",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1999.247.1",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1970.103a–e",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": "drops_field_content",
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "2001.732",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "2024.89.1",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "74.51.524",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1978.11.10",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "62.173.7",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "66.235",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1980.43.2",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "1987.424.9",
+            "boundary": null,
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "36.120.655",
+            "boundary": "date hedge: ca. 1740",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": false,
+            "llm_reason": "drops_field_content",
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "2013.872",
+            "boundary": "date uncertainty marker: late 18th century (?)",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "67.182.1",
+            "boundary": "disjunctive culture: Old Assyrian Trading Colony or Hittite",
+            "missing_fields": [],
+            "status": "drafted",
+            "reason": null,
+            "checks_passed": true,
+            "llm_applied": true,
+            "llm_reason": null,
+            "expectation": "expected_draft"
+          },
+          {
+            "catalogue_number": "62.98.1",
+            "boundary": "missing object_date",
+            "missing_fields": [
+              "object_date"
+            ],
+            "status": "refused",
+            "reason": "missing_required_field",
+            "checks_passed": null,
+            "llm_applied": null,
+            "llm_reason": null,
+            "expectation": "expected_refusal"
+          },
+          {
+            "catalogue_number": "14.40.372",
+            "boundary": "missing object_date",
+            "missing_fields": [
+              "object_date"
+            ],
+            "status": "refused",
+            "reason": "missing_required_field",
+            "checks_passed": null,
+            "llm_applied": null,
+            "llm_reason": null,
+            "expectation": "expected_refusal"
+          },
+          {
+            "catalogue_number": "09.13.5",
+            "boundary": "missing place_or_culture",
+            "missing_fields": [
+              "place_or_culture"
+            ],
+            "status": "refused",
+            "reason": "missing_required_field",
+            "checks_passed": null,
+            "llm_applied": null,
+            "llm_reason": null,
+            "expectation": "expected_refusal"
+          }
+        ]
       },
       "provenance": {
         "id": "met",
