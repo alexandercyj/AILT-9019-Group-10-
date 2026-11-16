@@ -49,20 +49,22 @@ Failure kept on purpose: record `62.98.1` has no object date, so the pipeline re
 Limitations:
 
 - The Week 2 Build Start brief was not accessible. See `docs/SOURCE_COVERAGE.md`. Requirements used here are the two submitted proposals, the midterm requirements, and the final rubric, template, and GitHub guide.
-- Live model calls were not run. The model-on numbers above are replay.
+- Golden model-on numbers above are replay. Two live rewrites are a separate file, `docs/live_run_2026-11-16.json`.
+- Cross-corpus on 16 Nov 2026: 37 drafted, 3 expected refusals, 35 replay rewrites kept, 2 discarded. See `eval/reports/cross_corpus.md`.
+- The three frozen corpora still match a read-only rebuild. See `docs/FRESHNESS_2026-11-16.md`. The Art Institute answered on 16 Nov and was not frozen.
 - Weekly report marks are course records and are not in this repository.
 - Section 6 below is empty of member claims because this pass did not observe who did which course task.
-- `export_pdf.applescript` from `836f232` points at a personal desktop path. It was not run and not edited.
+- `export_pdf.applescript` no longer contains a personal Desktop path. It was not run. Running it would overwrite `report.pdf`.
 
 ## 5. Ethics and AI-use disclosure
 
-Data: frozen Met, Egyptian, and Cleveland records already in the repository, with the licences and statuses in `data/sources.json` and `docs/DATA_SOURCES.md`. This pass did not fetch new museum records and did not read an API key. No personal data was added.
+Data: frozen Met, Egyptian, and Cleveland records already in the repository, with the licences and statuses in `data/sources.json` and `docs/DATA_SOURCES.md`. A read-only rebuild on 16 Nov 2026 matched those files and did not save new records. The sponsored key stayed outside the repository. No personal data was added.
 
 Does not: value, authenticate, or name a maker the cited fields do not name.
 
 Risk: a fluent rewrite can drop a hedge or a field. Mitigation already in the pipeline: grounding discards the rewrite and the golden replay discarded 2 of 13 for `drops_field_content`.
 
-Tools/models used: Cursor agent (Grok 4.7) on 16 Nov 2026, for the local code, tests, and this scaffold. The product’s optional rewrite model remains `deepseek-v4.1-flash`, used here only through existing replay transcripts. No live call.
+Tools/models used: Cursor agent (Grok 4.7) on 16 Nov 2026, for the local code, tests, and this scaffold. Replay uses `deepseek-v4.1-flash`. Two live rewrites used `deepseek-v4.1-flash-1017`. See `docs/proposed/REPORT_CANDIDATE.md`.
 
 Tasks supported: repair of clean-checkout `has_key` leakage into offline results; `unknown_maker` refusal; proposal boundary regression; contrast colours; README checksum and test count; English integration notes; evaluation rerun; this scaffold.
 
@@ -72,7 +74,7 @@ Material outputs retained: the files in the local commits on `cursor/ailt9019-lo
 
 Verification performed: pytest 248 passed on Python 3.12.6; model-off and replay evaluations exited 0 at 18/18. Two live rewrites on `deepseek-v4.1-flash-1017` were accepted by the same checks (`docs/live_run_2026-11-16.json`). Replay rows are recorded output, not those live calls. A team member still has to review the diff before any submission. This agent is not a member of Group 10.
 
-Known limitations: Week 2 brief unread; live API unverified; member contributions not observed.
+Known limitations: Week 2 brief unread; public page not hosted; videos not recorded; member contributions not observed. The draft ZIP is not final-ready.
 
 Team members responsible: not this agent. The people who submit the work remain responsible. Section 6 is unfinished until they write it.
 

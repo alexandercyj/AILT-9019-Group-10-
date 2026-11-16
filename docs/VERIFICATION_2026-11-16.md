@@ -15,7 +15,7 @@ Interpreter already installed: `/usr/local/bin/python3.12`, version 3.12.6. Isol
 On a clean worktree of `e6d8dbd` (before this hardening commit):
 
 - `pytest`: 241 passed in 1.41s
-- `tools/build_standalone.py --check`: matched sha256 `c08f6d1a3229cb03f6364f1ef4778b7b43a5163cba664367e5a4da4f73eaf8ad`
+- `tools/build_standalone.py --check`: matched sha256 `c08f6d1a3229cb03f6364f1ef4778b7b43a5163cba664367e5a4da4f73eaf8ad` at that commit. A later rebuild, after the Art Institute register note changed, is `2c329428645479d3d69779e319246319fb854a7069afbed80231934c8030f28b`.
 - `python3 -m labeldesk 14.40.377`: exit 0
 - `python3 -m labeldesk 62.98.1`: exit 3
 - `eval/evaluate.py --llm --replay --quiet`: 17/17, claim precision 100%, citation resolution 100%, 11/13 rewrites kept, 2 discarded for `drops_field_content`

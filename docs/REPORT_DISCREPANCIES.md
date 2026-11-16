@@ -23,8 +23,8 @@ These are suggested edits for a person on the team. They are not filled-in contr
 | “The must-have scope is unchanged” | The five fields are unchanged. The named fallback, the Art Institute of Chicago, is deferred; Cleveland was used | Say that in the same sentence so “unchanged” is not read as “no dataset change”. |
 | No Python version | Verified on 3.12.6 | State it in the reproducibility section. |
 | No Week 2 brief | The detailed Week 2 Build Start file was not accessible | One sentence in limitations. Do not invent the brief. |
-| `tools/fetch_corpus.py --check` as a verification step | Not run on 16 Nov. The command refetches museum records | Say it was not re-run in this pass, or run it later when a network fetch is intended. |
-| Cross-corpus “35/37 rewrites accepted” | Not re-run on 16 Nov | Leave the number only if someone re-runs `eval/cross_corpus.py` offline or on replay and gets it again. This pass does not confirm it. |
+| `tools/fetch_corpus.py --check` as a verification step | A read-only rebuild on 16 Nov matched all three shipped files. The files were not written. See `docs/FRESHNESS_2026-11-16.md` | Say the frozen bytes still match. Do not imply a new fetch was saved. |
+| Cross-corpus “35/37 rewrites accepted” | Re-run 16 Nov, offline and replay: 37 drafted, 3 expected refusals, 35 kept, 2 discarded (`1970.103a–e`, `36.120.655`) | The number still holds. Say it is replay, and that the live rewrite of `36.120.655` was a different call that was kept. |
 | “PDF export was dropped” | `export_pdf.applescript` still exports the course report. It no longer contains a personal Desktop path. It was not executed | Say the product does not export labels to PDF, and that the script only exports this course report beside itself. |
 
 ## Do not treat as verified
