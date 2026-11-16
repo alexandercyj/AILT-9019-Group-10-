@@ -1,0 +1,82 @@
+"""The draft package stays unready until a person supplies the missing rubric items."""
+
+from __future__ import annotations
+
+import json
+import sys
+import zipfile
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+
+from package_submission import collect_blockers, secret_hits  # noqa: E402
+
+
+def test_current_tree_is_not_final_ready(tmp_path):
+    completed = __import__("subprocess").run(
+        [
+            sys.executable,
+            str(ROOT / "tools" / "package_submission.py"),
+            "--out",
+            str(tmp_path / "draft.zip"),
+            "--preflight",
+            str(tmp_path / "preflight.json"),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=ROOT,
+    )
+    assert completed.returncode == 1, completed.stdout + completed.stderr
+    report = json.loads((tmp_path / "preflight.json").read_text(encoding="utf-8"))
+    assert report["final_ready"] is False
+    assert report["uploaded"] is False
+    assert report["within_limit"] is True
+    assert report["zip_bytes"] <= report["limit_bytes"]
+    ids = {item["id"] for item in report["blockers"]}
+    assert {
+        "public_webpage",
+        "presentation_youtube",
+        "demo_youtube",
+        "contribution_approval",
+        "updated_report_pdf",
+    } <= ids
+    names = zipfile.ZipFile(tmp_path / "draft.zip").namelist()
+    assert "SUBMISSION_STATUS.txt" in names
+    assert "links.txt" in names
+    assert "docs/proposed/REPORT_CANDIDATE.md" in names
+    assert not any(name.startswith(".git/") or name == ".env" or ".impeccable/" in name for name in names)
+    assert all(".ailt9019-group10.env" not in name for name in names)
+    status = zipfile.ZipFile(tmp_path / "draft.zip").read("SUBMISSION_STATUS.txt").decode("utf-8")
+    assert "final_ready: no" in status
+    assert "NOT" in Path(ROOT / "links.txt").read_text(encoding="utf-8")
+
+
+def test_supplied_items_clear_the_gate(tmp_path):
+    (tmp_path / "links.txt").write_text(
+        "Public webpage: https://example.edu/g10\n"
+        "Presentation YouTube: https://www.youtube.com/watch?v=aaaaaaaaaaa\n"
+        "Demo YouTube: https://youtu.be/bbbbbbbbbbb\n",
+        encoding="utf-8",
+    )
+    approval = tmp_path / "docs"
+    approval.mkdir()
+    (approval / "CONTRIBUTION_APPROVAL.txt").write_text(
+        "approved: yes\n"
+        "Chen Yongjun\nCheng Chi Man\nGunawan Alexander\nSheikh Mohammad Saarim\n",
+        encoding="utf-8",
+    )
+    proposed = tmp_path / "docs" / "proposed"
+    proposed.mkdir()
+    (proposed / "AILT9019_Final_Report_Group10_CANDIDATE.pdf").write_bytes(b"%PDF-1.4\n")
+    assert collect_blockers(tmp_path) == []
+
+
+def test_secret_assignment_is_rejected(tmp_path):
+    sample = tmp_path / "notes.txt"
+    sample.write_text("BAILIAN_API_KEY=sk-not-a-real-value\n", encoding="utf-8")
+    assert secret_hits(sample) == ["BAILIAN_API_KEY"]
+    sample.write_text("BAILIAN_API_KEY=\n", encoding="utf-8")
+    assert secret_hits(sample) == []
+    sample.write_text("BAILIAN_API_KEY=sk-test-sentinel-not-a-credential\n", encoding="utf-8")
+    assert secret_hits(sample) == []
