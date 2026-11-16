@@ -1,8 +1,12 @@
 # Verification, 16 Nov 2026
 
-Local branch `cursor/ailt9019-local-product-69c3`. No push. No live model call. No API key was read. Replay means recorded transcripts, not live inference.
+Local branch `cursor/ailt9019-local-product-69c3`. No push. The measurements below are the afternoon verification. They are not the evening live run.
 
-The Week 2 Build Start brief was not available. Ed threads on API credit and Bailian were blank, so live model calls stay blocked. Presentation speaking and Section 6 contributions are human-only.
+The Week 2 Build Start brief was not available. Presentation speaking and Section 6 contributions are human-only.
+
+## Later the same evening
+
+Ed credit rules were read. The sponsored key file outside the repo is mode 600 and was not copied into the tree. Two live rewrites used `deepseek-v4.1-flash-1017` at temperature 0, 800 output tokens, no retries, thinking off. Both were kept by the checks. A third draft, “Who made this?” on `14.40.377`, refused `unknown_maker` with no extra request. Usage and outcomes are in `docs/live_run_2026-11-16.json`. That file is live evidence. The 18/18 replay report is still recorded transcripts. Python 3.12.6 then passed 248 tests. Search and record selection do not call research unless the server is started with `--allow-research`, and a live draft is refused unless the server is started with `--allow-live`.
 
 ## Python 3.12
 
@@ -36,7 +40,7 @@ The refusal screenshot’s object image was requested by the browser from the mu
 ## What the tests do not prove
 
 - `tests/test_standalone.py` checks that `labeldesk.html` matches a fresh `draft()` from the same code. It proves the file was rebuilt. It does not use a second implementation as an oracle. The golden set’s expected statuses are the separate check.
-- The golden set still has no `unknown_maker` case. The CLI and `tests/test_refusal.py` cover that reason. Counts stay 17 so the committed comparison table does not change.
+- At the 245-test tree the golden set had no `unknown_maker` case. Request case `r03` was added later. The CLI and `tests/test_refusal.py` already covered that reason.
 - `tests/test_contrast.py` locks colour literals in `styles.css`. It does not measure pixels in a browser.
 - Server tests monkeypatch museum providers. They do not prove a live museum response.
 - Pytest used to rewrite the dated golden reports. It no longer does.
