@@ -48,7 +48,7 @@ cost prose quality; it cannot cost a fact or a citation.
 | --- | --- |
 | Corpora | 20 records (Met, 4 departments) · 10 (Met, Egyptian Art) · 10 (Cleveland Museum of Art) |
 | Sources checked | 7, of which 2 admitted, 2 refused, 1 deferred, 1 reference-only, 1 not frozen |
-| Tests | 260 on Python 3.12.6 |
+| Tests | 261 on Python 3.12.6 |
 | Golden set | 18/18 cases, both model-off and model-on replay |
 | Cross-corpus run | 40 records, 0 check failures, 35/37 rewrites accepted |
 | Claim precision · citation resolution | 100% · 100%, every run |
@@ -262,7 +262,7 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `260 passed` on 18 Nov 2026, Python 3.12.6, pytest 9.1.1. The 258 figure was the suite before the raw GitHub and loopback packager tests. The 257 figure was the suite before the github.io packager test. The 252 figure was the suite before the landing-page and packager tests. The suite is not a smoke test — it breaks the output on purpose
+Expected: `261 passed` on 18 Nov 2026, Python 3.12.6, pytest 9.1.1. The 260 figure was the suite before the GitHub file CDN packager tests. The 258 figure was the suite before the raw GitHub and loopback packager tests. The 257 figure was the suite before the github.io packager test. The 252 figure was the suite before the landing-page and packager tests. The suite is not a smoke test — it breaks the output on purpose
 and requires the check to catch it:
 
 | Test file | What it proves |
@@ -284,7 +284,7 @@ and requires the check to catch it:
 | `tests/test_skill.py` | The skill file describes the program that actually runs. |
 | `tests/test_repro.py` | Offline and replay results do not change when a key is present, and the key text is absent. |
 | `tests/test_contrast.py` | The muted and empty-state colours meet the WCAG AA 4.5:1 threshold on their backgrounds. |
-| `tests/test_package.py` | The draft ZIP stays unready, and neither the GitHub repository URL, a github.io URL while Pages is not enabled, a raw.githubusercontent.com URL, nor a loopback or private address is accepted as a public webpage. |
+| `tests/test_package.py` | The draft ZIP stays unready, and neither the GitHub repository URL, a github.io URL while Pages is not enabled, a raw.githubusercontent.com URL, a loopback or private address, nor a GitHub file CDN such as jsDelivr /gh/ or raw.githack.com is accepted as a public webpage. |
 | `tests/test_site_page.py` | The local landing page has a skip link and sufficient contrast, and it does not claim a host or a video. |
 
 ### 3. The golden set, run twice
@@ -632,7 +632,7 @@ eval/
   evaluate.py         golden-set scorer, --llm and --compare, writes eval/reports/
   cross_corpus.py     every record in every corpus, both modes, no per-record expectations
   probes.json         12 hand-labelled sentences for the grounding rule
-tests/                pytest suite (260 tests on 18 Nov 2026, Python 3.12.6)
+tests/                pytest suite (261 tests on 18 Nov 2026, Python 3.12.6)
 tools/
   fetch_corpus.py     rebuild any corpus from its museum API (--preset, --check)
   check_sources.py    re-fetch every robots.txt and report drift against the register

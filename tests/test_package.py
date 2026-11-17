@@ -191,3 +191,37 @@ def test_loopback_or_private_host_is_not_a_public_webpage(tmp_path):
         )
         ids = {item["id"] for item in collect_blockers(tmp_path)}
         assert ids == {"public_webpage"}, url
+
+
+def test_github_file_cdn_is_not_a_public_webpage(tmp_path):
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "CONTRIBUTION_APPROVAL.txt").write_text(
+        "approved: yes\n"
+        "Chen Yongjun\nCheng Chi Man\nGunawan Alexander\nSheikh Mohammad Saarim\n",
+        encoding="utf-8",
+    )
+    proposed = docs / "proposed"
+    proposed.mkdir()
+    (proposed / "AILT9019_Final_Report_Group10_CANDIDATE.pdf").write_bytes(b"%PDF-1.4\n")
+    site = tmp_path / "site"
+    site.mkdir()
+    (site / "index.html").write_text(
+        "<!DOCTYPE html><html lang='en'><body>Local landing page.</body></html>\n",
+        encoding="utf-8",
+    )
+    for url in (
+        "https://cdn.jsdelivr.net/gh/alexandercyj/AILT-9019-Group-10-@cursor/ailt9019-release-69c3/site/index.html",
+        "https://raw.githack.com/alexandercyj/AILT-9019-Group-10-/cursor/ailt9019-release-69c3/site/index.html",
+        "https://rawcdn.githack.com/alexandercyj/AILT-9019-Group-10-/cursor/ailt9019-release-69c3/site/index.html",
+        "https://cdn.statically.io/gh/alexandercyj/AILT-9019-Group-10-/cursor/ailt9019-release-69c3/site/index.html",
+        "https://gitcdn.link/repo/alexandercyj/AILT-9019-Group-10-/cursor/ailt9019-release-69c3/site/index.html",
+    ):
+        (tmp_path / "links.txt").write_text(
+            f"Public webpage: {url}\n"
+            "Presentation YouTube: https://www.youtube.com/watch?v=aaaaaaaaaaa\n"
+            "Demo YouTube: https://youtu.be/bbbbbbbbbbb\n",
+            encoding="utf-8",
+        )
+        ids = {item["id"] for item in collect_blockers(tmp_path)}
+        assert ids == {"public_webpage"}, url

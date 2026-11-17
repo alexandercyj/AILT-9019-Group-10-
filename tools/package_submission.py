@@ -106,6 +106,21 @@ def _is_raw_github_host(host: str) -> bool:
     return host == "githubusercontent.com" or host.endswith(".githubusercontent.com")
 
 
+def _is_github_file_cdn(value: str) -> bool:
+    """jsDelivr /gh/, githack, and similar hosts only proxy a repository file."""
+    host = _host(value)
+    path = (urlparse(value).path or "").lower()
+    if host in {"raw.githack.com", "rawcdn.githack.com"} or host.endswith(".githack.com"):
+        return True
+    if host in {"gitcdn.link", "gitcdn.xyz"} or host.endswith(".gitcdn.link") or host.endswith(".gitcdn.xyz"):
+        return True
+    if host == "jsdelivr.net" or host.endswith(".jsdelivr.net"):
+        return path == "/gh" or path.startswith("/gh/")
+    if host == "statically.io" or host.endswith(".statically.io"):
+        return path == "/gh" or path.startswith("/gh/")
+    return False
+
+
 def _is_local_or_private_host(host: str) -> bool:
     if not host:
         return True
@@ -130,8 +145,9 @@ def _public_page(value: str, root: Path) -> bool:
     """A hosted page. The GitHub repository URL is the source tree, not a site.
 
     A github.io URL is also not a public page while this tree still says
-    GitHub Pages is not enabled. A raw.githubusercontent.com URL, and a
-    loopback or private address, are not hosted public pages either.
+    GitHub Pages is not enabled. A raw.githubusercontent.com URL, a
+    loopback or private address, and a GitHub file CDN such as jsDelivr
+    /gh/ or raw.githack.com, are not hosted public pages either.
     """
     if not _https(value):
         return False
@@ -142,6 +158,8 @@ def _public_page(value: str, root: Path) -> bool:
     if _is_github_pages_host(host) and _pages_disabled_in_tree(root):
         return False
     if _is_raw_github_host(host) or _is_local_or_private_host(host):
+        return False
+    if _is_github_file_cdn(value):
         return False
     return True
 
