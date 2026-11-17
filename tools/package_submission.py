@@ -22,6 +22,7 @@ import re
 import sys
 import zipfile
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 LIMIT = 100 * 1024 * 1024
@@ -92,12 +93,34 @@ def _https(value: str) -> bool:
     return value.startswith("https://") and "NOT YET" not in value
 
 
-def _public_page(value: str) -> bool:
-    """A hosted page. The GitHub repository URL is the source tree, not a site."""
+def _host(value: str) -> str:
+    return (urlparse(value).hostname or "").lower()
+
+
+def _is_github_pages_host(host: str) -> bool:
+    return host == "github.io" or host.endswith(".github.io")
+
+
+def _pages_disabled_in_tree(root: Path) -> bool:
+    page = root / "site" / "index.html"
+    if not page.is_file():
+        return True
+    return "GitHub Pages is not enabled" in page.read_text(encoding="utf-8")
+
+
+def _public_page(value: str, root: Path) -> bool:
+    """A hosted page. The GitHub repository URL is the source tree, not a site.
+
+    A github.io URL is also not a public page while this tree still says
+    GitHub Pages is not enabled.
+    """
     if not _https(value):
         return False
+    host = _host(value)
     lowered = value.lower()
-    if "github.com/" in lowered and "github.io" not in lowered:
+    if "github.com/" in lowered and not _is_github_pages_host(host):
+        return False
+    if _is_github_pages_host(host) and _pages_disabled_in_tree(root):
         return False
     return True
 
@@ -112,7 +135,7 @@ def collect_blockers(root: Path) -> list[dict]:
     links_path = root / "links.txt"
     links = links_path.read_text(encoding="utf-8") if links_path.is_file() else ""
     checks = (
-        ("public_webpage", "Public webpage:", _public_page, "Public webpage is not a hosted https page."),
+        ("public_webpage", "Public webpage:", lambda value: _public_page(value, root), "Public webpage is not a hosted https page."),
         ("presentation_youtube", "Presentation YouTube:", _youtube, "Presentation YouTube link is missing."),
         ("demo_youtube", "Demo YouTube:", _youtube, "Demo YouTube link is missing."),
     )
