@@ -80,3 +80,25 @@ def test_secret_assignment_is_rejected(tmp_path):
     assert secret_hits(sample) == []
     sample.write_text("BAILIAN_API_KEY=sk-test-sentinel-not-a-credential\n", encoding="utf-8")
     assert secret_hits(sample) == []
+
+
+def test_repository_url_is_not_a_public_webpage(tmp_path):
+    (tmp_path / "links.txt").write_text(
+        "Public webpage: https://github.com/alexandercyj/AILT-9019-Group-10-\n"
+        "Presentation YouTube: https://www.youtube.com/watch?v=aaaaaaaaaaa\n"
+        "Demo YouTube: https://youtu.be/bbbbbbbbbbb\n",
+        encoding="utf-8",
+    )
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "CONTRIBUTION_APPROVAL.txt").write_text(
+        "approved: yes\n"
+        "Chen Yongjun\nCheng Chi Man\nGunawan Alexander\nSheikh Mohammad Saarim\n",
+        encoding="utf-8",
+    )
+    proposed = docs / "proposed"
+    proposed.mkdir()
+    (proposed / "AILT9019_Final_Report_Group10_CANDIDATE.pdf").write_bytes(b"%PDF-1.4\n")
+    ids = {item["id"] for item in collect_blockers(tmp_path)}
+    assert ids == {"public_webpage"}
+

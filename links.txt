@@ -7,5 +7,5 @@ Demo YouTube: NOT YET RECORDED
 
 Local files prepared for those slots, not hosted and not recorded:
 - labeldesk.html (open as a file; rebuilt 16 Nov 2026, sha256 2c329428645479d3d69779e319246319fb854a7069afbed80231934c8030f28b)
-- site/index.html (local landing page; links to ../labeldesk.html)
+- site/index.html (local landing page with a skip link, a drafted label, and a refusal; still not a hosted URL; links to ../labeldesk.html)
 - docs/demo.mp4 is a file already in the repository. It was not played in this pass and is not a YouTube upload.

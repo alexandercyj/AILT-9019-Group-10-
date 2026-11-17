@@ -48,7 +48,7 @@ cost prose quality; it cannot cost a fact or a citation.
 | --- | --- |
 | Corpora | 20 records (Met, 4 departments) · 10 (Met, Egyptian Art) · 10 (Cleveland Museum of Art) |
 | Sources checked | 7, of which 2 admitted, 2 refused, 1 deferred, 1 reference-only, 1 not frozen |
-| Tests | 252 on Python 3.12.6 |
+| Tests | 257 on Python 3.12.6 |
 | Golden set | 18/18 cases, both model-off and model-on replay |
 | Cross-corpus run | 40 records, 0 check failures, 35/37 rewrites accepted |
 | Claim precision · citation resolution | 100% · 100%, every run |
@@ -64,6 +64,11 @@ records from all three corpora and their real pipeline output. The page looks re
 up; it does not recompute or invent them. Museum images load from their open-access
 URLs, so image display needs a network connection; all catalogue text remains available
 offline.
+
+`site/index.html` is a local public landing page for the same project. Open it as a
+file. It is not a published URL, and GitHub Pages is not enabled on the repository.
+The page has a skip link, one drafted label and one refusal the program actually
+prints, and a link to `labeldesk.html`. Do not treat a github.io address as this page.
 
 The standalone reader deliberately does not pretend to offer live web research. Use
 `server.py` for the full encyclopaedia experience, including whole-collection search,
@@ -257,7 +262,7 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `252 passed` on 16 Nov 2026, Python 3.12.6, pytest 9.1.1. The suite is not a smoke test — it breaks the output on purpose
+Expected: `257 passed` on 17 Nov 2026, Python 3.12.6, pytest 9.1.1. The 252 figure was the suite before the landing-page and packager tests. The suite is not a smoke test — it breaks the output on purpose
 and requires the check to catch it:
 
 | Test file | What it proves |
@@ -279,6 +284,8 @@ and requires the check to catch it:
 | `tests/test_skill.py` | The skill file describes the program that actually runs. |
 | `tests/test_repro.py` | Offline and replay results do not change when a key is present, and the key text is absent. |
 | `tests/test_contrast.py` | The muted and empty-state colours meet the WCAG AA 4.5:1 threshold on their backgrounds. |
+| `tests/test_package.py` | The draft ZIP stays unready, and the GitHub repository URL is not accepted as a public webpage. |
+| `tests/test_site_page.py` | The local landing page has a skip link and sufficient contrast, and it does not claim a host or a video. |
 
 ### 3. The golden set, run twice
 
@@ -607,6 +614,7 @@ prompts/rewrite.txt   the label guardrail prompt, hashed into every transcript
 prompts/research.txt  the web-research and structured-citation prompt
 server.py             local server for collection search and encyclopaedia research
 index.html            English wiki-style browser view
+site/index.html       local public landing page; not a hosted URL
 app.js                browser presentation; no drafting or grounding logic
 styles.css            styling
 skills/labeldesk/     single-file skill contract for other agent environments
@@ -624,7 +632,7 @@ eval/
   evaluate.py         golden-set scorer, --llm and --compare, writes eval/reports/
   cross_corpus.py     every record in every corpus, both modes, no per-record expectations
   probes.json         12 hand-labelled sentences for the grounding rule
-tests/                pytest suite (252 tests on 16 Nov 2026, Python 3.12.6)
+tests/                pytest suite (257 tests on 17 Nov 2026, Python 3.12.6)
 tools/
   fetch_corpus.py     rebuild any corpus from its museum API (--preset, --check)
   check_sources.py    re-fetch every robots.txt and report drift against the register

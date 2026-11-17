@@ -92,6 +92,16 @@ def _https(value: str) -> bool:
     return value.startswith("https://") and "NOT YET" not in value
 
 
+def _public_page(value: str) -> bool:
+    """A hosted page. The GitHub repository URL is the source tree, not a site."""
+    if not _https(value):
+        return False
+    lowered = value.lower()
+    if "github.com/" in lowered and "github.io" not in lowered:
+        return False
+    return True
+
+
 def _youtube(value: str) -> bool:
     return _https(value) and ("youtube.com/" in value or "youtu.be/" in value)
 
@@ -102,7 +112,7 @@ def collect_blockers(root: Path) -> list[dict]:
     links_path = root / "links.txt"
     links = links_path.read_text(encoding="utf-8") if links_path.is_file() else ""
     checks = (
-        ("public_webpage", "Public webpage:", _https, "Public webpage is not an https URL."),
+        ("public_webpage", "Public webpage:", _public_page, "Public webpage is not a hosted https page."),
         ("presentation_youtube", "Presentation YouTube:", _youtube, "Presentation YouTube link is missing."),
         ("demo_youtube", "Demo YouTube:", _youtube, "Demo YouTube link is missing."),
     )
