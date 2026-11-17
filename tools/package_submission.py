@@ -16,6 +16,7 @@ build with exit 2 and writes no archive.
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 import os
 import re
@@ -101,6 +102,23 @@ def _is_github_pages_host(host: str) -> bool:
     return host == "github.io" or host.endswith(".github.io")
 
 
+def _is_raw_github_host(host: str) -> bool:
+    return host == "githubusercontent.com" or host.endswith(".githubusercontent.com")
+
+
+def _is_local_or_private_host(host: str) -> bool:
+    if not host:
+        return True
+    lowered = host.lower().rstrip(".")
+    if lowered == "localhost" or lowered.endswith(".localhost") or lowered.endswith(".local"):
+        return True
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        return False
+    return bool(ip.is_loopback or ip.is_private or ip.is_link_local or ip.is_unspecified)
+
+
 def _pages_disabled_in_tree(root: Path) -> bool:
     page = root / "site" / "index.html"
     if not page.is_file():
@@ -112,7 +130,8 @@ def _public_page(value: str, root: Path) -> bool:
     """A hosted page. The GitHub repository URL is the source tree, not a site.
 
     A github.io URL is also not a public page while this tree still says
-    GitHub Pages is not enabled.
+    GitHub Pages is not enabled. A raw.githubusercontent.com URL, and a
+    loopback or private address, are not hosted public pages either.
     """
     if not _https(value):
         return False
@@ -121,6 +140,8 @@ def _public_page(value: str, root: Path) -> bool:
     if "github.com/" in lowered and not _is_github_pages_host(host):
         return False
     if _is_github_pages_host(host) and _pages_disabled_in_tree(root):
+        return False
+    if _is_raw_github_host(host) or _is_local_or_private_host(host):
         return False
     return True
 
