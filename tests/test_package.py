@@ -225,3 +225,37 @@ def test_github_file_cdn_is_not_a_public_webpage(tmp_path):
         )
         ids = {item["id"] for item in collect_blockers(tmp_path)}
         assert ids == {"public_webpage"}, url
+
+
+def test_youtube_url_that_is_not_a_video_is_refused(tmp_path):
+    docs = tmp_path / "docs"
+    docs.mkdir()
+    (docs / "CONTRIBUTION_APPROVAL.txt").write_text(
+        "approved: yes\n"
+        "Chen Yongjun\nCheng Chi Man\nGunawan Alexander\nSheikh Mohammad Saarim\n",
+        encoding="utf-8",
+    )
+    proposed = docs / "proposed"
+    proposed.mkdir()
+    (proposed / "AILT9019_Final_Report_Group10_CANDIDATE.pdf").write_bytes(b"%PDF-1.4\n")
+    good_page = "https://example.edu/g10"
+    good_video = "https://www.youtube.com/watch?v=aaaaaaaaaaa"
+    for presentation, demo in (
+        ("https://www.youtube.com/", good_video),
+        ("https://www.youtube.com/channel/UCaaaaaaaaaaaaaaaaaaaaaa", good_video),
+        ("https://www.youtube.com/results?search_query=label+desk", good_video),
+        ("https://youtu.be/", good_video),
+        ("https://www.youtube.com/watch?v=", good_video),
+        ("https://example.edu/youtube.com/watch?v=aaaaaaaaaaa", good_video),
+        ("https://youtube.com.example.edu/watch?v=aaaaaaaaaaa", good_video),
+        (good_video, "https://www.youtube.com/"),
+    ):
+        (tmp_path / "links.txt").write_text(
+            f"Public webpage: {good_page}\n"
+            f"Presentation YouTube: {presentation}\n"
+            f"Demo YouTube: {demo}\n",
+            encoding="utf-8",
+        )
+        ids = {item["id"] for item in collect_blockers(tmp_path)}
+        assert "presentation_youtube" in ids or "demo_youtube" in ids, (presentation, demo)
+        assert "public_webpage" not in ids

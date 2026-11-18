@@ -23,7 +23,7 @@ import re
 import sys
 import zipfile
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 LIMIT = 100 * 1024 * 1024
@@ -164,8 +164,42 @@ def _public_page(value: str, root: Path) -> bool:
     return True
 
 
+YOUTUBE_ID = re.compile(r"^[A-Za-z0-9_-]{11}$")
+YOUTUBE_HOSTS = {
+    "youtube.com",
+    "www.youtube.com",
+    "m.youtube.com",
+    "music.youtube.com",
+    "www.music.youtube.com",
+    "youtu.be",
+    "www.youtu.be",
+    "youtube-nocookie.com",
+    "www.youtube-nocookie.com",
+}
+
+
+def _youtube_video_id(value: str) -> str:
+    """Return the 11-character video id, or empty if this is not a video URL."""
+    parsed = urlparse(value)
+    host = (parsed.hostname or "").lower().rstrip(".")
+    if host not in YOUTUBE_HOSTS:
+        return ""
+    parts = [part for part in (parsed.path or "").strip("/").split("/") if part]
+    if host in {"youtu.be", "www.youtu.be"}:
+        return parts[0] if parts and YOUTUBE_ID.fullmatch(parts[0]) else ""
+    if not parts:
+        return ""
+    if parts[0] == "watch":
+        vid = (parse_qs(parsed.query).get("v") or [""])[0]
+        return vid if YOUTUBE_ID.fullmatch(vid) else ""
+    if parts[0] in {"embed", "shorts", "live", "v"} and len(parts) >= 2:
+        return parts[1] if YOUTUBE_ID.fullmatch(parts[1]) else ""
+    return ""
+
+
 def _youtube(value: str) -> bool:
-    return _https(value) and ("youtube.com/" in value or "youtu.be/" in value)
+    """A hosted YouTube video, not a homepage, channel, search, or look-alike path."""
+    return _https(value) and bool(_youtube_video_id(value))
 
 
 def collect_blockers(root: Path) -> list[dict]:
