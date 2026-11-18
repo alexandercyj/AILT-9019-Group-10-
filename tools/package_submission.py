@@ -141,13 +141,29 @@ def _pages_disabled_in_tree(root: Path) -> bool:
     return "GitHub Pages is not enabled" in page.read_text(encoding="utf-8")
 
 
+def _is_youtube_property_host(host: str) -> bool:
+    """youtube.com, youtu.be, youtube-nocookie.com, and media CDNs such as ytimg.com."""
+    lowered = (host or "").lower().rstrip(".")
+    for suffix in (
+        "youtube.com",
+        "youtu.be",
+        "youtube-nocookie.com",
+        "ytimg.com",
+        "googlevideo.com",
+    ):
+        if lowered == suffix or lowered.endswith("." + suffix):
+            return True
+    return False
+
+
 def _public_page(value: str, root: Path) -> bool:
     """A hosted page. The GitHub repository URL is the source tree, not a site.
 
     A github.io URL is also not a public page while this tree still says
     GitHub Pages is not enabled. A raw.githubusercontent.com URL, a
     loopback or private address, and a GitHub file CDN such as jsDelivr
-    /gh/ or raw.githack.com, are not hosted public pages either.
+    /gh/ or raw.githack.com, are not hosted public pages either. A YouTube
+    URL is a video host, not a public webpage.
     """
     if not _https(value):
         return False
@@ -160,6 +176,8 @@ def _public_page(value: str, root: Path) -> bool:
     if _is_raw_github_host(host) or _is_local_or_private_host(host):
         return False
     if _is_github_file_cdn(value):
+        return False
+    if _is_youtube_property_host(host):
         return False
     return True
 
