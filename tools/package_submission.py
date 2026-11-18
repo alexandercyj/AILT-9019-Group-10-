@@ -178,6 +178,13 @@ YOUTUBE_HOSTS = {
 }
 
 
+def _video_id(candidate: str) -> str:
+    """An 11-character video id. 'videoseries' is a playlist token, not a video."""
+    if not candidate or candidate.lower() == "videoseries":
+        return ""
+    return candidate if YOUTUBE_ID.fullmatch(candidate) else ""
+
+
 def _youtube_video_id(value: str) -> str:
     """Return the 11-character video id, or empty if this is not a video URL."""
     parsed = urlparse(value)
@@ -186,23 +193,21 @@ def _youtube_video_id(value: str) -> str:
         return ""
     parts = [part for part in (parsed.path or "").strip("/").split("/") if part]
     if host in {"youtu.be", "www.youtu.be"}:
-        return parts[0] if parts and YOUTUBE_ID.fullmatch(parts[0]) else ""
+        return _video_id(parts[0]) if parts else ""
     if not parts:
         return ""
     if parts[0] == "watch":
-        vid = (parse_qs(parsed.query).get("v") or [""])[0]
-        return vid if YOUTUBE_ID.fullmatch(vid) else ""
+        return _video_id((parse_qs(parsed.query).get("v") or [""])[0])
     if parts[0] in {"embed", "shorts", "live", "v"} and len(parts) >= 2:
         # /embed/videoseries is a playlist, but the path segment is 11 characters
-        # and would otherwise match the video-id pattern.
-        if parts[1].lower() == "videoseries":
-            return ""
-        return parts[1] if YOUTUBE_ID.fullmatch(parts[1]) else ""
+        # and would otherwise match the video-id pattern. The same token can
+        # appear as youtu.be/videoseries or watch?v=videoseries.
+        return _video_id(parts[1])
     return ""
 
 
 def _youtube(value: str) -> bool:
-    """A hosted YouTube video, not a homepage, channel, search, playlist embed, or look-alike path."""
+    """A hosted YouTube video, not a homepage, channel, search, playlist embed, videoseries id, or look-alike path."""
     return _https(value) and bool(_youtube_video_id(value))
 
 
