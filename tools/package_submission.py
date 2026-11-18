@@ -193,12 +193,16 @@ def _youtube_video_id(value: str) -> str:
         vid = (parse_qs(parsed.query).get("v") or [""])[0]
         return vid if YOUTUBE_ID.fullmatch(vid) else ""
     if parts[0] in {"embed", "shorts", "live", "v"} and len(parts) >= 2:
+        # /embed/videoseries is a playlist, but the path segment is 11 characters
+        # and would otherwise match the video-id pattern.
+        if parts[1].lower() == "videoseries":
+            return ""
         return parts[1] if YOUTUBE_ID.fullmatch(parts[1]) else ""
     return ""
 
 
 def _youtube(value: str) -> bool:
-    """A hosted YouTube video, not a homepage, channel, search, or look-alike path."""
+    """A hosted YouTube video, not a homepage, channel, search, playlist embed, or look-alike path."""
     return _https(value) and bool(_youtube_video_id(value))
 
 
