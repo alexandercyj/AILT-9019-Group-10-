@@ -14,7 +14,7 @@ No API key and no environment variable. The core path uses the Python standard l
 
 1. Check the interpreter: `python3 --version` (3.12 or newer).
 2. Clone the shared repository, not a personal copy: `git clone https://github.com/alexandercyj/AILT-9019-Group-10-.git`
-3. Enter it and check out the current tree: `cd AILT-9019-Group-10-` then `git checkout cursor/ailt9019-release-69c3`. The default branch `main` is still `836f232` (the earlier teammate snapshot) and was not updated in this work.
+3. Enter it and check out the current tree: `cd AILT-9019-Group-10-` then `git checkout cursor/ailt9019-release-69c3`. The default branch `main` is now `5f02350` after teammate 陈泳钧 (alexandercyj) merged pull request #1 at 13:41 HKT (a merge of `836f232` and `d668969`, with the same tree as `d668969`). This work does not update `main`.
 4. Stay offline. Do not create a `.env` for this check.
 5. Paste one command: `python3 -m labeldesk 14.40.377`
 6. The process exits 0. The status line says `DRAFTED`. The corpus line shows `sha256 bdb51f3a20ae`. The label is 65 words and ends with `Draft for curator review, not an official record.`
