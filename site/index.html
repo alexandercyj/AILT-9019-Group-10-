@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Label Desk is Group 10's local project page for AILT 9019. This file is not a published URL." />
+  <title>Label Desk · Group 10</title>
+  <style>
+    :root {
+      --ink: #202a28;
+      --muted: #626864;
+      --line: #dedfd7;
+      --paper: #f5f3ed;
+      --white: #fffefa;
+      --green: #214f44;
+      --green-soft: #e4ece6;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Georgia, "Iowan Old Style", "Songti SC", serif;
+    }
+    body { max-width: 42rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem; line-height: 1.6; font-size: 1.05rem; }
+    h1 { font-size: 2.4rem; font-weight: 500; line-height: 1.15; margin: 0 0 0.6rem; }
+    h2 { font-size: 1.45rem; font-weight: 600; margin: 2rem 0 0.5rem; }
+    p, li { font-size: 1.05rem; }
+    a { color: var(--green); }
+    a:focus-visible { outline: 3px solid var(--green); outline-offset: 3px; }
+    .muted { color: var(--muted); }
+    .notice { padding: 0.9rem 1rem; border: 1px solid var(--green); background: var(--green-soft); }
+    pre { white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 0.95rem; background: var(--white); padding: 1rem; border: 1px solid var(--line); color: var(--ink); }
+    .skip-link { position: absolute; left: 12px; top: -48px; z-index: 5; padding: 8px 12px; background: var(--green); color: #ffffff; text-decoration: none; }
+    .skip-link:focus { top: 12px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the main content</a>
+  <main id="main">
+    <p class="muted">AILT 9019 · Group 10</p>
+    <h1>Label Desk</h1>
+    <p>Draft exhibition labels from frozen museum records, and refuse when a required field is blank. Every sentence in a drafted label has to come from the catalogue record.</p>
+    <p class="notice">This file is a local page. It is not a published URL. GitHub Pages is not enabled on the repository. Do not treat a github.io address as this page.</p>
+    <h2>Open the working collection</h2>
+    <p>The working page is <a href="../labeldesk.html">labeldesk.html</a> in the repository root. Open that file directly. It does not need a host, a server, or an API key. Museum images need a network connection; the catalogue text stays available offline.</p>
+    <h2>A drafted label the program actually prints</h2>
+    <p>Local command on 16 Nov 2026: <code>python3 -m labeldesk 14.40.377</code>. Exit status 0.</p>
+    <pre>STATUS  DRAFTED
+Label   65 words (band 60–80)
+
+  The object is titled "Vase". The catalogue dates it to 1713–22. The
+  medium is recorded as "Porcelain with peach-bloom glaze (Jingdezhen
+  ware)". Its place or culture is given as China. The credit line reads:
+  Bequest of Benjamin Altman, 1913. Every sentence above restates one
+  field of the catalogue record. No fact outside that record has been
+  added. Draft for curator review, not an official record.</pre>
+    <h2>A refusal the program actually prints</h2>
+    <p>Local command on 16 Nov 2026: <code>python3 -m labeldesk 62.98.1</code>. Exit status 3.</p>
+    <pre>STATUS  REFUSED
+Reason  missing_required_field
+
+Record 62.98.1 has no object date. No label was drafted: a blank field
+is not filled from outside the record. Supply the missing catalogue
+information and run again.</pre>
+    <h2>Reproduce this tree</h2>
+    <p>Clone <a href="https://github.com/alexandercyj/AILT-9019-Group-10-">the shared repository</a> and check out <code>cursor/ailt9019-release-69c3</code>. A default clone stays on <code>main</code> at <code>836f232</code>, which is the earlier teammate snapshot and does not contain this tree.</p>
+    <h2>Not yet supplied</h2>
+    <ul>
+      <li>Public webpage: not published. <a href="../links.txt">links.txt</a> still says so.</li>
+      <li>Presentation video: not recorded. Every member still has to speak, with their name visible.</li>
+      <li>Unrestricted demo video: not recorded. <code>docs/demo.mp4</code> is a file in the repository; it is not a YouTube upload.</li>
+      <li>Contribution approval and an updated report PDF: not supplied. The packager still exits unready.</li>
+    </ul>
+  </main>
+</body>
+</html>

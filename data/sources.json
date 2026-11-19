@@ -1,7 +1,7 @@
 {
   "register": {
     "version": "1.0.0",
-    "updated": "2026-11-01",
+    "updated": "2026-11-16",
     "purpose": "Where every record in this repository came from, what the host allows, and what the tool is therefore permitted to do with it.",
     "how_to_read": [
       "robots: the file that was actually fetched, its HTTP status, a sha256 prefix of the body, and the verdict reached from it.",
@@ -170,11 +170,11 @@
       },
       "robots": {
         "url": "https://api.artic.edu/robots.txt",
-        "http_status": 403,
-        "body_sha256_prefix": null,
-        "checked": "2026-11-01",
-        "verdict": "unreachable",
-        "notes": "Cloudflare managed challenge returned for every request from this network, with a browser user-agent and without one. The body is a challenge page, not a robots file, so no verdict can be reached. No hash is recorded: a challenge page is generated per request, so hashing it would report drift on every run without anything having changed. The status is the fact worth comparing."
+        "http_status": 200,
+        "body_sha256_prefix": "e5c4b84484ee4216",
+        "checked": "2026-11-16",
+        "verdict": "reachable",
+        "notes": "On 1 Nov 2026 this URL returned a Cloudflare challenge (403), so no robots verdict was possible. On 16 Nov 2026 it returned 200 and the body was stable enough to hash. That is not permission to freeze records."
       },
       "license": {
         "id": "CC0-1.0",
@@ -185,11 +185,11 @@
         "ai_input": false,
         "redistribute": false,
         "record_source": false,
-        "notes": "The proposal names this museum as the fallback dataset. It stays named as the fallback: the licence and the API are right, the network path is not. Re-check with tools/check_sources.py before relying on it."
+        "notes": "The proposal names this museum as the fallback. On 16 Nov 2026 one artworks request returned JSON. No record was saved and ai_input stays false. Re-check with tools/check_sources.py before anyone freezes a corpus."
       },
       "decision": {
         "status": "deferred",
-        "reason": "Declared fallback in the proposal. Not frozen because the API answers with a bot challenge from this network; nothing was attempted past the challenge."
+        "reason": "Declared fallback in the proposal. Still not frozen. On 16 Nov 2026 the robots file and one artworks response were reachable; building a corpus from that was not done."
       },
       "corpora": []
     },

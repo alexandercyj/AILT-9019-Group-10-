@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Golden-set evaluation.
 
-Runs the 15 hand-written record cases and 2 request cases through the core path
+Runs the 15 hand-written record cases and 3 request cases through the core path
 and scores them on the three checks the proposal commits to, plus the boundary
 probes that test the grounding rule itself.
 
@@ -127,6 +127,12 @@ def evaluate_request_case(corpus, case: dict, llm=None) -> dict:
         problems.append(f"reason {result['reason']} != {case.get('expected_reason')}")
     if result["label"]:
         problems.append("a refusal must not produce label text")
+    visible = " ".join(
+        part for part in (result.get("label"), result.get("reason_text")) if part
+    ).casefold()
+    for banned in case.get("must_not_contain") or []:
+        if banned.casefold() in visible:
+            problems.append(f"refusal contains {banned!r}")
     return {
         "id": case["id"],
         "catalogue_number": case["catalogue_number"],
@@ -363,7 +369,7 @@ def write_comparison(off: dict | None, on: dict | None, path: Path) -> str:
     lines = [
         "# Model off vs model on",
         "",
-        "Both runs are the same 15 record cases, 2 request cases and 12 boundary probes,",
+        "Both runs are the same 15 record cases, 3 request cases and 12 boundary probes,",
         "scored by the same gates. The point of the comparison is that turning the model",
         "on changes the prose and nothing else: the gates below must be identical.",
         "",
@@ -440,9 +446,16 @@ def main() -> int:
         action="store_true",
         help="write eval/reports/model_comparison.md from the two existing reports",
     )
+    parser.add_argument(
+        "--reports",
+        type=Path,
+        default=None,
+        help="write this run's reports here instead of eval/reports",
+    )
     args = parser.parse_args()
 
-    REPORTS.mkdir(parents=True, exist_ok=True)
+    reports = args.reports or REPORTS
+    reports.mkdir(parents=True, exist_ok=True)
     if args.compare:
         return compare_reports()
 
@@ -483,10 +496,11 @@ def main() -> int:
     }
 
     stem = "golden_report_llm" if llm_arg else "golden_report"
-    (REPORTS / f"{stem}.json").write_text(
+    (reports / f"{stem}.json").write_text(
         json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
-    write_markdown(report, REPORTS / f"{stem}.md")
+    written = reports / f"{stem}.md"
+    write_markdown(report, written)
 
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -518,7 +532,11 @@ def main() -> int:
                 print(f"  {state}  {row['id']}  {row['catalogue_number']:<14} {row['actual_status']}")
                 for problem in row["problems"]:
                     print(f"        - {problem}")
-        print(f"\nreport written to {(REPORTS / f'{stem}.md').relative_to(ROOT)}")
+        try:
+            shown = written.relative_to(ROOT)
+        except ValueError:
+            shown = written
+        print(f"\nreport written to {shown}")
 
     return 0 if summary["passed"] else 1
 

@@ -12,27 +12,29 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_golden_set_passes_every_gate():
+def test_golden_set_passes_every_gate(tmp_path):
     completed = subprocess.run(
-        [sys.executable, str(ROOT / "eval" / "evaluate.py"), "--quiet"],
+        [sys.executable, str(ROOT / "eval" / "evaluate.py"), "--quiet", "--reports", str(tmp_path)],
         capture_output=True,
         text=True,
         cwd=ROOT,
     )
     assert completed.returncode == 0, completed.stdout + completed.stderr
-    assert "17/17 cases passed" in completed.stdout
+    assert "18/18 cases passed" in completed.stdout
 
 
-def test_report_files_are_written():
+def test_report_files_are_written(tmp_path):
+    committed = (ROOT / "eval" / "reports" / "golden_report.md").read_bytes()
     subprocess.run(
-        [sys.executable, str(ROOT / "eval" / "evaluate.py"), "--quiet"],
+        [sys.executable, str(ROOT / "eval" / "evaluate.py"), "--quiet", "--reports", str(tmp_path)],
         capture_output=True,
         text=True,
         cwd=ROOT,
         check=True,
     )
-    assert (ROOT / "eval" / "reports" / "golden_report.md").exists()
-    assert (ROOT / "eval" / "reports" / "golden_report.json").exists()
+    assert (tmp_path / "golden_report.md").exists()
+    assert (tmp_path / "golden_report.json").exists()
+    assert (ROOT / "eval" / "reports" / "golden_report.md").read_bytes() == committed
 
 
 def test_cli_drafts_a_label():

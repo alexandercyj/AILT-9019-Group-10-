@@ -8,6 +8,19 @@ AILT9019 Group 10. Midterm check, October 2026 · post-midterm work, November 20
 
 ---
 
+## Six steps to one label
+
+No API key and no environment variable. The core path uses the Python standard library.
+
+1. Check the interpreter: `python3 --version` (3.12 or newer).
+2. Clone the shared repository, not a personal copy: `git clone https://github.com/alexandercyj/AILT-9019-Group-10-.git`
+3. Enter it and check out the current tree: `cd AILT-9019-Group-10-` then `git checkout cursor/ailt9019-release-69c3`. The default branch `main` is still `836f232` (the earlier teammate snapshot) and was not updated in this work.
+4. Stay offline. Do not create a `.env` for this check.
+5. Paste one command: `python3 -m labeldesk 14.40.377`
+6. The process exits 0. The status line says `DRAFTED`. The corpus line shows `sha256 bdb51f3a20ae`. The label is 65 words and ends with `Draft for curator review, not an official record.`
+
+Two further catalogue numbers show the other designed outcomes: `36.120.655` keeps the hedge `ca. 1740`, and `62.98.1` refuses because the object date is blank (exit 3).
+
 ## What works today
 
 One command takes a catalogue number from a frozen corpus of Met Open Access (CC0)
@@ -35,8 +48,8 @@ cost prose quality; it cannot cost a fact or a citation.
 | --- | --- |
 | Corpora | 20 records (Met, 4 departments) · 10 (Met, Egyptian Art) · 10 (Cleveland Museum of Art) |
 | Sources checked | 7, of which 2 admitted, 2 refused, 1 deferred, 1 reference-only, 1 not frozen |
-| Tests | 224 |
-| Golden set | 17/17 cases, both model-off and model-on |
+| Tests | 265 on Python 3.12.6 |
+| Golden set | 18/18 cases, both model-off and model-on replay |
 | Cross-corpus run | 40 records, 0 check failures, 35/37 rewrites accepted |
 | Claim precision · citation resolution | 100% · 100%, every run |
 | Network at run time | none, unless `--llm` or a live fetch is asked for |
@@ -51,6 +64,11 @@ records from all three corpora and their real pipeline output. The page looks re
 up; it does not recompute or invent them. Museum images load from their open-access
 URLs, so image display needs a network connection; all catalogue text remains available
 offline.
+
+`site/index.html` is a local public landing page for the same project. Open it as a
+file. It is not a published URL, and GitHub Pages is not enabled on the repository.
+The page has a skip link, one drafted label and one refusal the program actually
+prints, and a link to `labeldesk.html`. Do not treat a github.io address as this page.
 
 The standalone reader deliberately does not pretend to offer live web research. Use
 `server.py` for the full encyclopaedia experience, including whole-collection search,
@@ -68,12 +86,13 @@ checksums and the prompt hash.
 
 ## Setup
 
-Requires Python 3.10 or newer. The core path needs no third-party package.
+Requires Python 3.12 or newer, as the proposal specifies. Verified on 16 Nov 2026 with Python 3.12.6 (and earlier the same day with 3.15.2). The core path needs no third-party package.
 
 ```bash
 git clone https://github.com/alexandercyj/AILT-9019-Group-10-.git
 cd AILT-9019-Group-10-
-python3 --version          # 3.10 or newer
+git checkout cursor/ailt9019-release-69c3
+python3 --version          # 3.12 or newer; verified on 3.12.6
 python3 -m pip install -r requirements.txt   # pytest, and the optional model SDK
 ```
 
@@ -105,7 +124,7 @@ Expected output (this is the whole result, not an extract):
 
 ```text
 Label Desk 1.1.0 · offline draft
-Corpus  labeldesk-frozen-corpus v1.0.0 · 20 records · sha256 962e03aba0b6
+Corpus  labeldesk-frozen-corpus v1.0.0 · 20 records · sha256 bdb51f3a20ae
 Source  met · CC0-1.0 · robots no_restriction_published · ai_input yes
 Record  14.40.377 · Vase · object 42229 · Asian Art
 
@@ -243,7 +262,7 @@ with a pass count. A drafted label that fails any of them exits `1`.
 python3 -m pytest -q
 ```
 
-Expected: `224 passed`. The suite is not a smoke test — it breaks the output on purpose
+Expected: `265 passed` on 19 Nov 2026, Python 3.12.6, pytest 9.1.1. The 264 figure was the suite before the YouTube-as-public-webpage packager test. The 263 figure was the suite before the YouTube videoseries-id packager test. The 262 figure was the suite before the YouTube playlist-embed packager test. The 261 figure was the suite before the YouTube packager tests. The 260 figure was the suite before the GitHub file CDN packager tests. The 258 figure was the suite before the raw GitHub and loopback packager tests. The 257 figure was the suite before the github.io packager test. The 252 figure was the suite before the landing-page and packager tests. The suite is not a smoke test — it breaks the output on purpose
 and requires the check to catch it:
 
 | Test file | What it proves |
@@ -263,6 +282,10 @@ and requires the check to catch it:
 | `tests/test_research.py` | Retrieved-URL citations, readable research steps, source-policy filtering and safe failure without a key. |
 | `tests/test_standalone.py` | Every label in `labeldesk.html` equals a fresh pipeline run; no external code assets are loaded. |
 | `tests/test_skill.py` | The skill file describes the program that actually runs. |
+| `tests/test_repro.py` | Offline and replay results do not change when a key is present, and the key text is absent. |
+| `tests/test_contrast.py` | The muted and empty-state colours meet the WCAG AA 4.5:1 threshold on their backgrounds. |
+| `tests/test_package.py` | The draft ZIP stays unready, and neither the GitHub repository URL, a github.io URL while Pages is not enabled, a raw.githubusercontent.com URL, a loopback or private address, nor a GitHub file CDN such as jsDelivr /gh/ or raw.githack.com, nor a YouTube URL, is accepted as a public webpage. A YouTube homepage, channel, search, empty id, or look-alike path is not accepted as a presentation or demo video. |
+| `tests/test_site_page.py` | The local landing page has a skip link and sufficient contrast, and it does not claim a host or a video. |
 
 ### 3. The golden set, run twice
 
@@ -275,7 +298,7 @@ python3 eval/evaluate.py --compare       # the two side by side
 Expected, both runs:
 
 ```text
-Golden set · 17/17 cases passed
+Golden set · 18/18 cases passed
   claim precision        100%  citation resolution   100%  readability 100%
   restatements           72/72  probe agreement 100%  (false accepts 0, spurious rejections 0)
 ```
@@ -287,7 +310,7 @@ The model-on run adds one line:
         - drops_field_content x 2
 ```
 
-`data/golden_set.json` holds 15 record cases (10 well formed, 5 boundary) and 2 request
+`data/golden_set.json` holds 15 record cases (10 well formed, 5 boundary) and 3 request
 cases, each with the record values a correct label must restate and the outcome it must
 produce. `eval/probes.json` holds 12 single sentences labelled pass or fail, which test the
 grounding rule rather than the templates.
@@ -436,6 +459,7 @@ The full argument for keeping the layer, with the numbers and the conditions, is
 | `09.13.5` | `missing_required_field` | Same, for place or culture. |
 | `99.99.99` | `out_of_corpus` | "… is not in the frozen corpus … the system does not describe a similar object from memory." |
 | `--ask "what is it worth?"` | `out_of_scope` | Valuation, authentication, insurance and rights are declined. |
+| `--ask "who made this?"` | `unknown_maker` | No artist is named. The cited fields do not identify a maker. |
 
 A refusal never reaches the model: the look-up and validation steps run first, so there is
 nothing for a model to be asked about.
@@ -465,7 +489,7 @@ not a rule, so this corpus is the check on it.
 
 ```bash
 python3 -m labeldesk 1970.36 --corpus cleveland            # c. 1050 survives
-python3 -m labeldesk 1926.428 --corpus cleveland --llm     # c. 1160–1170 survives a rewrite
+python3 -m labeldesk 1926.428 --corpus cleveland --llm --replay  # recorded rewrite, not a live call
 python3 -m labeldesk --corpus cleveland --list
 ```
 
@@ -478,6 +502,13 @@ replay. `eval/cross_corpus.py` runs every record in every corpus and writes
 | cleveland | 10 | 10 | 0 | 10/10 | 10 |
 | egyptian | 10 | 10 | 0 | 10/10 | 10 |
 | primary | 20 | 17 | 3 | 17/17 | 15 (2 discarded) |
+
+Re-run on 16 Nov 2026 with offline drafting and replay, no live call. Same counts.
+The three refusals are the frozen records with a blank required field (`62.98.1` and
+`14.40.372` have no object date; `09.13.5` has no place or culture). Replay discarded
+`1970.103a–e` and `36.120.655` for `drops_field_content` and kept the offline draft.
+That replay discard is not the separate live rewrite of `36.120.655` recorded in
+`docs/live_run_2026-11-16.json`.
 
 ---
 
@@ -500,7 +531,7 @@ met             no_restriction_published  CC0-1.0                    yes  admitt
 cleveland       allowed                   CC0-1.0                    yes  admitted
 british-museum  restricted                no-open-licence-published  no   refused
 palace-museum   not_published             no-open-licence-published  no   refused
-artic           unreachable               CC0-1.0                    no   deferred
+artic           reachable                 CC0-1.0                    no   deferred
 wikidata        allowed                   CC0-1.0                    yes  reference_only
 nga             not_applicable            CC0-1.0                    yes  admitted_not_frozen
 ```
@@ -583,6 +614,7 @@ prompts/rewrite.txt   the label guardrail prompt, hashed into every transcript
 prompts/research.txt  the web-research and structured-citation prompt
 server.py             local server for collection search and encyclopaedia research
 index.html            English wiki-style browser view
+site/index.html       local public landing page; not a hosted URL
 app.js                browser presentation; no drafting or grounding logic
 styles.css            styling
 skills/labeldesk/     single-file skill contract for other agent environments
@@ -594,13 +626,13 @@ data/
   frozen_corpus_cleveland.json  10 Cleveland Museum of Art records, second museum
   frozen_corpus_cleveland.sha256
   sources.json                  every source examined: robots, licence, policy, decision
-  golden_set.json               15 record cases + 2 request cases, hand-written expectations
+  golden_set.json               15 record cases + 3 request cases, hand-written expectations
   llm_transcripts.json          37 recorded model responses, keyed by corpus
 eval/
   evaluate.py         golden-set scorer, --llm and --compare, writes eval/reports/
   cross_corpus.py     every record in every corpus, both modes, no per-record expectations
   probes.json         12 hand-labelled sentences for the grounding rule
-tests/                pytest suite (224 tests)
+tests/                pytest suite (265 tests on 19 Nov 2026, Python 3.12.6)
 tools/
   fetch_corpus.py     rebuild any corpus from its museum API (--preset, --check)
   check_sources.py    re-fetch every robots.txt and report drift against the register

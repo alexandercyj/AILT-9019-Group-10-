@@ -1,13 +1,13 @@
 # Model off vs model on
 
-Both runs are the same 15 record cases, 2 request cases and 12 boundary probes,
+Both runs are the same 15 record cases, 3 request cases and 12 boundary probes,
 scored by the same gates. The point of the comparison is that turning the model
 on changes the prose and nothing else: the gates below must be identical.
 
 | Run | Cases | Claim precision | Citation resolution | Readability | Probe agreement | False accepts | Result |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| model off | 17/17 | 100% | 100% | 100% | 100% | 0 | PASS |
-| model on | 17/17 | 100% | 100% | 100% | 100% | 0 | PASS |
+| model off | 18/18 | 100% | 100% | 100% | 100% | 0 | PASS |
+| model on | 18/18 | 100% | 100% | 100% | 100% | 0 | PASS |
 
 ## Label source per case
 

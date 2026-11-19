@@ -38,7 +38,12 @@ def config_from_environment() -> ResearchConfig:
     return ResearchConfig(
         base_url=source.get("LABELDESK_RESEARCH_BASE_URL") or base.base_url,
         model=source.get("LABELDESK_RESEARCH_MODEL") or DEFAULT_MODEL,
-        api_key=source.get("LABELDESK_API_KEY") or source.get("OPENAI_API_KEY") or None,
+        api_key=(
+            source.get("LABELDESK_API_KEY")
+            or source.get("OPENAI_API_KEY")
+            or source.get("BAILIAN_API_KEY")
+            or None
+        ),
     )
 
 
@@ -72,7 +77,7 @@ def build_input(query: str, record: dict | None, provider_name: str = "") -> lis
 def _post_with_sdk(config: ResearchConfig, messages: list[dict]) -> dict:
     from openai import OpenAI
 
-    client = OpenAI(api_key=config.api_key, base_url=config.base_url, timeout=config.timeout, max_retries=1)
+    client = OpenAI(api_key=config.api_key, base_url=config.base_url, timeout=config.timeout, max_retries=0)
     response = client.responses.create(
         model=config.model,
         input=messages,

@@ -40,7 +40,12 @@ def test_skill_documents_the_real_invocation(text):
 def test_skill_lists_exactly_the_refusal_reasons_the_code_emits(text):
     for reason in REASON_TEXT:
         assert reason in text, f"{reason} is not documented"
-    documented = set(re.findall(r"`(out_of_corpus|missing_required_field|out_of_scope)`", text))
+    documented = set(
+        re.findall(
+            r"`(out_of_corpus|missing_required_field|out_of_scope|unknown_maker)`",
+            text,
+        )
+    )
     assert documented == set(REASON_TEXT)
 
 

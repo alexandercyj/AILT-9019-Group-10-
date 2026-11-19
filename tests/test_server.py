@@ -124,6 +124,8 @@ def httpd():
     # The Met searcher sleeps between object GETs; a fake must not.
     server.PROVIDERS["met"] = {**server.PROVIDERS["met"], "pause": 0}
 
+    server.ALLOW_RESEARCH = True
+    server.ALLOW_LIVE = False
     instance = server.ThreadingHTTPServer(("127.0.0.1", 0), server.Handler)
     thread = threading.Thread(target=instance.serve_forever, daemon=True)
     thread.start()
@@ -134,6 +136,8 @@ def httpd():
     server.PROVIDERS.update(original)
     server.SEARCHERS.clear()
     server.SEARCHERS.update(original_searchers)
+    server.ALLOW_RESEARCH = False
+    server.ALLOW_LIVE = False
 
 
 # --------------------------------------------------------------------------- #
@@ -383,6 +387,100 @@ def test_reader_page_has_no_debug_or_search_redirect_controls(httpd):
         assert not any("\u3400" <= character <= "\u9fff" for character in page)
         for text in ("google", "sha256", "python3", "object id", "model rewrite", "four checks"):
             assert text not in page
+
+
+def test_post_body_is_capped(httpd):
+    import http.client
+    from urllib.parse import urlparse
+
+    parsed = urlparse(httpd)
+    connection = http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=5)
+    connection.request(
+        "POST",
+        "/api/draft",
+        body=b"{}",
+        headers={
+            "Content-Type": "application/json",
+            "Content-Length": str(server.MAX_BODY + 1),
+        },
+    )
+    response = connection.getresponse()
+    raw = response.read()
+    connection.close()
+    assert response.status == 413
+    assert json.loads(raw)["error"] == "body_too_large"
+
+
+def test_llm_status_and_draft_do_not_expose_a_key(httpd, monkeypatch):
+    monkeypatch.delenv("LABELDESK_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    status, body = _request(f"{httpd}/api/llm")
+    assert status == 200
+    assert set(body) == {
+        "model", "base_url", "has_key", "default_mode", "prompt_sha256",
+        "live_enabled", "research_enabled",
+    }
+    assert body["has_key"] is False
+    assert body["live_enabled"] is False
+    assert body["research_enabled"] is True
+    status, drafted = _request(f"{httpd}/api/draft", {"catalogue_number": "14.40.377"})
+    assert status == 200
+    encoded = json.dumps(drafted)
+    assert "api_key" not in encoded
+    assert drafted["llm"]["has_key"] is False
+
+
+def test_static_allowlist_rejects_escape(httpd):
+    status, _ = _request(f"{httpd}/%2e%2e/server.py")
+    assert status == 404
+    status, _ = _request(f"{httpd}/export_pdf.applescript")
+    assert status == 404
+
+
+def test_research_without_a_key_stays_offline(httpd, monkeypatch):
+    monkeypatch.delenv("LABELDESK_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    status, body = _request(f"{httpd}/api/research", {"query": "porcelain vase"})
+    assert status == 200
+    assert body["research"]["status"] == "unavailable"
+    assert body["research"]["reason"] == "no_key"
+
+
+def test_research_stays_off_until_the_server_allows_it(httpd, monkeypatch):
+    called = False
+
+    def explode(*args, **kwargs):
+        nonlocal called
+        called = True
+        raise AssertionError("research was called")
+
+    monkeypatch.setattr(server, "research", explode)
+    server.ALLOW_RESEARCH = False
+    try:
+        status, body = _request(f"{httpd}/api/research", {"query": "porcelain vase"})
+    finally:
+        server.ALLOW_RESEARCH = True
+    assert status == 200
+    assert body["research"]["reason"] == "disabled"
+    assert called is False
+
+
+def test_live_draft_is_refused_unless_the_server_allows_it(httpd):
+    server.ALLOW_LIVE = False
+    status, body = _request(
+        f"{httpd}/api/draft",
+        {"catalogue_number": "14.40.377", "llm": "live"},
+    )
+    assert status == 403
+    assert body["error"] == "live_disabled"
+
+
+def test_search_page_does_not_start_research():
+    text = (server.ROOT / "app.js").read_text(encoding="utf-8")
+    search = text.split("async function searchObjects", 1)[1].split("function renderSearchResults", 1)[0]
+    select = text.split("function selectRecord", 1)[1].split("function renderRecord", 1)[0]
+    assert "researchWeb(" not in search
+    assert "runResearch(" not in select
 
 
 def test_non_public_domain_records_do_not_expose_images():

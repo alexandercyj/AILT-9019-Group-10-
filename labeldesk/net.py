@@ -1,8 +1,9 @@
 """TLS for the few HTTPS calls this project makes.
 
 The core path is fully offline; the only outbound requests are the museum open
-APIs (live fetch, `tools/fetch_corpus.py`) and the optional model endpoint
-(`labeldesk/llm.py`). Both go through :func:`ssl_context`.
+APIs (`tools/fetch_corpus.py`), the robots re-check (`tools/check_sources.py`),
+and the optional model endpoint (`labeldesk/llm.py`). Those calls go through
+:func:`ssl_context`.
 
 Python installs that ship without a root store — the python.org macOS
 installer is the common case, with an empty ``etc/openssl`` — cannot verify

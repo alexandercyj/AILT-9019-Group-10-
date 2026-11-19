@@ -4,6 +4,8 @@ __pycache__/
 .venv/
 .DS_Store
 data/.rebuilt.json
+data/.rebuilt-*.json
+dist/
 .workbuddy-ai/
 
 # model layer credentials: never commit a key. .env.example is the committed shape.
@@ -12,3 +14,4 @@ data/.rebuilt.json
 # local editor noise
 .Rhistory
 .DS_Store
+.impeccable/hook.cache.json

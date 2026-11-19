@@ -214,6 +214,15 @@
       "expected_status": "refused",
       "expected_reason": "out_of_corpus",
       "notes": "Unknown catalogue number must be refused, not answered from a similar object."
+    },
+    {
+      "id": "r03",
+      "catalogue_number": "14.40.377",
+      "question": "Who made this?",
+      "expected_status": "refused",
+      "expected_reason": "unknown_maker",
+      "must_not_contain": ["attributed to", "painted by", "the artist is"],
+      "notes": "The cited fields do not name a maker. The refusal must not invent one. This expectation is the question and the banned phrases, not a copy of the reason sentence."
     }
   ]
 }

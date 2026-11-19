@@ -35,6 +35,7 @@ from labeldesk.validate import missing_fields
 from tools.fetch_corpus import PROVIDERS, normalise
 
 ROOT = Path(__file__).resolve().parent
+MAX_BODY = 64 * 1024
 STATIC_FILES = {
     "/": ("index.html", "text/html; charset=utf-8"),
     "/index.html": ("index.html", "text/html; charset=utf-8"),
@@ -45,6 +46,10 @@ STATIC_FILES = {
 # Set in main(); the handler reads it. One corpus per process, chosen at start-up,
 # so the page cannot ask for records the process was not started with.
 CORPUS = load_corpus()
+# Spending stays off until the process is started with the matching flag.
+# A key in the environment is not enough: search and ordinary drafts must not call out.
+ALLOW_LIVE = False
+ALLOW_RESEARCH = False
 
 DATA_DIR = ROOT / "data"
 RESEARCH_CACHE = {}
@@ -337,6 +342,8 @@ class Handler(BaseHTTPRequestHandler):
                     "has_key": config.has_key,
                     "default_mode": resolve_mode("auto", config),
                     "prompt_sha256": prompt_hash(),
+                    "live_enabled": ALLOW_LIVE,
+                    "research_enabled": ALLOW_RESEARCH,
                 },
             )
 
@@ -354,11 +361,9 @@ class Handler(BaseHTTPRequestHandler):
         if path not in ("/api/draft", "/api/fetch", "/api/search", "/api/research"):
             return self._json(404, {"error": "not_found", "path": path})
 
-        length = int(self.headers.get("Content-Length") or 0)
-        try:
-            payload = json.loads(self.rfile.read(length) or b"{}")
-        except json.JSONDecodeError:
-            return self._json(400, {"error": "bad_json"})
+        payload = self._read_json()
+        if payload is None:
+            return None
 
         if path == "/api/research":
             return self._research(payload)
@@ -367,6 +372,8 @@ class Handler(BaseHTTPRequestHandler):
         llm = payload.get("llm")
         if llm not in (None, False, "auto", "live", "replay"):
             return self._json(400, {"error": "bad_llm_mode", "got": llm})
+        if llm == "live" and not ALLOW_LIVE:
+            return self._json(403, {"error": "live_disabled"})
 
         if path == "/api/fetch":
             return self._fetch(payload, llm)
@@ -382,6 +389,13 @@ class Handler(BaseHTTPRequestHandler):
         return self._json(200, result)
 
     def _research(self, payload: dict) -> None:
+        if not ALLOW_RESEARCH:
+            return self._json(200, {"record": None, "research": {
+                "status": "unavailable",
+                "reason": "disabled",
+                "message": "Web research is off. Start the server with --allow-research to spend the sponsored quota.",
+                "steps": [],
+            }})
         query = str(payload.get("query") or payload.get("name") or "").strip()
         if not query or len(query) > 200:
             return self._json(400, {"error": "name_required"})
@@ -463,6 +477,35 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(502, {"error": "upstream_unreachable"})
         return self._json(200, body)
 
+    def _read_json(self) -> dict | None:
+        """Read one JSON object, or send 400 and return None.
+
+        The cap is deliberate: this process is a local viewer, and a declared
+        Content-Length is not allowed to allocate an unbounded buffer.
+        """
+        raw_length = self.headers.get("Content-Length")
+        if raw_length is None or raw_length == "":
+            length = 0
+        else:
+            try:
+                length = int(raw_length)
+            except ValueError:
+                self._json(400, {"error": "bad_length"})
+                return None
+        if length < 0 or length > MAX_BODY:
+            self.close_connection = True
+            self._json(413, {"error": "body_too_large", "limit": MAX_BODY})
+            return None
+        try:
+            payload = json.loads(self.rfile.read(length) or b"{}")
+        except json.JSONDecodeError:
+            self._json(400, {"error": "bad_json"})
+            return None
+        if not isinstance(payload, dict):
+            self._json(400, {"error": "bad_json"})
+            return None
+        return payload
+
     def _json(self, status: int, payload: dict) -> None:
         body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self._send(status, body, "application/json; charset=utf-8")
@@ -486,7 +529,21 @@ def main() -> int:
     parser.add_argument(
         "--corpus", metavar="ALIAS_OR_PATH", help="a registered alias (primary, egyptian, cleveland) or a path"
     )
+    parser.add_argument(
+        "--allow-live",
+        action="store_true",
+        help="accept llm=live on /api/draft and /api/fetch; off by default so a key cannot be spent by a page",
+    )
+    parser.add_argument(
+        "--allow-research",
+        action="store_true",
+        help="accept /api/research; off by default so search cannot start a paid call",
+    )
     args = parser.parse_args()
+
+    global ALLOW_LIVE, ALLOW_RESEARCH
+    ALLOW_LIVE = args.allow_live
+    ALLOW_RESEARCH = args.allow_research
 
     global CORPUS
     CORPUS = load_corpus(resolve_corpus(args.corpus))

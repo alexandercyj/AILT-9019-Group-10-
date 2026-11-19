@@ -75,7 +75,7 @@ class LLMConfig:
     temperature: float = 0.0
     timeout: float = 90.0
     max_tokens: int = 4000
-    retries: int = 1
+    retries: int = 0
     # deepseek-v4.1-flash reasons before it answers. For a rewrite that must be
     # reproducible and cheap, the reasoning trace is not wanted: with it on, a
     # 900-token budget was spent entirely on hidden reasoning and the answer came
@@ -105,6 +105,13 @@ class LLMConfig:
             "has_key": self.has_key,
             "key_fingerprint": self.key_fingerprint,
         }
+
+
+def redact(text: str, secret: str | None) -> str:
+    """Remove a credential from text that might be stored or shown."""
+    if not text or not secret:
+        return text
+    return text.replace(secret, "[redacted]")
 
 
 def fingerprint(key: str | None) -> str | None:
@@ -144,9 +151,11 @@ def config_from_env(env: dict[str, str] | None = None) -> LLMConfig:
         return default
 
     return LLMConfig(
-        base_url=pick("LABELDESK_BASE_URL", "OPENAI_BASE_URL", default=DEFAULT_BASE_URL),
-        model=pick("LABELDESK_MODEL", "OPENAI_MODEL", default=DEFAULT_MODEL),
-        api_key=pick("LABELDESK_API_KEY", "OPENAI_API_KEY") or None,
+        base_url=pick(
+            "LABELDESK_BASE_URL", "OPENAI_BASE_URL", "BAILIAN_BASE_URL", default=DEFAULT_BASE_URL
+        ),
+        model=pick("LABELDESK_MODEL", "OPENAI_MODEL", "BAILIAN_MODEL", default=DEFAULT_MODEL),
+        api_key=pick("LABELDESK_API_KEY", "OPENAI_API_KEY", "BAILIAN_API_KEY") or None,
         thinking=pick("LABELDESK_THINKING", default="0").strip().lower()
         in ("1", "true", "yes", "on"),
     )
@@ -522,6 +531,10 @@ def transcript_for(
 
 
 def _empty_block(mode: str, config: LLMConfig, requested: bool = False) -> dict:
+    # Offline and replay never send the record. Copying config.has_key into
+    # those results made labeldesk.html differ between a machine that had a
+    # key and a clean checkout. has_key is true only when this run is live.
+    live = mode == "live"
     return {
         "requested": requested,
         "mode": mode,
@@ -529,9 +542,9 @@ def _empty_block(mode: str, config: LLMConfig, requested: bool = False) -> dict:
         "label_source": "offline_template",
         "reason": None,
         "detail": {},
-        "model": config.model,
-        "base_url": config.base_url,
-        "has_key": config.has_key,
+        "model": config.model if live else DEFAULT_MODEL,
+        "base_url": config.base_url if live else DEFAULT_BASE_URL,
+        "has_key": bool(config.has_key) if live else False,
         "prompt_sha256": None,
         "attempts": 0,
         "latency_ms": None,
@@ -619,7 +632,11 @@ def rewrite(
         raw, usage = call_model(config, messages)
     except Exception as error:  # noqa: BLE001 - any transport failure is a fallback
         block["reason"] = "call_failed"
-        block["detail"] = {"error": f"{type(error).__name__}: {error}"}
+        status = getattr(error, "status_code", None)
+        detail = f"{type(error).__name__}"
+        if status:
+            detail += f" status={status}"
+        block["detail"] = {"error": redact(detail, config.api_key)}
         block["latency_ms"] = round((time.monotonic() - started) * 1000)
         return block
     block["latency_ms"] = round((time.monotonic() - started) * 1000)
