@@ -283,7 +283,7 @@ and requires the check to catch it:
 | `tests/test_skill.py` | The skill file describes the program that actually runs. |
 | `tests/test_repro.py` | Offline and replay results do not change when a key is present, and the key text is absent. |
 | `tests/test_contrast.py` | The muted and empty-state colours meet the WCAG AA 4.5:1 threshold on their backgrounds. |
-| `tests/test_package.py` | The draft ZIP stays unready, and neither the GitHub repository URL, a github.io URL while Pages is not enabled, a raw.githubusercontent.com URL, a loopback or private address, nor a GitHub file CDN such as jsDelivr /gh/ or raw.githack.com, nor a YouTube URL, is accepted as a public webpage. A YouTube homepage, channel, search, empty id, or look-alike path is not accepted as a presentation or demo video. |
+| `tests/test_package.py` | The ZIP is ready only when every required item is present; an HTML file attached in the Moodle submission counts as the webpage, and neither the GitHub repository URL, a github.io URL while Pages is not enabled, a raw.githubusercontent.com URL, a loopback or private address, nor a GitHub file CDN such as jsDelivr /gh/ or raw.githack.com, nor a YouTube URL, is accepted as a public webpage. A YouTube homepage, channel, search, empty id, or look-alike path is not accepted as a presentation or demo video. |
 | `tests/test_site_page.py` | The local landing page has a skip link and sufficient contrast, and it does not claim a host or a video. |
 
 ### 3. The golden set, run twice

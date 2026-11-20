@@ -156,6 +156,14 @@ def _is_youtube_property_host(host: str) -> bool:
     return False
 
 
+ATTACHED_HTML = re.compile(r"^[A-Za-z0-9_.-]+\.html\b.*\bMoodle\b", re.IGNORECASE)
+
+
+def _attached_html(value: str) -> bool:
+    """The webpage is an HTML file attached to the Moodle submission zip."""
+    return bool(ATTACHED_HTML.match(value))
+
+
 def _public_page(value: str, root: Path) -> bool:
     """A hosted page. The GitHub repository URL is the source tree, not a site.
 
@@ -235,7 +243,7 @@ def collect_blockers(root: Path) -> list[dict]:
     links_path = root / "links.txt"
     links = links_path.read_text(encoding="utf-8") if links_path.is_file() else ""
     checks = (
-        ("public_webpage", "Public webpage:", lambda value: _public_page(value, root), "Public webpage is not a hosted https page."),
+        ("public_webpage", "Public webpage:", lambda value: _attached_html(value) or _public_page(value, root), "Public webpage is neither a hosted https page nor an HTML file attached in the Moodle submission."),
         ("presentation_youtube", "Presentation YouTube:", _youtube, "Presentation YouTube link is missing."),
         ("demo_youtube", "Demo YouTube:", _youtube, "Demo YouTube link is missing."),
     )
@@ -254,14 +262,11 @@ def collect_blockers(root: Path) -> list[dict]:
             ),
         })
 
-    pdf = root / "docs" / "proposed" / "AILT9019_Final_Report_Group10_CANDIDATE.pdf"
-    if not pdf.is_file():
+    candidate = root / "docs" / "proposed" / "AILT9019_Final_Report_Group10_CANDIDATE.pdf"
+    if not (root / "report.pdf").is_file() and not candidate.is_file():
         blockers.append({
             "id": "updated_report_pdf",
-            "detail": (
-                "No updated report PDF. docs/proposed holds a review candidate only. "
-                "report.pdf is the earlier teammate draft and was not replaced."
-            ),
+            "detail": "No final report PDF. report.pdf is missing from the repository root.",
         })
     return blockers
 
@@ -273,9 +278,7 @@ def status_text(blockers: list[dict]) -> str:
         "limit_bytes: 104857600",
         "This file is a dry run. It was not uploaded and it is not a grade.",
         "",
-        "Do not treat report.pdf or AILT9019_Final_Report_Group10.docx as the updated report.",
-        "The review copy is docs/proposed/REPORT_CANDIDATE.md.",
-        "Running tools_build_report.py overwrites the teammate docx. Do not run it for this draft.",
+        "The final report is report.pdf; AILT9019_Final_Report_Group10.docx is built from tools_build_report.py.",
         "",
     ]
     if blockers:

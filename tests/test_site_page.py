@@ -58,7 +58,7 @@ def test_landing_page_does_not_claim_a_host_or_videos():
     assert "Do not treat a github.io address as this page." in PAGE
     assert "youtube.com/watch" not in PAGE.lower()
     assert "youtu.be/" not in PAGE.lower()
-    assert "Public webpage: NOT YET PUBLISHED" in LINKS
+    assert "Public webpage: label-desk.html, an HTML file attached in the Moodle submission zip" in LINKS
     assert "Presentation YouTube: https://youtu.be/FsGWcQHxIOg" in LINKS
     assert "Demo YouTube: https://youtu.be/b1T1Ulurln8" in LINKS
 

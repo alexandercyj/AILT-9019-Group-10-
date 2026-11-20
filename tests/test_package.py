@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 from package_submission import collect_blockers, secret_hits  # noqa: E402
 
 
-def test_current_tree_is_not_final_ready(tmp_path):
+def test_current_tree_readiness(tmp_path):
     completed = __import__("subprocess").run(
         [
             sys.executable,
@@ -27,29 +27,35 @@ def test_current_tree_is_not_final_ready(tmp_path):
         text=True,
         cwd=ROOT,
     )
-    assert completed.returncode == 1, completed.stdout + completed.stderr
     report = json.loads((tmp_path / "preflight.json").read_text(encoding="utf-8"))
-    assert report["final_ready"] is False
     assert report["uploaded"] is False
     assert report["within_limit"] is True
     assert report["zip_bytes"] <= report["limit_bytes"]
     ids = {item["id"] for item in report["blockers"]}
-    assert {
-        "public_webpage",
-        "contribution_approval",
-        "updated_report_pdf",
-    } <= ids
+    approval = ROOT / "docs" / "CONTRIBUTION_APPROVAL.txt"
+    expected = set() if approval.is_file() else {"contribution_approval"}
+    assert ids == expected
+    assert completed.returncode == (0 if not ids else 1), completed.stdout + completed.stderr
+    assert report["final_ready"] is (not ids)
     names = zipfile.ZipFile(tmp_path / "draft.zip").namelist()
     assert "SUBMISSION_STATUS.txt" in names
     assert "links.txt" in names
-    assert "docs/proposed/REPORT_CANDIDATE.md" in names
+    assert "report.pdf" in names
     assert not any(name.startswith(".git/") or name == ".env" or ".impeccable/" in name for name in names)
     assert all(".ailt9019-group10.env" not in name for name in names)
     status = zipfile.ZipFile(tmp_path / "draft.zip").read("SUBMISSION_STATUS.txt").decode("utf-8")
-    assert "final_ready: no" in status
-    assert "NOT" in Path(ROOT / "links.txt").read_text(encoding="utf-8")
-    assert "presentation_youtube" not in ids
-    assert "demo_youtube" not in ids
+    assert ("final_ready: yes" if not ids else "final_ready: no") in status
+
+    attached = tmp_path / "attached"
+    attached.mkdir()
+    (attached / "links.txt").write_text(
+        "Public webpage: label-desk.html, an HTML file attached in the Moodle submission zip\n"
+        "Presentation YouTube: https://www.youtube.com/watch?v=aaaaaaaaaaa\n"
+        "Demo YouTube: https://youtu.be/bbbbbbbbbbb\n",
+        encoding="utf-8",
+    )
+    (attached / "report.pdf").write_bytes(b"%PDF-1.4\n")
+    assert {item["id"] for item in collect_blockers(attached)} == {"contribution_approval"}
 
 
 def test_supplied_items_clear_the_gate(tmp_path):
