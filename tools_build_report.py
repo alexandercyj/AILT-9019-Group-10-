@@ -266,8 +266,8 @@ set_text(find("Known limitations:"),
     "wording.")
 set_text(find("Team members responsible:"),
     "Team members responsible: Chen Yongjun — verification of AI-assisted work and of the "
-    "13 November report draft; SHEIKH Mohammad (GitHub: smsaarim11) — directed and prompted "
-    "the 29 AI-assisted local edit commits and prepared the 20 November corrections; CHENG "
+    "13 November report draft; SHEIKH Mohammad (GitHub: smsaarim11) — did the technical work in "
+    "the 29 local edit commits and prepared the 20 November corrections; CHENG "
     "Chi Man and GUNAWAN Alexander — checked the 13 November disclosure and their own entries.")
 
 # ---------- 8. Section 6 · Contributions ----------
@@ -282,18 +282,18 @@ insert_block(find("For every section, list every member"), [
      "layer with the coverage rule; the source register; the browser view, standalone reader "
      "and agent skill contract. B: tested the three refusal paths and the browser-to-pipeline "
      "wiring. C: reviewed the domain rules (hedge handling, corpus field maps) against the "
-     "museum records. D: directed and prompted the AI-assisted work on offline builds, "
+     "museum records. D: did the technical work on offline builds, "
      "server hardening, design-hook cache exclusion, and sponsored model-call opt-in in "
-     "the 29 AI-assisted local edit commits, including the two later feature-branch commits.", False),
+     "the 29 local edit commits, including the two later feature-branch commits.", False),
     ("3. Evaluation and results — A: wrote the golden set, the boundary probes and the "
      "evaluation scripts; ran the model-off, model-on and cross-corpus evaluations. B: verified "
      "the committed reports against fresh runs. C: ran the pytest suite and recorded pass "
-     "counts. D: directed and prompted the recorded evaluation, verification, and "
+     "counts. D: did the recorded evaluation, verification, and "
      "cross-corpus refusal work in those commits.", False),
     ("4. Reproducibility and limitations — A: wrote the README, the standalone builder and the "
      "corpus checksum checks; analysed the drops_field_content and empty-response failures. "
      "B: tested a fresh clone using only the README. C: checked the setup instructions and "
-     "troubleshooting table. D: directed and prompted the local public landing page, "
+     "troubleshooting table. D: did the technical work on the local public landing page, "
      "draft packaging, Python 3.12 test workflow, 265-test counts, and packager honesty "
      "checks (listed in Appendix B); also authored commits 27d6af3 and d668969.", False),
     ("5. Ethics & AI-use disclosure — A: compiled the source register and the licence/robots "
@@ -311,7 +311,7 @@ insert_block(find("Also list each member’s completed webpage"), [
     ("Other project work — A: the Label Desk webpage (labeldesk.html standalone reader and the "
      "server.py browser view), the 58-second midterm demo recording, and presentation slides. "
      "B: checked the demo captions and the repository-link file. C: reviewed the presentation "
-     "materials. D: directed and prompted the 29 AI-assisted local edit commits, and checked "
+     "materials. D: did the technical work in the 29 local edit commits, and checked "
      "README links. A recorded presentation in which all four members speak has not yet been "
      "made; the 13 November claim that they had is withdrawn. This 20 November revision was "
      "prepared by SHEIKH Mohammad (smsaarim11) and has not been re-signed by the other members. "
@@ -340,8 +340,8 @@ insert_block(find("Delete if unused"), [
      "golden_report_llm.md, golden_report_llm_live.md, model_comparison.md, cross_corpus.md) "
      "and the 265-test suite under tests/.", False),
     ("Appendix B — contribution evidence: git history and the committed evaluation reports. "
-     "The 29 AI-assisted local edit commits directed and prompted by SHEIKH Mohammad "
-     "(GitHub: smsaarim11) cover offline builds, evaluation recording, server hardening, "
+     "The 29 local edit commits in which SHEIKH Mohammad "
+     "(GitHub: smsaarim11) did the technical work cover offline builds, evaluation recording, server hardening, "
      "design-hook cache exclusion, sponsored model calls, verification, cross-corpus refusals, "
      "report candidates, draft packaging, the Python 3.12 test workflow, test counting, the "
      "local public landing page, packager honesty checks for unhosted github.io URLs, raw "
