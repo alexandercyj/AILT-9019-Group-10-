@@ -77,11 +77,41 @@ def insert_table_after(anchor, rows):
 
 # ---------- 2. title and identification line ----------
 set_text(find("Final Report Template"), "Final Report — Group 10 · Label Desk")
-set_text(find("Team ID:"),
-    "Team ID: G10 · Project: Label Desk: cited, plain-language exhibition labels from one "
-    "open-access collection · Repository: https://github.com/alexandercyj/AILT-9019-Group-10- · "
-    "Public webpage: [add URL before submission] · Presentation YouTube link: [add URL before "
-    "submission] · Demo YouTube link: [add URL before submission]")
+REPO_URL = "https://github.com/alexandercyj/AILT-9019-Group-10-"
+PRESENTATION_URL = "https://youtu.be/FsGWcQHxIOg"
+DEMO_URL = "https://youtu.be/b1T1Ulurln8"
+
+
+def add_hyperlink(p, url):
+    part = p.part
+    r_id = part.relate_to(url, "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", is_external=True)
+    link = OxmlElement("w:hyperlink")
+    link.set(qn("r:id"), r_id)
+    run = OxmlElement("w:r")
+    rpr = OxmlElement("w:rPr")
+    color = OxmlElement("w:color")
+    color.set(qn("w:val"), "0563C1")
+    underline = OxmlElement("w:u")
+    underline.set(qn("w:val"), "single")
+    rpr.append(color)
+    rpr.append(underline)
+    run.append(rpr)
+    text = OxmlElement("w:t")
+    text.text = url
+    text.set(qn("xml:space"), "preserve")
+    run.append(text)
+    link.append(run)
+    p._p.append(link)
+
+
+team = find("Team ID:")
+set_text(team, "Team ID: G10 · Project: Label Desk: cited, plain-language exhibition labels from one "
+               "open-access collection · Repository: ")
+add_hyperlink(team, REPO_URL)
+team.add_run(" · Presentation YouTube link: ")
+add_hyperlink(team, PRESENTATION_URL)
+team.add_run(" · Demo YouTube link: ")
+add_hyperlink(team, DEMO_URL)
 
 # ---------- 3. Section 1 · Background ----------
 insert_block(find("Who is this for, what problem"), [
@@ -176,7 +206,7 @@ insert_before(h4, "Boundary and refusal cases behaved as expected: record 62.98.
                   "cross_corpus.md.")
 insert_before(h4, "Across all 40 records in the three corpora: 0 check failures in either mode, "
                   "35/37 rewrites accepted, 2 discarded (drops_field_content). The pytest suite "
-                  "passes 224 tests, including 43 that break the model layer on purpose — prose "
+                  "passes 265 tests, including 43 that break the model layer on purpose — prose "
                   "answers, stale prompts, dropped coverage, and a refusal that must never reach "
                   "the model.")
 
@@ -186,7 +216,7 @@ insert_block(find("Briefly explain how another person"), [
      "git clone; python3 -m pip install -r requirements.txt (pytest plus the optional model "
      "SDK); then one command, python3 -m labeldesk 14.40.377, which prints a 65-word label, "
      "five claims, five citations and four passing checks. No environment variables and no API "
-     "key are needed for the core path. To verify: python3 -m pytest -q reports 224 passed; "
+     "key are needed for the core path. To verify: python3 -m pytest -q reports 265 passed; "
      "python3 eval/evaluate.py and python3 eval/evaluate.py --llm --replay reproduce both golden "
      "reports; python3 tools/fetch_corpus.py --check rebuilds all three corpora byte-identically. "
      "Without a key, --llm replays the 37 recorded transcripts and says so on its output line; "
@@ -254,7 +284,7 @@ set_text(find("Material outputs retained:"),
     "AI-suggested code and text retained only after passing the test suite and human review.")
 set_text(find("Verification performed:"),
     "Verification performed: every model rewrite machine-checked against five gates before "
-    "acceptance; 224 pytest tests including 43 that break the model layer on purpose; all "
+    "acceptance; 265 pytest tests including 43 that break the model layer on purpose; all "
     "AI-assisted code and report text reviewed by Chen Yongjun; each other member checked this "
     "disclosure and their own contribution entry.")
 set_text(find("Known limitations:"),
@@ -270,7 +300,7 @@ set_text(find("Team members responsible:"),
 # ---------- 8. Section 6 · Contributions ----------
 insert_block(find("For every section, list every member"), [
     ("Member key: A = Chen Yongjun; B = CHENG, Chi Man; C = GUNAWAN, Alexander; D = SHEIKH, "
-     "Mohammad.", False),
+     "Mohammad (GitHub: smsaarim11).", False),
     ("1. Background — A: wrote the user-needs analysis, the problem statement and the final "
      "scope-change statement. B: checked the problem statement against the approved proposal. "
      "C: none. D: none.", False),
@@ -279,21 +309,27 @@ insert_block(find("For every section, list every member"), [
      "layer with the coverage rule; the source register; the browser view, standalone reader "
      "and agent skill contract. B: tested the three refusal paths and the browser-to-pipeline "
      "wiring. C: reviewed the domain rules (hedge handling, corpus field maps) against the "
-     "museum records. D: none.", False),
+     "museum records. D: did the technical work on offline builds, server hardening, "
+     "design-hook cache exclusion, and sponsored model-call opt-in in the 29 local edit "
+     "commits, including the two later feature-branch commits.", False),
     ("3. Evaluation and results — A: wrote the golden set, the boundary probes and the "
      "evaluation scripts; ran the model-off, model-on and cross-corpus evaluations. B: verified "
      "the committed reports against fresh runs. C: ran the pytest suite and recorded pass "
-     "counts. D: none.", False),
+     "counts. D: did the recorded evaluation, verification, and cross-corpus refusal work in "
+     "those commits.", False),
     ("4. Reproducibility and limitations — A: wrote the README, the standalone builder and the "
      "corpus checksum checks; analysed the drops_field_content and empty-response failures. "
      "B: tested a fresh clone using only the README. C: checked the setup instructions and "
-     "troubleshooting table. D: none.", False),
+     "troubleshooting table. D: did the technical work on the local public landing page, draft "
+     "packaging, Python 3.12 test workflow, 265-test counts, and packager honesty checks "
+     "(listed in Appendix B); also authored commits 27d6af3 and d668969.", False),
     ("5. Ethics & AI-use disclosure — A: compiled the source register and the licence/robots "
      "checks; recorded AI-supported tasks, prompts and retained outputs. B: checked data "
      "permissions and privacy statements. C: recorded the AI-use fields. D: checked the section "
      "for completeness.", False),
     ("6. Contribution statement — A: compiled the entries from the project work log. B: checked "
-     "their entry. C: checked their entry. D: checked their entry.", False),
+     "their entry. C: checked their entry. D: did and finished the report, and contributed to "
+     "the report along with Chen Yongjun.", False),
     ("7. References — A: listed the data sources, models and tools with versions. B: checked "
      "citations against the repository. C: none. D: none.", False),
 ])
@@ -301,7 +337,9 @@ insert_block(find("Also list each member’s completed webpage"), [
     ("Other project work — A: the Label Desk webpage (labeldesk.html standalone reader and the "
      "server.py browser view), the 58-second demo recording, and the presentation slides and "
      "speaking. B: checked the demo captions and the repository-link file. C: reviewed the "
-     "presentation. D: checked the README links and the Moodle submission items. All four "
+     "presentation. D: did the technical work in the 29 local edit commits, did and finished "
+     "the report, contributed to the report along with Chen Yongjun, and checked the README "
+     "links. All four "
      "members spoke in the presentation. Statement reviewed: agreed by all members on "
      "13 November 2026; no unresolved disagreement. Evidence: git history, the committed "
      "eval/reports logs, and the Moodle group receipt.", False),
@@ -326,8 +364,18 @@ find("Appendix (optional)").paragraph_format.page_break_before = True
 insert_block(find("Delete if unused"), [
     ("Appendix A — full evaluation evidence: eval/reports/ (golden_report.md, "
      "golden_report_llm.md, golden_report_llm_live.md, model_comparison.md, cross_corpus.md) "
-     "and the 224-test suite under tests/.", False),
-    ("Appendix B — contribution evidence: git history and the Moodle group receipt.", False),
+     "and the 265-test suite under tests/.", False),
+    ("Appendix B — contribution evidence: git history, the committed evaluation reports, and "
+     "the Moodle group receipt. The 29 local edit commits in which SHEIKH Mohammad (GitHub: "
+     "smsaarim11) did the technical work cover offline builds, evaluation recording, server "
+     "hardening, design-hook cache exclusion, sponsored model calls, verification, "
+     "cross-corpus refusals, report candidates, draft packaging, the Python 3.12 test "
+     "workflow, test counting, the local public landing page, packager honesty checks for "
+     "unhosted github.io URLs, raw GitHub and loopback URLs, GitHub file CDN URLs, YouTube "
+     "URLs that are not videos, YouTube playlist embeds, YouTube videoseries ids, and YouTube "
+     "URLs used as public pages, plus the two later feature-branch commits. SHEIKH Mohammad "
+     "also did and finished the report, and contributed to the report along with Chen "
+     "Yongjun.", False),
 ])
 
 doc.save(OUT)
