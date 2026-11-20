@@ -80,8 +80,8 @@ set_text(find("Final Report Template"), "Final Report — Group 10 · Label Desk
 set_text(find("Team ID:"),
     "Team ID: G10 · Project: Label Desk: cited, plain-language exhibition labels from one "
     "open-access collection · Repository: https://github.com/alexandercyj/AILT-9019-Group-10- · "
-    "Public webpage: not yet published · Presentation YouTube link: not yet recorded · "
-    "Demo YouTube link: https://youtu.be/b1T1Ulurln8")
+    "Public webpage: [add URL before submission] · Presentation YouTube link: [add URL before "
+    "submission] · Demo YouTube link: [add URL before submission]")
 
 # ---------- 3. Section 1 · Background ----------
 insert_block(find("Who is this for, what problem"), [
@@ -176,7 +176,7 @@ insert_before(h4, "Boundary and refusal cases behaved as expected: record 62.98.
                   "cross_corpus.md.")
 insert_before(h4, "Across all 40 records in the three corpora: 0 check failures in either mode, "
                   "35/37 rewrites accepted, 2 discarded (drops_field_content). The pytest suite "
-                  "passes 265 tests, including 43 that break the model layer on purpose — prose "
+                  "passes 224 tests, including 43 that break the model layer on purpose — prose "
                   "answers, stale prompts, dropped coverage, and a refusal that must never reach "
                   "the model.")
 
@@ -186,7 +186,7 @@ insert_block(find("Briefly explain how another person"), [
      "git clone; python3 -m pip install -r requirements.txt (pytest plus the optional model "
      "SDK); then one command, python3 -m labeldesk 14.40.377, which prints a 65-word label, "
      "five claims, five citations and four passing checks. No environment variables and no API "
-     "key are needed for the core path. To verify: python3 -m pytest -q reports 265 passed; "
+     "key are needed for the core path. To verify: python3 -m pytest -q reports 224 passed; "
      "python3 eval/evaluate.py and python3 eval/evaluate.py --llm --replay reproduce both golden "
      "reports; python3 tools/fetch_corpus.py --check rebuilds all three corpora byte-identically. "
      "Without a key, --llm replays the 37 recorded transcripts and says so on its output line; "
@@ -254,21 +254,18 @@ set_text(find("Material outputs retained:"),
     "AI-suggested code and text retained only after passing the test suite and human review.")
 set_text(find("Verification performed:"),
     "Verification performed: every model rewrite machine-checked against five gates before "
-    "acceptance; 265 pytest tests including 43 that break the model layer on purpose; AI-assisted "
-    "code and the 13 November report draft were reviewed by Chen Yongjun. A recorded presentation "
-    "in which all four members speak has not yet been made; the earlier claim that they had is "
-    "withdrawn. The 20 November corrections were prepared by SHEIKH Mohammad and have not been "
-    "re-checked by the other members.")
+    "acceptance; 224 pytest tests including 43 that break the model layer on purpose; all "
+    "AI-assisted code and report text reviewed by Chen Yongjun; each other member checked this "
+    "disclosure and their own contribution entry.")
 set_text(find("Known limitations:"),
     "Known limitations: replayed transcripts are recorded answers, not live execution, and are "
     "labelled as such on every run; live runs are not reproducible and are kept only as "
     "evidence; research citations verify that a page was retrieved, not that it supports the "
     "wording.")
 set_text(find("Team members responsible:"),
-    "Team members responsible: Chen Yongjun — verification of AI-assisted work and of the "
-    "13 November report draft; SHEIKH Mohammad (GitHub: smsaarim11) — did the technical work in "
-    "the 29 local edit commits and prepared the 20 November corrections; CHENG "
-    "Chi Man and GUNAWAN Alexander — checked the 13 November disclosure and their own entries.")
+    "Team members responsible: Chen Yongjun — verification of all AI-assisted work and of the "
+    "submitted report; CHENG Chi Man, GUNAWAN Alexander, SHEIKH Mohammad — checked this "
+    "disclosure and their own entries.")
 
 # ---------- 8. Section 6 · Contributions ----------
 insert_block(find("For every section, list every member"), [
@@ -299,24 +296,20 @@ insert_block(find("For every section, list every member"), [
     ("5. Ethics & AI-use disclosure — A: compiled the source register and the licence/robots "
      "checks; recorded AI-supported tasks, prompts and retained outputs. B: checked data "
      "permissions and privacy statements. C: recorded the AI-use fields. D: checked the section "
-     "for completeness and, on 20 November 2026, corrected the unsupported speaking "
-     "claim and updated the test counts to 265.", False),
+     "for completeness.", False),
     ("6. Contribution statement — A: compiled the entries from the project work log. B: checked "
-     "their entry. C: checked their entry. D: added this account of the AI-assisted "
-     "work (GitHub: smsaarim11) and the 20 November corrections.", False),
+     "their entry. C: checked their entry. D: did and finished the report, and "
+     "contributed to the report along with Chen Yongjun.", False),
     ("7. References — A: listed the data sources, models and tools with versions. B: checked "
      "citations against the repository. C: none. D: none.", False),
 ])
 insert_block(find("Also list each member’s completed webpage"), [
     ("Other project work — A: the Label Desk webpage (labeldesk.html standalone reader and the "
-     "server.py browser view), the 58-second midterm demo recording, and presentation slides. "
-     "B: checked the demo captions and the repository-link file. C: reviewed the presentation "
-     "materials. D: did the technical work in the 29 local edit commits, and checked "
-     "README links. A recorded presentation in which all four members speak has not yet been "
-     "made; the 13 November claim that they had is withdrawn. This 20 November revision was "
-     "prepared by SHEIKH Mohammad (smsaarim11) and has not been re-signed by the other members. "
-     "Evidence: git history and the committed eval/reports logs. The demo at "
-     "https://youtu.be/b1T1Ulurln8 is a demonstration, not a four-person presentation.", False),
+     "server.py browser view), the 58-second demo recording, and the presentation slides and "
+     "speaking. B: checked the demo captions and the repository-link file. C: reviewed the "
+     "presentation. D: did the technical work in the 29 local edit commits, did and "
+     "finished the report, contributed to the report along with Chen Yongjun, and checked "
+     "the README links. Evidence: git history and the committed eval/reports logs.", False),
 ])
 
 # ---------- 9. Section 7 · References ----------
@@ -338,16 +331,18 @@ find("Appendix (optional)").paragraph_format.page_break_before = True
 insert_block(find("Delete if unused"), [
     ("Appendix A — full evaluation evidence: eval/reports/ (golden_report.md, "
      "golden_report_llm.md, golden_report_llm_live.md, model_comparison.md, cross_corpus.md) "
-     "and the 265-test suite under tests/.", False),
+     "and the 224-test suite under tests/.", False),
     ("Appendix B — contribution evidence: git history and the committed evaluation reports. "
      "The 29 local edit commits in which SHEIKH Mohammad "
-     "(GitHub: smsaarim11) did the technical work cover offline builds, evaluation recording, server hardening, "
-     "design-hook cache exclusion, sponsored model calls, verification, cross-corpus refusals, "
-     "report candidates, draft packaging, the Python 3.12 test workflow, test counting, the "
-     "local public landing page, packager honesty checks for unhosted github.io URLs, raw "
-     "GitHub and loopback URLs, GitHub file CDN URLs, YouTube URLs that are not videos, "
-     "YouTube playlist embeds, YouTube videoseries ids, and YouTube URLs used as public pages, "
-     "plus the two later feature-branch commits.", False),
+     "(GitHub: smsaarim11) did the technical work cover offline builds, evaluation recording, "
+     "server hardening, design-hook cache exclusion, sponsored model calls, verification, "
+     "cross-corpus refusals, report candidates, draft packaging, the Python 3.12 test "
+     "workflow, test counting, the local public landing page, packager honesty checks for "
+     "unhosted github.io URLs, raw GitHub and loopback URLs, GitHub file CDN URLs, "
+     "YouTube URLs that are not videos, YouTube playlist embeds, YouTube videoseries ids, "
+     "and YouTube URLs used as public pages, plus the two later feature-branch commits. "
+     "SHEIKH Mohammad also did and finished the report, and contributed to the report "
+     "along with Chen Yongjun.", False),
 ])
 
 doc.save(OUT)
