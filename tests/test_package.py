@@ -36,8 +36,6 @@ def test_current_tree_is_not_final_ready(tmp_path):
     ids = {item["id"] for item in report["blockers"]}
     assert {
         "public_webpage",
-        "presentation_youtube",
-        "demo_youtube",
         "contribution_approval",
         "updated_report_pdf",
     } <= ids
@@ -50,6 +48,8 @@ def test_current_tree_is_not_final_ready(tmp_path):
     status = zipfile.ZipFile(tmp_path / "draft.zip").read("SUBMISSION_STATUS.txt").decode("utf-8")
     assert "final_ready: no" in status
     assert "NOT" in Path(ROOT / "links.txt").read_text(encoding="utf-8")
+    assert "presentation_youtube" not in ids
+    assert "demo_youtube" not in ids
 
 
 def test_supplied_items_clear_the_gate(tmp_path):

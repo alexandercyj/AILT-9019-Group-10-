@@ -14,7 +14,7 @@ No API key and no environment variable. The core path uses the Python standard l
 
 1. Check the interpreter: `python3 --version` (3.12 or newer).
 2. Clone the shared repository, not a personal copy: `git clone https://github.com/alexandercyj/AILT-9019-Group-10-.git`
-3. Enter it and check out the current tree: `cd AILT-9019-Group-10-` then `git checkout cursor/ailt9019-release-69c3`. The default branch `main` is still `836f232` (the earlier teammate snapshot) and was not updated in this work.
+3. Enter it: `cd AILT-9019-Group-10-`. The default branch `main` holds the current tree.
 4. Stay offline. Do not create a `.env` for this check.
 5. Paste one command: `python3 -m labeldesk 14.40.377`
 6. The process exits 0. The status line says `DRAFTED`. The corpus line shows `sha256 bdb51f3a20ae`. The label is 65 words and ends with `Draft for curator review, not an official record.`
@@ -91,7 +91,6 @@ Requires Python 3.12 or newer, as the proposal specifies. Verified on 16 Nov 202
 ```bash
 git clone https://github.com/alexandercyj/AILT-9019-Group-10-.git
 cd AILT-9019-Group-10-
-git checkout cursor/ailt9019-release-69c3
 python3 --version          # 3.12 or newer; verified on 3.12.6
 python3 -m pip install -r requirements.txt   # pytest, and the optional model SDK
 ```
@@ -341,7 +340,7 @@ python3 tools/fetch_corpus.py --preset cleveland --check
 python3 eval/cross_corpus.py
 ```
 
-The golden set is 17 hand-picked cases with expectations the team wrote while looking at
+The golden set is 18 hand-picked cases with expectations the team wrote while looking at
 the same records. This is the other test: all 40 records across all three corpora, no
 per-record expectations, reporting only what the pipeline says about itself.
 
